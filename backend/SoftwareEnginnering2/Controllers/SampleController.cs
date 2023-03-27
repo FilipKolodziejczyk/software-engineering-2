@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEnginnering2.Models;
 using Swashbuckle.AspNetCore.Annotations;
-using SoftwareEnginnering2.Models;
 
 namespace SoftwareEnginnering2.Controllers
 {
