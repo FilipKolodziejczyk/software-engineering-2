@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using SoftwareEnginnering2.Models;
+using SoftwareEngineering2.Models;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace SoftwareEnginnering2.Controllers
+namespace SoftwareEngineering2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -27,7 +27,7 @@ namespace SoftwareEnginnering2.Controllers
         }
 
         // GET: api/Sample/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id:int}", Name = "Get")]
         [SwaggerResponse(200, "Returns a model", typeof(string))]
         [SwaggerResponse(404, "Model not found")]
         public ActionResult Get(int id)
@@ -63,7 +63,7 @@ namespace SoftwareEnginnering2.Controllers
         }
 
         // PUT: api/Sample/5
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [SwaggerResponse(200, "Value updated", typeof(string))]
         [SwaggerResponse(400, "Value is null or empty")]
         [SwaggerResponse(404, "Value not found")]
@@ -84,7 +84,7 @@ namespace SoftwareEnginnering2.Controllers
         }
 
         // DELETE: api/Sample/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [SwaggerResponse(204, "Model deleted")]
         [SwaggerResponse(404, "Model not found")]
         public ActionResult Delete(int id)

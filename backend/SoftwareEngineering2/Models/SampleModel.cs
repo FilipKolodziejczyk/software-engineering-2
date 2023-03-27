@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-namespace SoftwareEnginnering2.Models; 
+namespace SoftwareEngineering2.Models; 
 
 public class SampleModel {
     public int Id { get; set; }
