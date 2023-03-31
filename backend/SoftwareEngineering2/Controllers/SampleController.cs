@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Models;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -47,16 +48,20 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(201, "Model created", typeof(string))]
         [SwaggerResponse(400, "Model is invalid")]
         [SwaggerResponse(409, "Model already exists")]
-        public ActionResult Post([FromBody] SampleModel newModel)
+        public ActionResult Post([FromBody] SampleDTO newModel)
         {
             // data should be kept in repositories, this is only for demo purposes
             var types = new[] { new SampleModelType { Id = 1, Name = "Type 1" }, new SampleModelType { Id = 2, Name = "Type 2" } };
             var data = new[] { new SampleModel { Id = 1, Name = "Value 1", Type = types[0] }, new SampleModel { Id = 2, Name = "Value 2", Type = types[1] } };
-
-            if (!types.Contains(newModel.Type) || string.IsNullOrWhiteSpace(newModel.Name))
+            
+            var type = types.FirstOrDefault(x => x.Name == newModel.Type);
+            
+            if (null == type || string.IsNullOrWhiteSpace(newModel.Name))
                 return BadRequest();
+            
+            var model = new SampleModel { Name = newModel.Name, Type = type };
 
-            if (data.Contains(newModel))
+            if (data.Contains(model))
                 return Conflict();
 
             return CreatedAtAction(nameof(Get), new { id = data.Length + 1 }, newModel);
@@ -67,7 +72,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(200, "Value updated", typeof(string))]
         [SwaggerResponse(400, "Value is null or empty")]
         [SwaggerResponse(404, "Value not found")]
-        public ActionResult Put(int id, [FromBody] SampleModel updatedModel)
+        public ActionResult Put(int id, [FromBody] SampleDTO updatedModel)
         {
             // data should be kept in repositories, this is only for demo purposes
             var types = new[] { new SampleModelType { Id = 1, Name = "Type 1" }, new SampleModelType { Id = 2, Name = "Type 2" } };
@@ -77,8 +82,16 @@ namespace SoftwareEngineering2.Controllers
             if (id < 0 || id >= data.Length)
                 return NoContent();
             
-            if (string.IsNullOrWhiteSpace(updatedModel.Name) || !types.Contains(updatedModel.Type))
+            if (string.IsNullOrWhiteSpace(updatedModel.Name))
                 return BadRequest();
+            
+            var modelToUpdate = data[id];
+            var type = types.FirstOrDefault(x => x.Name == updatedModel.Type);
+            if (type == null)
+                return BadRequest();
+            
+            modelToUpdate.Name = updatedModel.Name;
+            modelToUpdate.Type = type;
 
             return Ok(updatedModel);
         }
