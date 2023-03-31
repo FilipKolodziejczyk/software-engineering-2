@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEnginnering2", "SoftwareEnginnering2\SoftwareEnginnering2.csproj", "{057BE41B-EC5B-462E-8B2E-071E9FCDE293}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineering2", "SoftwareEngineering2\SoftwareEngineering2.csproj", "{057BE41B-EC5B-462E-8B2E-071E9FCDE293}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineering2Test", "SoftwareEngineering2Test\SoftwareEngineering2Test.csproj", "{09A93441-B58A-43EC-BFA0-438BC257241A}"
 EndProject
