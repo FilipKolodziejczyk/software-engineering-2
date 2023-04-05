@@ -11,13 +11,12 @@ namespace SoftwareEngineering2.Controllers
     {
         // POST: api/orders
         [HttpPost]
-        [SwaggerResponse(400, "Bad Request"]
+        [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(201, "Created")]
-        public ActionResult Place([FromBody] SampleDTO newModel)
+        public ActionResult PlaceOrder([FromBody] SampleDTO newModel)
         {
-
-            return null;
+            return Ok("Order succesfully placed");
         }
         
         // PUT: api/orders
@@ -29,20 +28,19 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(200, "OK")]
         public ActionResult Modify([FromBody] SampleDTO newModel)
         {
-            return null;
+            return Ok("Order succesfully modified");
         }
         
         
         // POST: api/orders
         [HttpPost]
-        [SwaggerResponse(400, "Bad Request"]
+        [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
         public ActionResult ChangeStatus([FromBody] SampleDTO newModel)
         {
-
-            return null;
+            return Ok("Order status succesfully changed");
         }
         
         // GET: api/orders
@@ -50,10 +48,9 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        public ActionResult AssignedOrders([FromBody] SampleDTO newModel)
+        public ActionResult GetAssignedOrders([FromBody] SampleDTO newModel)
         {
-
-            return null;
+            return Ok("Succesfully get assigned order");
         }
 
     }

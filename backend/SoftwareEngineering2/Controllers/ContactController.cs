@@ -16,8 +16,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(201, "Created")]
         public ActionResult FillComplaint([FromBody] SampleDTO newModel)
         {
-
-            return null;
+            return Ok("Complain filled");
         }
         
         // POST: api/contact
@@ -28,8 +27,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(201, "Created")]
         public ActionResult AnswerComplaint([FromBody] SampleDTO newModel)
         {
-
-            return null;
+            return Ok("Complain answered");
         }
 
     }

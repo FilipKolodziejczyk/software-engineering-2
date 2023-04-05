@@ -11,25 +11,23 @@ namespace SoftwareEngineering2.Controllers
     {
         // POST: api/products
         [HttpPost]
-        [SwaggerResponse(400, "Bad Request"]
+        [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(200, "OK")]
-        public ActionResult Add([FromBody] SampleDTO newModel)
+        public ActionResult Add([FromBody] ProductDTO productModel)
         {
-
-            return null;
+            return Ok("Succesfully added");
         }
         
         
-        // DELETE: api/products
-        [HttpDelete]
+        // DELETE: api/products/6
+        [HttpDelete("{ProductID:int}")]
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
         public ActionResult Delete([FromBody] SampleDTO newModel)
         {
-
-            return null;
+            return Ok("Succesfully deleted");
         }
         
         // PUT: api/products
@@ -40,11 +38,8 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(201, "Created")]
         public ActionResult Update([FromBody] SampleDTO newModel)
         {
-
-            return null;
+            return Ok("Succesfully updated");
         }
-        
-
     }
 }
 
