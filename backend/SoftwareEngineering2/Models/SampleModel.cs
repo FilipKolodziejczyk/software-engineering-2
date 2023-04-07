@@ -1,17 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using SoftwareEngineering2.ModelEntityTypeConfiguration;
 
 namespace SoftwareEngineering2.Models;
 
+[EntityTypeConfiguration(typeof(SampleModelEntityConfiguration))]
 public class SampleModel {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Key]
     public int Id { get; set; }
-    [Column(TypeName = "VARCHAR")]
-    [MaxLength(50)]
-    [Required]
     public string Name { get; set; }
     
-    [ForeignKey("SampleModelTypeId")]
     public SampleModelType Type { get; set; }
 }

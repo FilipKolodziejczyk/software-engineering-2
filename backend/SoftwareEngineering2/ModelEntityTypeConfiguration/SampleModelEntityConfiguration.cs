@@ -6,8 +6,9 @@ namespace SoftwareEngineering2.ModelEntityTypeConfiguration;
 
 public class SampleModelEntityConfiguration : IEntityTypeConfiguration<SampleModel> {
     public void Configure(EntityTypeBuilder<SampleModel> builder) {
+
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Name).IsRequired();
+        builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
         builder.HasOne(x => x.Type).WithMany().HasForeignKey(x => x.Id);
     }
 }
