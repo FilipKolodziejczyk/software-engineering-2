@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SoftwareEngineering2.Models; 
 
-[Table("SampleModelTypes")]
 public class SampleModelType {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
