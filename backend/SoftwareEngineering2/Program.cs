@@ -16,10 +16,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-var connectionString = Environment.GetEnvironmentVariable("CONNSTR");
-if (string.IsNullOrEmpty(connectionString)) {
-    connectionString = builder.Configuration.GetConnectionString("Db");
-}
+var connectionStringBuilder = new SqlConnectionStringBuilder(
+    builder.Configuration.GetConnectionString("Db"));
+connectionStringBuilder.UserID = builder.Configuration["DbUser"];
+connectionStringBuilder.Password = builder.Configuration["DbPassword"];
+var connectionString = connectionStringBuilder.ConnectionString;
 
 builder.Services.AddTransient<IDbConnection>(_ => new SqlConnection(connectionString));
 builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseSqlServer(connectionString));
