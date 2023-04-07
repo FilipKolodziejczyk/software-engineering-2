@@ -7,7 +7,8 @@ public class SampleModelType {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
     public int Id { get; set; }
-    [Column(TypeName = "VARCHAR(255)")]
+    [Column(TypeName = "VARCHAR")]
+    [MaxLength(50)]
     [Required]
     public string Name { get; set; }
 }
