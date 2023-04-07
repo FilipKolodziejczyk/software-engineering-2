@@ -31,6 +31,10 @@ builder.Services.AddTransient<ISampleModelTypeRepository, SampleModelTypeReposit
 
 var app = builder.Build();
 
+app.UsePathBase("/api");
+app.UseRouting();
+app.MapGet("/", () => "Backend is healthy!"); // Health check endpoint
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
