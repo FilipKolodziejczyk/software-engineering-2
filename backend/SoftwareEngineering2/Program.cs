@@ -18,12 +18,11 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var connectionString = Environment.GetEnvironmentVariable("CONNSTR");
 if (string.IsNullOrEmpty(connectionString)) {
-    connectionString = ConfigurationManager.ConnectionStrings["Db"].ConnectionString;
+    connectionString = builder.Configuration.GetConnectionString("Db");
 }
 
 builder.Services.AddTransient<IDbConnection>(_ => new SqlConnection(connectionString));
-builder.Services.AddDbContext<FlowerShopContext>(
-    options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseSqlServer(connectionString));
 
 
 builder.Services.AddTransient<ISampleModelRepository, SampleModelRepository>();
