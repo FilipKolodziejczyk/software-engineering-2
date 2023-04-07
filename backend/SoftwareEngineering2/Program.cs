@@ -11,10 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var connectionString = Environment.GetEnvironmentVariable("CONNSTR");
 if (string.IsNullOrEmpty(connectionString)) {
@@ -28,6 +28,8 @@ builder.Services.AddDbContext<FlowerShopContext>(
 
 builder.Services.AddTransient<ISampleModelRepository, SampleModelRepository>();
 builder.Services.AddTransient<ISampleModelTypeRepository, SampleModelTypeRepository>();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
