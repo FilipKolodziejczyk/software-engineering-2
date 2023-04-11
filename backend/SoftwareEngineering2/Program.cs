@@ -25,7 +25,7 @@ var connectionString = connectionStringBuilder.ConnectionString;
 builder.Services.AddTransient<IDbConnection>(_ => new SqlConnection(connectionString));
 builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseSqlServer(connectionString));
 
-
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<ISampleModelRepository, SampleModelRepository>();
 builder.Services.AddTransient<ISampleModelTypeRepository, SampleModelTypeRepository>();
 
