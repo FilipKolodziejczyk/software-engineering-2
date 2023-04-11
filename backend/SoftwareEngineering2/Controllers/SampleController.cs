@@ -1,92 +1,61 @@
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Interfaces;
-using SoftwareEngineering2.Models;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SoftwareEngineering2.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class SampleController : ControllerBase {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ISampleModelRepository _sampleModelRepository;
-        private readonly ISampleModelTypeRepository _sampleModelTypeRepository;
-        private readonly IMapper _mapper;
+        private readonly ISampleService _sampleService;
 
-        public SampleController(
-            IUnitOfWork unitOfWork,
-            ISampleModelRepository sampleModelRepository,
-            ISampleModelTypeRepository sampleModelTypeRepository,
-            IMapper mapper) {
-            _unitOfWork = unitOfWork;
-            _sampleModelRepository = sampleModelRepository;
-            _sampleModelTypeRepository = sampleModelTypeRepository;
-            _mapper = mapper;
+        public SampleController(ISampleService sampleService) {
+            _sampleService = sampleService;
         }
 
         // GET: api/Sample
         [HttpGet]
-        [SwaggerResponse(200, "Returns a list of models", typeof(SampleDTO[]))]
-        [SwaggerResponse(404, "No models found")]
+        [SwaggerResponse(200, "Returns a list of samples", typeof(SampleDTO[]))]
+        [SwaggerResponse(404, "No samples found")]
         public async Task<IActionResult> Get([FromQuery] string? filter, [FromQuery] string? type) {
-            var result = await _sampleModelRepository.GetAllFilteredAsync(filter, type);
+            filter ??= "";
+            type ??= "";
 
-            var list = result.ToList();
-            if (!list.Any()) {
-                return NotFound(new {message = $"No models found with name {filter ?? "any"} and type {type ?? "any"}"});
-            }
-
-            return Ok(new List<SampleDTO>(list.Select(item => _mapper.Map<SampleDTO>(item))));
+            var samples = await _sampleService.GetFilteredModelsAsync(filter, type);
+            return samples.Any() ? 
+                Ok(samples) : 
+                NotFound(new { message = $"No samples found with name {filter} and type {type}" });
         }
 
         // GET: api/Sample/5
         [HttpGet("{id:int}", Name = "Get")]
-        [SwaggerResponse(200, "Returns a model", typeof(SampleDTO))]
-        [SwaggerResponse(404, "Model not found")]
+        [SwaggerResponse(200, "Returns a sample", typeof(SampleDTO))]
+        [SwaggerResponse(404, "Sample not found")]
         public async Task<IActionResult> Get(int id) {
-            var result = await _sampleModelRepository.GetByIdAsync(id);
-
-            if (result == null) {
-                return NotFound(new {message = $"No model found with id {id}"});
-            }
-
-            return Ok(_mapper.Map<SampleDTO>(result));
+            var sample = await _sampleService.GetModelByIdAsync(id);
+            return sample != null ? 
+                Ok(sample) : 
+                NotFound(new { message = $"No sample found with id {id}" });
         }
 
         // POST: api/Sample
         [HttpPost]
-        [SwaggerResponse(201, "Model created", typeof(SampleDTO))]
-        [SwaggerResponse(400, "Model is invalid")]
-        [SwaggerResponse(409, "Model already exists")]
-        public async Task<IActionResult> Post([FromBody] [Required] NewSampleDTO newModel) {
-            if (string.IsNullOrWhiteSpace(newModel.Name) || string.IsNullOrWhiteSpace(newModel.Type)) {
-                return BadRequest(new {message = "Nonempty model and type names are required"});
-            }
+        [SwaggerResponse(201, "Sample created", typeof(SampleDTO))]
+        [SwaggerResponse(400, "Sample is invalid")]
+        [SwaggerResponse(409, "Sample already exists")]
+        public async Task<IActionResult> Post([FromBody] [Required] NewSampleDTO newSample) {
+            if (string.IsNullOrWhiteSpace(newSample.Name) || string.IsNullOrWhiteSpace(newSample.Type))
+                return BadRequest(new { message = "Nonempty sample and type names are required" });
 
-            var type = await _sampleModelTypeRepository.GetByNameAsync(newModel.Type);
-            if (type == null) {
-                return BadRequest(new {message = $"No type found with name {newModel.Type}"});
-            }
-            
-            var existing = await _sampleModelRepository.GetAllFilteredAsync(newModel.Name, newModel.Type, true);
-            if (existing.Any()) {
-                return Conflict(new {message = $"Model with name {newModel.Name} and type {newModel.Type} already exists"});
-            }
-            
-            var model = _mapper.Map<SampleModel>(newModel);
-            model.Type = type;
+            if (await _sampleService.GetModelTypeByNameAsync(newSample.Type) == null)
+                return BadRequest(new { message = $"No type found with name {newSample.Type}" });
 
-            try {
-                await _sampleModelRepository.AddAsync(model);
-                await _unitOfWork.SaveChangesAsync();
-            } catch (Exception e) {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
+            if (await _sampleService.GetModelByData(newSample.Name, newSample.Type) != null)
+                return Conflict(new { message = $"Sample with name {newSample.Name} and type {newSample.Type} already exists" });
             
-            return CreatedAtAction(nameof(Get), new {id = model.Id}, _mapper.Map<SampleDTO>(model));
+            var result = await _sampleService.CreateModelAsync(newSample);
+            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
         }
 
         // PUT: api/Sample/5
@@ -95,29 +64,19 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(400, "Value is null or empty")]
         [SwaggerResponse(404, "Value not found")]
         public async Task<IActionResult> Put(int id, [FromBody] [Required] NewSampleDTO updatedModel) {
-            if (string.IsNullOrWhiteSpace(updatedModel.Name) || string.IsNullOrWhiteSpace(updatedModel.Type)) {
-                return BadRequest(new {message = "Nonempty model and type names are required"});
-            }
-            
-            var model = await _sampleModelRepository.GetByIdAsync(id);
-            if (model == null) {
-                return NotFound(new {message = $"No model found with id {id}"});
-            }
-            
-            var type = await _sampleModelTypeRepository.GetByNameAsync(updatedModel.Type);
-            if (type == null) {
-                return BadRequest(new {message = $"No type found with name {updatedModel.Type}"});
-            }
-            
-            try {
-                model.Name = updatedModel.Name;
-                model.Type = type;
-                await _unitOfWork.SaveChangesAsync();
-            } catch (Exception e) {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
+            if (string.IsNullOrWhiteSpace(updatedModel.Name) || string.IsNullOrWhiteSpace(updatedModel.Type))
+                return BadRequest(new { message = "Nonempty sample and type names are required" });
 
-            return Ok(_mapper.Map<SampleDTO>(model));
+            if (await _sampleService.GetModelTypeByNameAsync(updatedModel.Type) == null)
+                return BadRequest(new { message = $"No type found with name {updatedModel.Type}" });
+            
+            if (await _sampleService.GetModelByIdAsync(id) == null)
+                return NotFound(new { message = $"No sample found with id {id}" });
+
+            if (await _sampleService.GetModelByData(updatedModel.Name, updatedModel.Type) != null)
+                return Conflict(new { message = $"Sample with name {updatedModel.Name} and type {updatedModel.Type} already exists" });
+            
+            return Ok(await _sampleService.UpdateModelAsync(id, updatedModel));
         }
 
         // DELETE: api/Sample/5
@@ -125,20 +84,11 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(204, "Model deleted")]
         [SwaggerResponse(404, "Model not found")]
         public async Task<IActionResult> Delete(int id) {
-            var model = await _sampleModelRepository.GetByIdAsync(id);
+            if (await _sampleService.GetModelByIdAsync(id) == null)
+                return NotFound(new { message = $"No sample found with id {id}" });
             
-            if (model == null) {
-                return NotFound(new {message = $"No model found with id {id}"});
-            }
-            
-            try {
-                _sampleModelRepository.Delete(model);
-                await _unitOfWork.SaveChangesAsync();
-            } catch (Exception e) {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
-
-            return Ok();
+            await _sampleService.DeleteModelAsync(id);
+            return NoContent();
         }
     }
 }

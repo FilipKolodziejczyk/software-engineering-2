@@ -11,13 +11,10 @@ public class SampleModelRepository : ISampleModelRepository {
         _context = context;
     }
     
-    public async Task<IEnumerable<SampleModel>> GetAllFilteredAsync(string? name, string? type, bool exactMatch = false) {
-        name ??= "";
-        type ??= "";
-        
+    public async Task<IEnumerable<SampleModel>> GetAllFilteredAsync(string name, string type) {
         return await _context.SampleModels
-            .Where(sample => exactMatch ? sample.Name == name : sample.Name.Contains(name))
-            .Where(sample => exactMatch ? sample.Type.Name == type : sample.Type.Name.Contains(type ?? ""))
+            .Where(sample => sample.Name.Contains(name))
+            .Where(sample => sample.Type.Name.Contains(type ?? ""))
             .Include(model => model.Type)
             .ToListAsync();
     }
@@ -26,6 +23,14 @@ public class SampleModelRepository : ISampleModelRepository {
         return await _context.SampleModels
             .Include(model => model.Type)
             .FirstOrDefaultAsync(sample => sample.Id == id);
+    }
+    
+    public async Task<SampleModel?> GetByNameAndTypeAsync(string name, string type) {
+        return await _context.SampleModels
+            .Where(sample => sample.Name == name)
+            .Where(sample => sample.Type.Name == type)
+            .Include(model => model.Type)
+            .FirstOrDefaultAsync();
     }
 
     public async Task AddAsync(SampleModel sample) {
