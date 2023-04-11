@@ -4,4 +4,5 @@ namespace SoftwareEngineering2.Interfaces;
 
 public interface ISampleModelTypeRepository {
     Task<IEnumerable<SampleModelType>> GetAllAsync();
+    Task<SampleModelType?> GetByNameAsync(string name);
 }

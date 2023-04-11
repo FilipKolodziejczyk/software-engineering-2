@@ -14,4 +14,8 @@ public class SampleModelTypeRepository : ISampleModelTypeRepository {
     public async Task<IEnumerable<SampleModelType>> GetAllAsync() {
         return await _context.SampleModelTypes.ToListAsync();
     }
+    
+    public async Task<SampleModelType?> GetByNameAsync(string name) {
+        return await _context.SampleModelTypes.FirstOrDefaultAsync(x => x.Name == name);
+    }
 }

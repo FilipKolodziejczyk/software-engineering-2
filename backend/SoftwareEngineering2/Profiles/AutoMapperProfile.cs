@@ -8,5 +8,8 @@ public class AutoMapperProfile : Profile {
     public AutoMapperProfile() {
         CreateMap<SampleModel, SampleDTO>()
             .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.Name));
+        
+        CreateMap<NewSampleDTO, SampleModel>()
+            .ForMember(dest => dest.Type, opt => opt.Ignore());
     }
 }
