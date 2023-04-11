@@ -1,114 +1,93 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEngineering2.DTO;
-using SoftwareEngineering2.Models;
+using SoftwareEngineering2.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace SoftwareEngineering2.Controllers
-{
+namespace SoftwareEngineering2.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class SampleController : ControllerBase
-    {
+    public class SampleController : ControllerBase {
+        private readonly ISampleService _sampleService;
+
+        public SampleController(ISampleService sampleService) {
+            _sampleService = sampleService;
+        }
+
         // GET: api/Sample
         [HttpGet]
-        [SwaggerResponse(200, "Returns a list of models", typeof(string[]))]
-        [SwaggerResponse(404, "No models found")]
-        public ActionResult Get([FromQuery] string filter)
-        {
-            // data should be kept in repositories, this is only for demo purposes
-            var types = new[] { new SampleModelType { Id = 1, Name = "Type 1" }, new SampleModelType { Id = 2, Name = "Type 2" } };
-            var data = new[] { new SampleModel { Id = 1, Name = "Value 1", Type = types[0] }, new SampleModel { Id = 2, Name = "Value 2", Type = types[1] } };
-            
-            var result = data.Where(x => x.Name.Contains(filter)).ToList();
+        [SwaggerResponse(200, "Returns a list of samples", typeof(SampleDTO[]))]
+        [SwaggerResponse(404, "No samples found")]
+        public async Task<IActionResult> Get([FromQuery] string? filter, [FromQuery] string? type) {
+            filter ??= "";
+            type ??= "";
 
-            if (!result.Any())
-                return NotFound();
-            
-            return Ok(result);
+            var samples = await _sampleService.GetFilteredModelsAsync(filter, type);
+            return samples.Any() ? 
+                Ok(samples) : 
+                NotFound(new { message = $"No samples found with name {filter} and type {type}" });
         }
 
         // GET: api/Sample/5
         [HttpGet("{id:int}", Name = "Get")]
-        [SwaggerResponse(200, "Returns a model", typeof(string))]
-        [SwaggerResponse(404, "Model not found")]
-        public ActionResult Get(int id)
-        {
-            // data should be kept in repositories, this is only for demo purposes
-            var types = new[] { new SampleModelType { Id = 1, Name = "Type 1" }, new SampleModelType { Id = 2, Name = "Type 2" } };
-            var data = new[] { new SampleModel { Id = 1, Name = "Value 1", Type = types[0] }, new SampleModel { Id = 2, Name = "Value 2", Type = types[1] } };
-            
-            if (id < 0 || id >= data.Length)
-                return NotFound();
-            
-            return Ok(data[id]);
+        [SwaggerResponse(200, "Returns a sample", typeof(SampleDTO))]
+        [SwaggerResponse(404, "Sample not found")]
+        public async Task<IActionResult> Get(int id) {
+            var sample = await _sampleService.GetModelByIdAsync(id);
+            return sample != null ? 
+                Ok(sample) : 
+                NotFound(new { message = $"No sample found with id {id}" });
         }
 
         // POST: api/Sample
         [HttpPost]
-        [SwaggerResponse(201, "Model created", typeof(string))]
-        [SwaggerResponse(400, "Model is invalid")]
-        [SwaggerResponse(409, "Model already exists")]
-        public ActionResult Post([FromBody] SampleDTO newModel)
-        {
-            // data should be kept in repositories, this is only for demo purposes
-            var types = new[] { new SampleModelType { Id = 1, Name = "Type 1" }, new SampleModelType { Id = 2, Name = "Type 2" } };
-            var data = new[] { new SampleModel { Id = 1, Name = "Value 1", Type = types[0] }, new SampleModel { Id = 2, Name = "Value 2", Type = types[1] } };
-            
-            var type = types.FirstOrDefault(x => x.Name == newModel.Type);
-            
-            if (null == type || string.IsNullOrWhiteSpace(newModel.Name))
-                return BadRequest();
-            
-            var model = new SampleModel { Name = newModel.Name, Type = type };
+        [SwaggerResponse(201, "Sample created", typeof(SampleDTO))]
+        [SwaggerResponse(400, "Sample is invalid")]
+        [SwaggerResponse(409, "Sample already exists")]
+        public async Task<IActionResult> Post([FromBody] [Required] NewSampleDTO newSample) {
+            if (string.IsNullOrWhiteSpace(newSample.Name) || string.IsNullOrWhiteSpace(newSample.Type))
+                return BadRequest(new { message = "Nonempty sample and type names are required" });
 
-            if (data.Contains(model))
-                return Conflict();
+            if (await _sampleService.GetModelTypeByNameAsync(newSample.Type) == null)
+                return BadRequest(new { message = $"No type found with name {newSample.Type}" });
 
-            return CreatedAtAction(nameof(Get), new { id = data.Length + 1 }, newModel);
+            if (await _sampleService.GetModelByData(newSample.Name, newSample.Type) != null)
+                return Conflict(new { message = $"Sample with name {newSample.Name} and type {newSample.Type} already exists" });
+            
+            var result = await _sampleService.CreateModelAsync(newSample);
+            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
         }
 
         // PUT: api/Sample/5
         [HttpPut("{id:int}")]
-        [SwaggerResponse(200, "Value updated", typeof(string))]
+        [SwaggerResponse(200, "Value updated", typeof(SampleDTO))]
         [SwaggerResponse(400, "Value is null or empty")]
         [SwaggerResponse(404, "Value not found")]
-        public ActionResult Put(int id, [FromBody] SampleDTO updatedModel)
-        {
-            // data should be kept in repositories, this is only for demo purposes
-            var types = new[] { new SampleModelType { Id = 1, Name = "Type 1" }, new SampleModelType { Id = 2, Name = "Type 2" } };
-            var data = new[] { new SampleModel { Id = 1, Name = "Value 1", Type = types[0] }, new SampleModel { Id = 2, Name = "Value 2", Type = types[1] } };
+        public async Task<IActionResult> Put(int id, [FromBody] [Required] NewSampleDTO updatedModel) {
+            if (string.IsNullOrWhiteSpace(updatedModel.Name) || string.IsNullOrWhiteSpace(updatedModel.Type))
+                return BadRequest(new { message = "Nonempty sample and type names are required" });
 
+            if (await _sampleService.GetModelTypeByNameAsync(updatedModel.Type) == null)
+                return BadRequest(new { message = $"No type found with name {updatedModel.Type}" });
+            
+            if (await _sampleService.GetModelByIdAsync(id) == null)
+                return NotFound(new { message = $"No sample found with id {id}" });
 
-            if (id < 0 || id >= data.Length)
-                return NoContent();
+            if (await _sampleService.GetModelByData(updatedModel.Name, updatedModel.Type) != null)
+                return Conflict(new { message = $"Sample with name {updatedModel.Name} and type {updatedModel.Type} already exists" });
             
-            if (string.IsNullOrWhiteSpace(updatedModel.Name))
-                return BadRequest();
-            
-            var modelToUpdate = data[id];
-            var type = types.FirstOrDefault(x => x.Name == updatedModel.Type);
-            if (type == null)
-                return BadRequest();
-            
-            modelToUpdate.Name = updatedModel.Name;
-            modelToUpdate.Type = type;
-
-            return Ok(updatedModel);
+            return Ok(await _sampleService.UpdateModelAsync(id, updatedModel));
         }
 
         // DELETE: api/Sample/5
         [HttpDelete("{id:int}")]
         [SwaggerResponse(204, "Model deleted")]
         [SwaggerResponse(404, "Model not found")]
-        public ActionResult Delete(int id)
-        {
-            // data should be kept in repositories, this is only for demo purposes
-            var types = new[] { new SampleModelType { Id = 1, Name = "Type 1" }, new SampleModelType { Id = 2, Name = "Type 2" } };
-            var data = new[] { new SampleModel { Id = 1, Name = "Value 1", Type = types[0] }, new SampleModel { Id = 2, Name = "Value 2", Type = types[1] } };
-
-            if (id < 0 || id >= data.Length)
-                return NotFound();
-
+        public async Task<IActionResult> Delete(int id) {
+            if (await _sampleService.GetModelByIdAsync(id) == null)
+                return NotFound(new { message = $"No sample found with id {id}" });
+            
+            await _sampleService.DeleteModelAsync(id);
             return NoContent();
         }
     }
