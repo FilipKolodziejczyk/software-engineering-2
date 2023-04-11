@@ -16,14 +16,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-var connectionStringBuilder = new SqlConnectionStringBuilder(
-    builder.Configuration.GetConnectionString("Db"));
-connectionStringBuilder.UserID = builder.Configuration["DbUser"];
-connectionStringBuilder.Password = builder.Configuration["DbPassword"];
-var connectionString = connectionStringBuilder.ConnectionString;
-
-builder.Services.AddTransient<IDbConnection>(_ => new SqlConnection(connectionString));
-builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseSqlServer(connectionString));
+if (Environment.GetEnvironmentVariable("USE_IN_MEMORY_DB") == "true") {
+    builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseInMemoryDatabase("FlowerShop"));
+} else {
+    var connectionStringBuilder = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("Db"))
+        {
+            UserID = builder.Configuration["DbUser"],
+            Password = builder.Configuration["DbPassword"]
+        };
+    var connectionString = connectionStringBuilder.ConnectionString;
+    
+    builder.Services.AddTransient<IDbConnection>(_ => new SqlConnection(connectionString));
+    builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseSqlServer(connectionString));
+}
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<ISampleModelRepository, SampleModelRepository>();
@@ -37,6 +42,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetRequiredService<FlowerShopContext>();
+if (Environment.GetEnvironmentVariable("CREATE_AND_DROP_DB") == "true") {
+    dbContext.Database.EnsureDeleted();
+    dbContext.Database.EnsureCreated();
+}
+else {
+    dbContext.Database.Migrate();
 }
 
 app.UseHttpsRedirection();

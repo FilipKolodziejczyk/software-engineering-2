@@ -9,32 +9,40 @@
     }
   },
   "profiles": {
-    "http": {
+    "inmemdb_http_create_and_drop_db": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5019",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "USE_IN_MEMORY_DB": "true",
+        "CREATE_AND_DROP_DB": "true"
       }
     },
-    "https": {
+    "sqlserver_http_create_and_drop_db": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5019",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "USE_IN_MEMORY_DB": "false",
+        "CREATE_AND_DROP_DB": "true"
+      }
+    },
+    "sqlserver_https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7134;http://localhost:5019",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "USE_IN_MEMORY_DB": "false",
+        "CREATE_AND_DROP_DB": "false"
       }
     }
   }
