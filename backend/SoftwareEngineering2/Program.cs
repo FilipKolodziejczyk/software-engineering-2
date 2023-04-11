@@ -1,11 +1,11 @@
-using System.Configuration;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SoftwareEngineering2;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Repositories;
-using ConfigurationManager = System.Configuration.ConfigurationManager;
+using SoftwareEngineering2.Services;
+using SoftwareEngineering2.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +33,7 @@ if (Environment.GetEnvironmentVariable("USE_IN_MEMORY_DB") == "true") {
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<ISampleModelRepository, SampleModelRepository>();
 builder.Services.AddTransient<ISampleModelTypeRepository, SampleModelTypeRepository>();
+builder.Services.AddTransient<ISampleService, SampleService>();
 
 builder.Services.AddControllers();
 
@@ -53,6 +54,8 @@ if (Environment.GetEnvironmentVariable("CREATE_AND_DROP_DB") == "true") {
 else {
     dbContext.Database.Migrate();
 }
+
+app.ConfigureExceptionHandler(detailedErrors: app.Environment.IsDevelopment());
 
 app.UseHttpsRedirection();
 
