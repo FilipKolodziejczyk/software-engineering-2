@@ -8,7 +8,9 @@ public class SampleModelEntityConfiguration : IEntityTypeConfiguration<SampleMod
     public void Configure(EntityTypeBuilder<SampleModel> builder) {
 
         builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
         builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
-        builder.HasOne(x => x.Type).WithMany().HasForeignKey(x => x.Id);
+        builder.HasOne(x => x.Type)
+            .WithMany(type => type.Models);
     }
 }

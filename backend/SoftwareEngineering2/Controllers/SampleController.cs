@@ -29,7 +29,7 @@ namespace SoftwareEngineering2.Controllers {
 
         // GET: api/Sample
         [HttpGet]
-        [SwaggerResponse(200, "Returns a list of models", typeof(SampleDTO))]
+        [SwaggerResponse(200, "Returns a list of models", typeof(SampleDTO[]))]
         [SwaggerResponse(404, "No models found")]
         public async Task<IActionResult> Get([FromQuery] string? filter, [FromQuery] string? type) {
             var result = await _sampleModelRepository.GetAllFilteredAsync(filter, type);
@@ -58,7 +58,7 @@ namespace SoftwareEngineering2.Controllers {
 
         // POST: api/Sample
         [HttpPost]
-        [SwaggerResponse(201, "Model created", typeof(string))]
+        [SwaggerResponse(201, "Model created", typeof(SampleDTO))]
         [SwaggerResponse(400, "Model is invalid")]
         [SwaggerResponse(409, "Model already exists")]
         public async Task<IActionResult> Post([FromBody] [Required] NewSampleDTO newModel) {
@@ -91,10 +91,10 @@ namespace SoftwareEngineering2.Controllers {
 
         // PUT: api/Sample/5
         [HttpPut("{id:int}")]
-        [SwaggerResponse(200, "Value updated", typeof(string))]
+        [SwaggerResponse(200, "Value updated", typeof(SampleDTO))]
         [SwaggerResponse(400, "Value is null or empty")]
         [SwaggerResponse(404, "Value not found")]
-        public async Task<IActionResult> Put(int id, [FromBody] [Required] SampleDTO updatedModel) {
+        public async Task<IActionResult> Put(int id, [FromBody] [Required] NewSampleDTO updatedModel) {
             if (string.IsNullOrWhiteSpace(updatedModel.Name) || string.IsNullOrWhiteSpace(updatedModel.Type)) {
                 return BadRequest(new {message = "Nonempty model and type names are required"});
             }
@@ -117,7 +117,7 @@ namespace SoftwareEngineering2.Controllers {
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
 
-            return Ok();
+            return Ok(_mapper.Map<SampleDTO>(model));
         }
 
         // DELETE: api/Sample/5

@@ -9,4 +9,5 @@ namespace SoftwareEngineering2.Models;
 public class SampleModelType {
     public int Id { get; set; }
     public string Name { get; set; }
+    public IReadOnlyCollection<SampleModel> Models { get; private set; }
 }
