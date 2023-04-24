@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import ProductCard from "../components/ProductCard";
 import {Product} from "../models/Product";
+import {ArrowPathIcon} from "@heroicons/react/20/solid";
 
 const sortOptions = [{value: "featured", label: "Featured"}, {
   value: "price-asc", label: "Price ascending"
@@ -36,7 +37,7 @@ export default function ProductsPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [products]);
 
-  return (<div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-8 lg:max-w-7xl lg:px-8">
+  return (<div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-8 lg:max-w-5xl 2xl:max-w-7xl lg:px-8">
     <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Products</h1>
     <div className="flex justify-between items-center">
       <p className="text-sm text-gray-700">Showing {products.length} results</p>
@@ -54,8 +55,8 @@ export default function ProductsPage() {
     <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
       {products.map((product) => (<ProductCard key={product.id} product={product}/>))}
     </div>
-    <div className="flex justify-center">
-      {loading && <p>Loading...</p>}
+    <div className="flex justify-center mt-2">
+      {loading && <p className="flex items-center gap-2">Loading <ArrowPathIcon className="w-4 h-4 animate-spin"/></p>}
       {error && <p>Error</p>}
     </div>
   </div>);
