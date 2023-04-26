@@ -38,9 +38,9 @@ export default function ProductsPage() {
   }, [products]);
 
   return (<div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-8 lg:max-w-5xl 2xl:max-w-7xl lg:px-8">
-    <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Products</h1>
+    <h1 className="text-2xl font-bold sm:text-3xl sm:font-extrabold tracking-tight text-gray-900">Products</h1>
     <div className="flex justify-between items-center">
-      <p className="text-sm text-gray-700">Showing {products.length} results</p>
+      {/*<p className="text-sm text-gray-700">Showing {products.length} results</p>*/}
       <div className="flex items-center gap-2">
         <label htmlFor="sort" className="text-sm text-gray-700">Sort by</label>
         <select id="sort" name="sort"
