@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEngineering2.DTO;
+using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace SoftwareEngineering2.Controllers
 {
@@ -9,14 +12,37 @@ namespace SoftwareEngineering2.Controllers
     [ApiController]
     public class ProductsController: ControllerBase
     {
+        private readonly IProductService _productService;
+        public ProductsController(IProductService productService) {
+            _productService = productService;
+        }
+        
         // POST: api/products
         [HttpPost]
+        [SwaggerResponse(201, "Created Succesfully")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorized")]
-        [SwaggerResponse(200, "OK")]
-        public ActionResult Add([FromBody] ProductDTO productModel)
+        public async Task<IActionResult> Add([FromBody] NewProductDTO productModel)
         {
-            return Ok("Succesfully added");
+            //check validity
+            if (string.IsNullOrWhiteSpace(productModel.Name) || string.IsNullOrWhiteSpace(productModel.Description))
+            {
+                return BadRequest(new { message = "No name or description provided" });
+            }
+            //add to db
+            var result = await _productService.CreateModelAsync(productModel);
+            return CreatedAtAction(nameof(Add), new { id = result.ProductID }, result); //?
+        }
+        
+        // GET: api/products/5
+        [HttpGet("{id:int}", Name = "GetProduct")]
+        [SwaggerResponse(200, "Returns a sample", typeof(ProductDTO))]
+        [SwaggerResponse(404, "Product not found")]
+        public async Task<IActionResult> Get(int id) {
+            var product = await _productService.GetModelByIdAsync(id);
+            return product != null ? 
+                Ok(product) : 
+                NotFound(new { message = $"No product found with id {id}" });
         }
         
         

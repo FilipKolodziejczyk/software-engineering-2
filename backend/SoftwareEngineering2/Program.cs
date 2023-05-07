@@ -35,6 +35,9 @@ builder.Services.AddTransient<ISampleModelRepository, SampleModelRepository>();
 builder.Services.AddTransient<ISampleModelTypeRepository, SampleModelTypeRepository>();
 builder.Services.AddTransient<ISampleService, SampleService>();
 
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IProductService, ProductService>();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
