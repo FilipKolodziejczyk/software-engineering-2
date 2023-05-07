@@ -34,15 +34,29 @@ namespace SoftwareEngineering2.Controllers
             return CreatedAtAction(nameof(Add), new { id = result.ProductID }, result); //?
         }
         
+        
         // GET: api/products/5
         [HttpGet("{id:int}", Name = "GetProduct")]
-        [SwaggerResponse(200, "Returns a sample", typeof(ProductDTO))]
+        [SwaggerResponse(200, "Returns a product", typeof(ProductDTO))]
         [SwaggerResponse(404, "Product not found")]
         public async Task<IActionResult> Get(int id) {
             var product = await _productService.GetModelByIdAsync(id);
             return product != null ? 
                 Ok(product) : 
                 NotFound(new { message = $"No product found with id {id}" });
+        }
+        // GET: api/Sample
+        [HttpGet]
+        [SwaggerResponse(200, "Returns a list of samples", typeof(ProductDTO[]))]
+        [SwaggerResponse(404, "No samples found")]
+        public async Task<IActionResult> Get([FromQuery] string? filter, [FromQuery] string? type) {
+            filter ??= "";
+            type ??= "";
+
+            var samples = await _productService.GetFilteredModelsAsync(filter, type);
+            return samples.Any() ? 
+                Ok(samples) : 
+                NotFound(new { message = $"No samples found with name {filter} and type {type}" });
         }
         
         
@@ -51,9 +65,13 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        public ActionResult Delete([FromBody] SampleDTO newModel)
-        {
-            return Ok("Succesfully deleted");
+        public async Task<IActionResult> Delete(int id) {
+            if (await _productService.GetModelByIdAsync(id) == null)
+            {
+                return NotFound(new { message = $"No product found with id {id}" }); 
+            }
+            await _productService.DeleteModelAsync(id);
+            return NoContent();
         }
         
         // PUT: api/products

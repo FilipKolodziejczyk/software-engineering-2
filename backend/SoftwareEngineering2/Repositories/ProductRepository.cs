@@ -22,4 +22,16 @@ public class ProductRepository: IProductRepository
         return await _context.ProductModels
             .FirstOrDefaultAsync(product => product.ProductID == id);
     }
+
+    public void Delete(ProductModel product)
+    {
+        _context.ProductModels.Remove(product);
+    }
+
+    public async Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string name, string type)
+    {
+        return await _context.ProductModels
+            .Where(product => product.Name.Contains(name))
+            .ToListAsync();
+    }
 }

@@ -33,4 +33,17 @@ public class ProductService: IProductService
         var result = await _productRepository.GetByIdAsync(id);
         return _mapper.Map<ProductDTO>(result);
     }
+
+    public async Task DeleteModelAsync(int id)
+    {
+            var model = await _productRepository.GetByIdAsync(id) ?? throw new Exception("Product not found");
+            _productRepository.Delete(model);
+            await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task<List<ProductDTO>> GetFilteredModelsAsync(string namePattern, string typePattern)
+    {
+        var result = await _productRepository.GetAllFilteredAsync(namePattern, typePattern);
+        return new List<ProductDTO>(result.Select(item => _mapper.Map<ProductDTO>(item)));
+    }
 }
