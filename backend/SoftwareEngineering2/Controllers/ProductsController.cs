@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Interfaces;
@@ -17,9 +18,10 @@ namespace SoftwareEngineering2.Controllers
             _productService = productService;
         }
         
-        // POST: api/products
+        // POST: api/products/
         [HttpPost]
-        [SwaggerResponse(201, "Created Succesfully")]
+        [SwaggerOperation(Summary = "Create new Product")]
+        [SwaggerResponse(201, "Created Successfully")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorized")]
         public async Task<IActionResult> Add([FromBody] NewProductDTO productModel)
@@ -33,10 +35,13 @@ namespace SoftwareEngineering2.Controllers
             var result = await _productService.CreateModelAsync(productModel);
             return CreatedAtAction(nameof(Add), new { id = result.ProductID }, result); //?
         }
+        // PUT???: api/products/
+        //create multiply products???
         
         
         // GET: api/products/5
         [HttpGet("{id:int}", Name = "GetProduct")]
+        [SwaggerOperation(Summary = "Fetch a specific product", Description =  "This endpoint will return the specific product matching productID")]
         [SwaggerResponse(200, "Returns a product", typeof(ProductDTO))]
         [SwaggerResponse(404, "Product not found")]
         public async Task<IActionResult> Get(int id) {
@@ -47,6 +52,7 @@ namespace SoftwareEngineering2.Controllers
         }
         // GET: api/Sample
         [HttpGet]
+        [SwaggerOperation(Summary = "Fetch Products", Description =  "This endpoint will return the list of all products matching provided criteria.")]
         [SwaggerResponse(200, "Returns a list of samples", typeof(ProductDTO[]))]
         [SwaggerResponse(404, "No samples found")]
         public async Task<IActionResult> Get([FromQuery] string? filter, [FromQuery] string? type) {
@@ -62,6 +68,7 @@ namespace SoftwareEngineering2.Controllers
         
         // DELETE: api/products/6
         [HttpDelete("{ProductID:int}")]
+        [SwaggerOperation(Summary = "Delete product", Description =  "This endpoint will delete the specific product matching productID")]
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
@@ -76,6 +83,7 @@ namespace SoftwareEngineering2.Controllers
         
         // PUT: api/products
         [HttpPut]
+        [SwaggerOperation(Summary = "Modify product", Description =  "This endpoint will modify the specific product")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(404, "Not found")]

@@ -1,6 +1,7 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using SoftwareEngineering2;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Repositories;
@@ -12,7 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+});
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
