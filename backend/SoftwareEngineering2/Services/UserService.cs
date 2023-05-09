@@ -46,10 +46,10 @@ public class UserService : IUserService {
         if (passwordResult != PasswordVerificationResult.Success)
             return null;
 
-        int id = result switch {
-            EmployeeModel => (result as EmployeeModel)!.EmployeeID,
-            DeliveryManModel => (result as DeliveryManModel)!.DeliveryManID,
-            _ => (result as ClientModel)!.ClientID,
+        (int id, string role) = result switch {
+            EmployeeModel => ((result as EmployeeModel)!.EmployeeID, "employee"),
+            DeliveryManModel => ((result as DeliveryManModel)!.DeliveryManID, "deliveryman"),
+            _ => ((result as ClientModel)!.ClientID, "client"),
         };
 
         // TODO: get secret key from configuration
@@ -60,7 +60,7 @@ public class UserService : IUserService {
             issuer: "your-issuer",
             audience: "your-audience",
             claims: new List<Claim> {
-                new Claim(ClaimTypes.Role, "client"),
+                new Claim(ClaimTypes.Role, role),
                 new Claim("UserID", id.ToString())
             },
             expires: DateTime.Now.AddMinutes(30),
@@ -96,10 +96,18 @@ public class UserService : IUserService {
         return userDTO;
     }
 
-    public async Task<UserDTO?> GetUserByID(int id) {
-        IUserModel? result = await _clientModelRepository.GetByID(id);
-        result ??= await _deliveryManModelRepository.GetByID(id);
-        result ??= await _employeeModelRepository.GetByID(id);
+    public async Task<UserDTO?> GetUserByID(string role, int id) {
+        //IUserModel? result = await _clientModelRepository.GetByID(id);
+        //result ??= await _deliveryManModelRepository.GetByID(id);
+        //result ??= await _employeeModelRepository.GetByID(id);
+
+        IUserModel? result = role switch {
+            "client" => await _clientModelRepository.GetByID(id),
+            "employee" => await _employeeModelRepository.GetByID(id),
+            "deliveryman" => await _deliveryManModelRepository.GetByID(id),
+            _ => null,
+        };
+
         return _mapper.Map<UserDTO>(result);
     }
 

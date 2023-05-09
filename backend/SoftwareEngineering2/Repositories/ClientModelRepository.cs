@@ -20,7 +20,9 @@ public class ClientModelRepository : IClientModelRepository {
     }
 
     public async Task<ClientModel?> GetByID(int id) {
-        return await _context.ClientModels.FirstOrDefaultAsync(model => model.ClientID == id);
+        return await _context.ClientModels
+            .Include(model => model.Address)
+            .FirstOrDefaultAsync(model => model.ClientID == id);
     }
 
     public async Task UpdateNewsletter(int id, bool subscribed) {

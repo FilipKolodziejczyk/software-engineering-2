@@ -5,6 +5,7 @@ using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace SoftwareEngineering2.Controllers {
     [Route("api/users")]
@@ -41,7 +42,7 @@ namespace SoftwareEngineering2.Controllers {
             if (!int.TryParse(User.FindFirst("UserID")?.Value, out int id))
                 return Unauthorized();
 
-            var user = await _userService.GetUserByID(id);
+            var user = await _userService.GetUserByID(User.FindFirstValue(ClaimTypes.Role)!, id);
             return user is not null ? Ok(user) : Unauthorized();
         }
 

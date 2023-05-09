@@ -7,5 +7,6 @@ public record UserDTO() {
     public string? Name { get; init; }
     public string? Email { get; init; }
     public string? Role { get; init; }
+    public bool? Newsletter { get; init; }
     public AddressDTO? Address { get; init; }
 }
