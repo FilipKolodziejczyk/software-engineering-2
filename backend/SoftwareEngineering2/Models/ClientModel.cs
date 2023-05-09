@@ -1,17 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace SoftwareEngineering2.Models;
 
-public class ClientModel {
+public class ClientModel : IUserModel {
     public int ClientID { get; set; }
 
     [Required]
-    public string? FirstName { get; set; }
+    public string? Name { get; set; }
 
     [Required]
-    public string? LastName { get; set; }
-
-    [Required]
-    public string? EmailAddress { get; set; }
+    public string? Email { get; set; }
 
     [Required]
     public int AddressID { get; set; }
@@ -19,9 +16,6 @@ public class ClientModel {
 
     [Required]
     public bool HasNewsletterOn { get; set; }
-
-    [Required]
-    public string? Username { get; set; }
 
     [Required]
     public string? Password { get; set; }
