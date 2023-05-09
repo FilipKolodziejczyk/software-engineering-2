@@ -41,9 +41,29 @@ public class ProductService: IProductService
             await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<List<ProductDTO>> GetFilteredModelsAsync(string namePattern, string typePattern)
+
+    public async Task<List<ProductDTO>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage )
     {
-        var result = await _productRepository.GetAllFilteredAsync(namePattern, typePattern);
+        var result = await _productRepository.GetAllFilteredAsync(searchQuery, filteredCategory, pageNumber, elementsOnPage);
         return new List<ProductDTO>(result.Select(item => _mapper.Map<ProductDTO>(item)));
+    }
+
+    public async Task<ProductDTO> UpdateModelAsync(UpdateProductDTO product)
+    {
+        var model = await _productRepository.GetByIdAsync(product.ProductID) ?? throw new Exception("Model not found");
+
+        //model = _mapper.Map<ProductModel>(product);
+        //to be done differently
+        model.Name = product.Name;
+        model.ProductID = product.ProductID;
+        model.Archived = product.Archived;
+        model.Category = product.Category;
+        model.Price = product.Price;
+        model.Image = product.Image;
+        model.Quantity = product.Quantity;
+        model.Description = product.Description;
+
+        await _unitOfWork.SaveChangesAsync();
+        return _mapper.Map<ProductDTO>(model);
     }
 }

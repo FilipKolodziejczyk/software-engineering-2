@@ -14,7 +14,10 @@ public class AutoMapperProfile : Profile {
 
         CreateMap<NewProductDTO, ProductModel>()
             .ForMember(dest => dest.Archived, opt => opt.MapFrom(src => false));
+        
         CreateMap<ProductModel, ProductDTO>(); //Modification may be needed later to handle getting products from database
+
+        CreateMap<UpdateProductDTO, ProductModel>();
     }
     
 }

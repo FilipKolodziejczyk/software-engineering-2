@@ -28,10 +28,11 @@ public class ProductRepository: IProductRepository
         _context.ProductModels.Remove(product);
     }
 
-    public async Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string name, string type)
+    public async Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage)
     {
         return await _context.ProductModels
-            .Where(product => product.Name.Contains(name))
+            .Where(product => product.Name.Contains(searchQuery))
+            .Where(product => product.Category.Contains(filteredCategory))
             .ToListAsync();
     }
 }

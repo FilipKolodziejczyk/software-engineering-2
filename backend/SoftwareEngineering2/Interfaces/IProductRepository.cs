@@ -8,5 +8,5 @@ public interface IProductRepository
     Task<ProductModel?> GetByIdAsync(int id);
     
     void Delete(ProductModel product);
-    Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string name, string type);
+    Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage);
 }

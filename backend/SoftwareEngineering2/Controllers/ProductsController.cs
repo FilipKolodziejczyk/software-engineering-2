@@ -20,8 +20,8 @@ namespace SoftwareEngineering2.Controllers
         
         // POST: api/products/
         [HttpPost]
-        [SwaggerOperation(Summary = "Create new Product")]
-        [SwaggerResponse(201, "Created Successfully")]
+        [SwaggerOperation(Summary = "Create new Product", Description = "Difference: Does not contain a ProductID")]
+        [SwaggerResponse(201, "Created")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorized")]
         public async Task<IActionResult> Add([FromBody] NewProductDTO productModel)
@@ -35,34 +35,39 @@ namespace SoftwareEngineering2.Controllers
             var result = await _productService.CreateModelAsync(productModel);
             return CreatedAtAction(nameof(Add), new { id = result.ProductID }, result); //?
         }
+        
         // PUT???: api/products/
         //create multiply products???
         
         
         // GET: api/products/5
-        [HttpGet("{id:int}", Name = "GetProduct")]
+        [HttpGet("{ProductID:int}", Name = "GetProduct")]
         [SwaggerOperation(Summary = "Fetch a specific product", Description =  "This endpoint will return the specific product matching productID")]
         [SwaggerResponse(200, "Returns a product", typeof(ProductDTO))]
         [SwaggerResponse(404, "Product not found")]
-        public async Task<IActionResult> Get(int id) {
-            var product = await _productService.GetModelByIdAsync(id);
+        public async Task<IActionResult> Get(int ProductID) {
+            var product = await _productService.GetModelByIdAsync(ProductID);
             return product != null ? 
                 Ok(product) : 
-                NotFound(new { message = $"No product found with id {id}" });
+                NotFound(new { message = $"No product found with id {ProductID}" });
         }
-        // GET: api/Sample
+        
+        // GET: api/products
         [HttpGet]
         [SwaggerOperation(Summary = "Fetch Products", Description =  "This endpoint will return the list of all products matching provided criteria.")]
         [SwaggerResponse(200, "Returns a list of samples", typeof(ProductDTO[]))]
         [SwaggerResponse(404, "No samples found")]
-        public async Task<IActionResult> Get([FromQuery] string? filter, [FromQuery] string? type) {
-            filter ??= "";
-            type ??= "";
-
-            var samples = await _productService.GetFilteredModelsAsync(filter, type);
+        public async Task<IActionResult> Get([FromQuery] string? searchQuery, [FromQuery] string? filteredCategory, [FromQuery] int? pageNumber, [FromQuery] int? elementsOnPage)
+        {
+            searchQuery ??= "";
+            filteredCategory ??= "";
+            pageNumber ??= 1;
+            elementsOnPage  ??= 32;
+            
+            var samples = await _productService.GetFilteredModelsAsync(searchQuery, filteredCategory, pageNumber.Value, elementsOnPage.Value);
             return samples.Any() ? 
                 Ok(samples) : 
-                NotFound(new { message = $"No samples found with name {filter} and type {type}" });
+                NotFound(new { message = $"No samples found with name {searchQuery} and category {filteredCategory}" });
         }
         
         
@@ -72,12 +77,12 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        public async Task<IActionResult> Delete(int id) {
-            if (await _productService.GetModelByIdAsync(id) == null)
+        public async Task<IActionResult> Delete(int ProductID) {
+            if (await _productService.GetModelByIdAsync(ProductID) == null)
             {
-                return NotFound(new { message = $"No product found with id {id}" }); 
+                return NotFound(new { message = $"No product found with id {ProductID}" }); 
             }
-            await _productService.DeleteModelAsync(id);
+            await _productService.DeleteModelAsync(ProductID);
             return NoContent();
         }
         
@@ -88,9 +93,18 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(201, "Created")]
-        public ActionResult Update([FromBody] SampleDTO newModel)
+        public async Task<IActionResult>  Update([FromBody] UpdateProductDTO product)
         {
-            return Ok("Succesfully updated");
+            if (string.IsNullOrWhiteSpace(product.Name) || string.IsNullOrWhiteSpace(product.Category))
+            {
+                return BadRequest(new { message = "Nonempty product name and category are required" });
+            }
+
+            if (await _productService.GetModelByIdAsync(product.ProductID) == null)
+            {
+                return NotFound(new { message = $"No sample found with id {product.ProductID})"});
+            }
+            return Ok(await _productService.UpdateModelAsync(product));
         }
     }
 }
