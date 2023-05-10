@@ -9,7 +9,7 @@ public class ProductModelEntityConfiguration : IEntityTypeConfiguration<ProductM
         builder.HasKey(x => x.ProductID);
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Price).IsRequired();
-        builder.Property(x => x.InStock).IsRequired();
+        builder.Property(x => x.Quantity).IsRequired();
         builder.Property(x => x.Description).IsRequired();
         builder.Property(x => x.Archived).IsRequired();
 
