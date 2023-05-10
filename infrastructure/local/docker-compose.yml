@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  backend:
+    build: "../../backend/SoftwareEngineering2"
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - USE_IN_MEMORY_DB=${USE_IN_MEMORY_DB}
+      - CREATE_AND_DROP_DB=${CREATE_AND_DROP_DB}
+      - CONNSTR=Server=db;Database=flowershopdb;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=true
+      - DbUser=sa
+      - DbPassword=${DbPassword}
+    networks: 
+      - net
+    
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DbPassword}
+    ports:
+      - "1433:1433"
+    networks:
+      - net
+    volumes:
+      - db-data:/var/opt/mssql
+
+volumes:
+  db-data: {}
+
+
+networks:
+  net:
+    driver: bridge
