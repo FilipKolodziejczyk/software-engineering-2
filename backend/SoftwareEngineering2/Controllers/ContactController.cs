@@ -19,16 +19,16 @@ namespace SoftwareEngineering2.Controllers
             return Ok("Complain filled");
         }
         
-        // POST: api/contact
-        [HttpPost]
-        [SwaggerResponse(400, "Bad Request")]
-        [SwaggerResponse(401, "Unauthorised")]
-        [SwaggerResponse(404, "Not found")]
-        [SwaggerResponse(201, "Created")]
-        public ActionResult AnswerComplaint([FromBody] SampleDTO newModel)
-        {
-            return Ok("Complain answered");
-        }
+        // // POST: api/contact
+        // [HttpPost]
+        // [SwaggerResponse(400, "Bad Request")]
+        // [SwaggerResponse(401, "Unauthorised")]
+        // [SwaggerResponse(404, "Not found")]
+        // [SwaggerResponse(201, "Created")]
+        // public ActionResult AnswerComplaint([FromBody] SampleDTO newModel)
+        // {
+        //     return Ok("Complain answered");
+        // }
 
     }
 }
