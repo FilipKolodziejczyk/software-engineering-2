@@ -14,3 +14,11 @@ terraform {
 }
 
 provider "aws" {}
+
+module "network" {
+  source = "./modules/network"
+
+  app_name        = var.app_name
+  app_environment = var.app_environment
+  cidr            = var.cidr
+}
