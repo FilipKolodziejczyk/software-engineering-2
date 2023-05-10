@@ -4,8 +4,10 @@ using SoftwareEngineering2.Models;
 
 namespace SoftwareEngineering2.Profiles;
 
-public class AutoMapperProfile : Profile {
-    public AutoMapperProfile() {
+public class AutoMapperProfile : Profile
+{
+    public AutoMapperProfile()
+    {
         CreateMap<AddressDTO, AddressModel>();
         CreateMap<AddressModel, AddressDTO>();
 
@@ -28,14 +30,25 @@ public class AutoMapperProfile : Profile {
             .ForMember(dest => dest.HasNewsletterOn, opt => opt.MapFrom(src => src.Newsletter));
         CreateMap<NewUserDTO, EmployeeModel>();
         CreateMap<NewUserDTO, DeliveryManModel>();
-      
+
         CreateMap<NewProductDTO, ProductModel>()
             .ForMember(dest => dest.Archived, opt => opt.MapFrom(src => false));
-        
+
         CreateMap<ProductModel, ProductDTO>(); //Modification may be needed later to handle getting products from database
 
         CreateMap<UpdateProductDTO, ProductModel>();
+
+        CreateMap<OrderedItemDTO, OrderDetailsModel>();
+        CreateMap<OrderDetailsModel, OrderedItemDTO>();
+        
+        CreateMap<OrderModel, OrderDTO>()
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.OrderDetails));
+
+        CreateMap<NewOrderDTO, OrderModel>()
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "received"))
+            .ForMember(dest => dest.Complaints, opt => opt.Ignore())
+            .ForMember(dest => dest.DeliveryMan, opt => opt.Ignore())
+            .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom((src => src.Items)));
     }
-    
 }
 

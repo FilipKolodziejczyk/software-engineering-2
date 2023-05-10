@@ -5,6 +5,7 @@ using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace SoftwareEngineering2.Controllers
@@ -24,6 +25,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(201, "Created")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorized")]
+        [Authorize(Roles = "employee")]
         public async Task<IActionResult> Add([FromBody] NewProductDTO productModel)
         {
             //check validity
@@ -77,6 +79,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
+        [Authorize(Roles = "employee")]
         public async Task<IActionResult> Delete(int ProductID) {
             if (await _productService.GetModelByIdAsync(ProductID) == null)
             {
@@ -93,6 +96,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(401, "Unauthorized")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(201, "Created")]
+        [Authorize(Roles = "employee")]
         public async Task<IActionResult>  Update([FromBody] UpdateProductDTO product)
         {
             if (string.IsNullOrWhiteSpace(product.Name) || string.IsNullOrWhiteSpace(product.Category))
@@ -108,7 +112,3 @@ namespace SoftwareEngineering2.Controllers
         }
     }
 }
-
-//4.3.7 Employee adding new product
-//4.3.8 Employee removing a product
-//4.3.9 Employee updating a product

@@ -66,6 +66,9 @@ builder.Services.AddTransient<IDeliveryManModelRepository, DeliveryManModelRepos
 builder.Services.AddTransient<IAddressModelRepository, AddressModelRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderModelRepository, OrderModelRepository>();
+builder.Services.AddTransient<IOrderDetailsModelRepository, OrderDetailsModelRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {
