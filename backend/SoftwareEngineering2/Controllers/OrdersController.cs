@@ -31,7 +31,6 @@ namespace SoftwareEngineering2.Controllers
             return Ok("Order succesfully modified");
         }
         
-        
         // POST: api/orders/6
         [HttpPost("{OrderID:int}")]
         [SwaggerResponse(400, "Bad Request")]
@@ -42,6 +41,7 @@ namespace SoftwareEngineering2.Controllers
         {
             return Ok("Order status succesfully changed");
         }
+
         
         // GET: api/orders
         [HttpGet]
