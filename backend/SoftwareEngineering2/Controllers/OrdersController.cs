@@ -31,9 +31,8 @@ namespace SoftwareEngineering2.Controllers
             return Ok("Order succesfully modified");
         }
         
-        
-        // POST: api/orders
-        [HttpPost]
+        // POST: api/orders/6
+        [HttpPost("{OrderID:int}")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(404, "Not found")]
@@ -42,9 +41,10 @@ namespace SoftwareEngineering2.Controllers
         {
             return Ok("Order status succesfully changed");
         }
+
         
         // GET: api/orders
-        [HttpPost]
+        [HttpGet]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]

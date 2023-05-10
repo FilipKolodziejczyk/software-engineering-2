@@ -1,6 +1,7 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using SoftwareEngineering2;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Repositories;
@@ -16,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
+    c.EnableAnnotations();
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
         Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
                       Enter 'Bearer' [space] and then your token in the text input below.
@@ -38,6 +41,7 @@ builder.Services.AddSwaggerGen(c => {
         new List<string>()
     } });
 });
+
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -64,6 +68,8 @@ builder.Services.AddTransient<IClientModelRepository, ClientModelRepository>();
 builder.Services.AddTransient<IEmployeeModelRepository, EmployeeModelRepository>();
 builder.Services.AddTransient<IDeliveryManModelRepository, DeliveryManModelRepository>();
 builder.Services.AddTransient<IAddressModelRepository, AddressModelRepository>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IProductService, ProductService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {

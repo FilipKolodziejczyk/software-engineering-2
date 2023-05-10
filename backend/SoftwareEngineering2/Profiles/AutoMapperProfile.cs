@@ -34,5 +34,14 @@ public class AutoMapperProfile : Profile {
             .ForMember(dest => dest.HasNewsletterOn, opt => opt.MapFrom(src => src.Newsletter));
         CreateMap<NewUserDTO, EmployeeModel>();
         CreateMap<NewUserDTO, DeliveryManModel>();
+      
+        CreateMap<NewProductDTO, ProductModel>()
+            .ForMember(dest => dest.Archived, opt => opt.MapFrom(src => false));
+        
+        CreateMap<ProductModel, ProductDTO>(); //Modification may be needed later to handle getting products from database
+
+        CreateMap<UpdateProductDTO, ProductModel>();
     }
+    
 }
+
