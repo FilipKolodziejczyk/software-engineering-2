@@ -19,7 +19,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 if (Environment.GetEnvironmentVariable("USE_IN_MEMORY_DB") == "true") {
     builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseInMemoryDatabase("FlowerShop"));
 } else {
-    var connectionStringBuilder = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("Db"))
+    var connectionStringBuilder = new SqlConnectionStringBuilder(Environment.GetEnvironmentVariable("CONNSTR"))
         {
             UserID = builder.Configuration["DbUser"],
             Password = builder.Configuration["DbPassword"]
@@ -48,6 +48,7 @@ if (app.Environment.IsDevelopment()) {
 using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<FlowerShopContext>();
 if (Environment.GetEnvironmentVariable("CREATE_AND_DROP_DB") == "true") {
+    Console.WriteLine("Creating and dropping database");
     dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
 }
