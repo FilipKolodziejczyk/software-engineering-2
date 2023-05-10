@@ -14,7 +14,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(201, "Created")]
-        public ActionResult PlaceOrder([FromBody] SampleDTO newModel)
+        public ActionResult PlaceOrder([FromBody] OrderDTO newModel)
         {
             return Ok("Order succesfully placed");
         }
@@ -26,7 +26,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        public ActionResult Modify([FromBody] SampleDTO newModel)
+        public ActionResult Modify([FromBody] OrderDTO newModel)
         {
             return Ok("Order succesfully modified");
         }
@@ -37,7 +37,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        public ActionResult ChangeStatus([FromBody] SampleDTO newModel)
+        public ActionResult ChangeStatus([FromBody] OrderDTO newModel)
         {
             return Ok("Order status succesfully changed");
         }
@@ -48,7 +48,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        public ActionResult GetAssignedOrders([FromBody] SampleDTO newModel)
+        public ActionResult GetAssignedOrders([FromBody] OrderDTO newModel)
         {
             return Ok("Succesfully get assigned order");
         }

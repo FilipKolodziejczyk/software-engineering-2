@@ -14,7 +14,7 @@ namespace SoftwareEngineering2.Controllers
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(201, "Created")]
-        public ActionResult FillComplaint([FromBody] SampleDTO newModel)
+        public ActionResult FillComplaint([FromBody] ComplaintDTO newModel)
         {
             return Ok("Complain filled");
         }

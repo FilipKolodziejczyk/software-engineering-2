@@ -59,10 +59,6 @@ if (Environment.GetEnvironmentVariable("USE_IN_MEMORY_DB") == "true") {
 }
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<ISampleModelRepository, SampleModelRepository>();
-builder.Services.AddTransient<ISampleModelTypeRepository, SampleModelTypeRepository>();
-builder.Services.AddTransient<ISampleService, SampleService>();
-
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IClientModelRepository, ClientModelRepository>();
 builder.Services.AddTransient<IEmployeeModelRepository, EmployeeModelRepository>();
