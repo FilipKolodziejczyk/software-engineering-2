@@ -8,7 +8,7 @@ resource "aws_internet_gateway" "aws-igw" {
 }
 
 resource "aws_subnet" "public" {
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = aws_vpc.aws-vpc.id
   cidr_block  = var.cidr
 
   tags  = {
