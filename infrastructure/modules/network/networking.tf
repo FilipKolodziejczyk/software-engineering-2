@@ -1,5 +1,5 @@
-resource "aws_internet_gateway" "aws-igw" {
-  vpc_id = aws_vpc.aws-vpc.id
+resource "aws_internet_gateway" "default_igw" {
+  vpc_id = aws_vpc.default_vpc.id
   
   tags = {
     Name        = "${var.app_name}-igw"
@@ -8,7 +8,7 @@ resource "aws_internet_gateway" "aws-igw" {
 }
 
 resource "aws_subnet" "public" {
-  vpc_id      = aws_vpc.aws-vpc.id
+  vpc_id      = aws_vpc.default_vpc.id
   cidr_block  = var.cidr
 
   tags  = {
@@ -18,7 +18,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.aws-vpc.id
+  vpc_id = aws_vpc.default_vpc.id
 
   tags = {
     Name        = "${var.app_name}-routing-table-public"
@@ -29,7 +29,7 @@ resource "aws_route_table" "public" {
 resource "aws_route" "public" {
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.aws-igw.id
+  gateway_id             = aws_internet_gateway.default_igw.id
 }
 
 resource "aws_route_table_association" "public" {
