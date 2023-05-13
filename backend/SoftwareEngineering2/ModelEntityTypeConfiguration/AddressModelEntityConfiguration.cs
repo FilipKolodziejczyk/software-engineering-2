@@ -11,6 +11,8 @@ public class AddressModelEntityConfiguration : IEntityTypeConfiguration<AddressM
         builder.Property(x => x.City).IsRequired();
         builder.Property(x => x.PostalCode).IsRequired();
         builder.Property(x => x.Country).IsRequired();
+        builder.Property(x => x.BuildingNo).IsRequired();
+        builder.Property(x => x.HouseNo).IsRequired();
 
         builder.HasMany(x => x.Orders).WithOne(x => x.Address).HasForeignKey(x => x.OrderID);
         builder.HasOne(x => x.Client).WithOne(x => x.Address).HasForeignKey<ClientModel>(x => x.AddressID);

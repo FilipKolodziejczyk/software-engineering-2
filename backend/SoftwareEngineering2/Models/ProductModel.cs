@@ -11,15 +11,17 @@ public class ProductModel {
     public decimal Price { get; set; }
 
     [Required]
-    public int InStock { get; set; }
+    public int Quantity { get; set; }
 
     [Required]
     public string? Description { get; set; }
 
-    public byte[]? Image { get; set; }
+    public string Image { get; set; }
 
     [Required]
     public bool Archived { get; set; }
+    
+    public string Category { get; set; }
 
-    public ICollection<OrderDetailsModel>? OrderDetails { get; }
+    public ICollection<OrderDetailsModel>? OrderDetails { get; set; }
 }
