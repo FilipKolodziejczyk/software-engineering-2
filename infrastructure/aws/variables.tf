@@ -30,6 +30,20 @@ variable "cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "subnet_count" {
+  description = "The number of subnets to create."
+  type        = map(number)
+  default     = {
+    public  = 1
+    private = 2
+  }
+}
+
+variable "availability_zones" {
+  description = "The availability zones to use."
+  type        = list(string)
+}
+
 variable "sa_password_kms_key_id" {
   type = string
   description = "SQL Server SA Password KMS Key ID"

@@ -1,10 +1,12 @@
 module "network" {
   source = "./modules/network"
 
-  aws_region      = var.aws_region
-  app_name        = var.app_name
-  app_environment = var.app_environment
-  cidr            = var.cidr
+  aws_region          = var.aws_region
+  app_name            = var.app_name
+  app_environment     = var.app_environment
+  cidr                = var.cidr
+  subnet_count        = var.subnet_count
+  availability_zones  = var.availability_zones
 }
 
 module "ecs" {
@@ -21,4 +23,5 @@ module "sqlserver" {
   app_name                = var.app_name
   app_environment         = var.app_environment
   vpc_id                  = module.network.vpc_id
+  subnet_ids              = module.network.private_subnet_ids
 }

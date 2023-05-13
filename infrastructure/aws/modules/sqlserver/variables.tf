@@ -1,7 +1,6 @@
-variable "sa_password" {
+variable "sa_password_kms_key_id" {
   type = string
-  sensitive = true
-  description = "SQL Server SA Password"
+  description = "SQL Server SA Password KMS Key ID"
 }
 
 variable "app_name" {
@@ -17,4 +16,9 @@ variable "app_environment" {
 variable "vpc_id" {
   type        = string
   description = "VPC ID"
+}
+
+variable "subnet_ids" {
+  type        = list(string)
+  description = "Subnet IDs"
 }

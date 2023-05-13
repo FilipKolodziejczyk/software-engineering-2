@@ -16,5 +16,14 @@ variable "app_environment" {
 variable "cidr" {
   type        = string
   description = "The CIDR block for the VPC."
-  default     = "10.0.0.0/16"
+}
+
+variable "subnet_count" {
+  description = "The number of subnets to create."
+  type        = map(number)
+}
+
+variable "availability_zones" {
+  description = "The availability zones to use."
+  type        = list(string)
 }
