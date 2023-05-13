@@ -30,8 +30,7 @@ variable "cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "sa_password" {
+variable "sa_password_kms_key_id" {
   type = string
-  sensitive = true
-  description = "SQL Server SA Password"
+  description = "SQL Server SA Password KMS Key ID"
 }

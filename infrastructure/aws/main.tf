@@ -17,8 +17,8 @@ module "ecs" {
 module "sqlserver" {
   source = "./modules/sqlserver"
 
-  sa_password     = var.sa_password
-  app_name        = var.app_name
-  app_environment = var.app_environment
-  vpc_id          = module.network.vpc_id
+  sa_password_kms_key_id  = var.sa_password_kms_key_id
+  app_name                = var.app_name
+  app_environment         = var.app_environment
+  vpc_id                  = module.network.vpc_id
 }

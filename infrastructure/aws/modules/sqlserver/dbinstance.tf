@@ -1,12 +1,12 @@
 resource "aws_db_instance" "sqlserver" {
     allocated_storage       = 20
     engine                  = "sqlserver-ex"
-    engine_version          = "15.00.4236.7.v1"
-    instance_class          = "db.t3.micro"
+    engine_version          = "14.00.3451.2.v1"
+    instance_class          = "db.t2.micro"
 
-    db_name                 = "${var.app_name}-${var.app_environment}-sqlserver"
-    username                = "sa"
-    password                = var.sa_password
+    username                      = "sa"
+    manage_master_user_password   = true
+    master_user_secret_kms_key_id = var.sa_password_kmd_key_id
 
     vpc_security_group_ids  = [aws_security_group.sqlserver_sg.id]
     skip_final_snapshot     = true
