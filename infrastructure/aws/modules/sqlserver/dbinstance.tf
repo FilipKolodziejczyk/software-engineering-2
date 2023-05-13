@@ -1,7 +1,3 @@
-resource "aws_db_subnet_group" "sqlserver_db_subnet_group" {
-    subnet_ids  = [var.vpc_subnet_id]
-}
-
 resource "aws_db_instance" "sqlserver" {
     allocated_storage       = 20
     engine                  = "sqlserver-ex"
@@ -12,7 +8,6 @@ resource "aws_db_instance" "sqlserver" {
     username                = "sa"
     password                = var.sa_password
 
-    db_subnet_group_name    = aws_db_subnet_group.sqlserver_db_subnet_group.name
     vpc_security_group_ids  = [aws_security_group.sqlserver_sg.id]
     skip_final_snapshot     = true
     publicly_accessible     = true

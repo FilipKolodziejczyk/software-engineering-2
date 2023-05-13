@@ -14,11 +14,6 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
-variable "vpc_subnet_id" {
-  type        = string
-  description = "VPC Subnet ID"
-}
-
 variable "vpc_id" {
   type        = string
   description = "VPC ID"

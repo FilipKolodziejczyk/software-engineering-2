@@ -21,5 +21,4 @@ module "sqlserver" {
   app_name        = var.app_name
   app_environment = var.app_environment
   vpc_id          = module.network.vpc_id
-  vpc_subnet_id   = module.network.subnet_id 
 }
