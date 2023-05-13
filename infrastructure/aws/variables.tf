@@ -29,3 +29,9 @@ variable "cidr" {
   description = "The CIDR block for the VPC."
   default     = "10.0.0.0/16"
 }
+
+variable "sa_password" {
+  type = string
+  sensitive = true
+  description = "SQL Server SA Password"
+}
