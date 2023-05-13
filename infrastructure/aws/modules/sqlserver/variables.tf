@@ -22,3 +22,8 @@ variable "subnet_ids" {
   type        = list(string)
   description = "Subnet IDs"
 }
+
+variable "backend_sg_id" {
+  type        = string
+  description = "Backend Security Group ID"
+}

@@ -1,13 +1,12 @@
-resource "aws_security_group" "sqlserver_sg" {
-    name   = "${var.app_name}-${var.app_environment}-sqlserver-sg"
+resource "aws_security_group" "backend_sg" {
+    name   = "${var.app_name}-${var.app_environment}-backend-sg"
     vpc_id = var.vpc_id
 
     ingress {
-        from_port       = 1433
-        to_port         = 1433
+        from_port       = 80
+        to_port         = 80
         protocol        = "tcp"
         cidr_blocks     = ["0.0.0.0/0"]
-        security_groups = [var.backend_sg_id]
     }
 
     egress {
@@ -16,9 +15,13 @@ resource "aws_security_group" "sqlserver_sg" {
         protocol        = "-1"
         cidr_blocks     = ["0.0.0.0/0"]
     }
-
+    
     tags = {
-        Name        = "${var.app_name}-sqlserver-sg"
+        Name        = "${var.app_name}-backend-sg"
         Environment = var.app_environment
     }
+}
+
+output "sg_id" {
+    value = aws_security_group.backend_sg.id
 }

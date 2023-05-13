@@ -14,6 +14,7 @@ module "ecs" {
 
   app_name        = var.app_name
   app_environment = var.app_environment
+  subnet_id       = module.network.public_subnet_ids[0]
 }
 
 module "sqlserver" {
@@ -24,4 +25,15 @@ module "sqlserver" {
   app_environment         = var.app_environment
   vpc_id                  = module.network.vpc_id
   subnet_ids              = module.network.private_subnet_ids
+  backend_sg_id            = module.backend.sg_id
+}
+
+module "backend" {
+  source = "./modules/backend"
+
+  app_name        = var.app_name
+  app_environment = var.app_environment
+  vpc_id          = module.network.vpc_id
+  subnet_id       = module.network.public_subnet_ids[0]
+  cluster_id      = module.ecs.cluster_id
 }

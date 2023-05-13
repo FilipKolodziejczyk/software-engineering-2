@@ -8,7 +8,17 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID"
+}
+
 variable "subnet_id" {
   type        = string
   description = "Subnet ID"
+}
+
+variable "cluster_id" {
+  type        = string
+  description = "Cluster ID"
 }
