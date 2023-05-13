@@ -5,8 +5,7 @@ using SoftwareEngineering2.Models;
 
 namespace SoftwareEngineering2.Services;
 
-public class OrderService: IOrderService
-{
+public class OrderService : IOrderService {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IOrderModelRepository _orderModelRepository;
     private readonly IOrderDetailsModelRepository _orderDetailsModelRepository;
@@ -23,10 +22,17 @@ public class OrderService: IOrderService
         _mapper = mapper;
     }
 
-    public async Task<OrderDTO?> CreateModelAsync(NewOrderDTO order)
-    {
+    public async Task<OrderDTO?> CreateModelAsync(NewOrderDTO order, int clientId) {
         var model = _mapper.Map<OrderModel>(order);
+        model.ClientID = clientId;
         await _orderModelRepository.AddAsync(model);
+
+        foreach (var item in order.Items!) {
+            var itemModel = _mapper.Map<OrderDetailsModel>(item);
+            itemModel.OrderID = model.OrderID;
+            await _orderDetailsModelRepository.AddAsync(itemModel);
+        }
+
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<OrderDTO>(model);
     }

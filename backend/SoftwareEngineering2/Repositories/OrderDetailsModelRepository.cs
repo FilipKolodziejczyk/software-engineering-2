@@ -10,4 +10,8 @@ public class OrderDetailsModelRepository : IOrderDetailsModelRepository {
     public OrderDetailsModelRepository(FlowerShopContext context) {
         _context = context;
     }
+
+    public async Task AddAsync(OrderDetailsModel itemModel) {
+        await _context.OrderDetailsModels.AddAsync(itemModel);
+    }
 }
