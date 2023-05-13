@@ -30,9 +30,29 @@ services:
     volumes:
       - db-data:/var/opt/mssql
 
+  frontend-client:
+    build: "../../frontend/client"
+    ports:
+      - "10000:5173"
+    networks:
+      - net
+
+  frontend-delivery:
+    build: "../../frontend/delivery"
+    ports:
+      - "10001:5173"
+    networks:
+      - net
+
+  frontend-shop:
+    build: "../../frontend/shop"
+    ports:
+      - "10002:5173"
+    networks:
+      - net
+
 volumes:
   db-data: {}
-
 
 networks:
   net:
