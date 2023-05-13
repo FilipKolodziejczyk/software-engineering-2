@@ -14,6 +14,7 @@ resource "aws_db_instance" "sqlserver" {
     engine_version          = "14.00.3451.2.v1"
     instance_class          = "db.t2.micro"
 
+    identifier                    = "${var.app_name}-${var.app_environment}-sqlserver"
     username                      = "sa"
     manage_master_user_password   = true
     master_user_secret_kms_key_id = var.sa_password_kms_key_id
