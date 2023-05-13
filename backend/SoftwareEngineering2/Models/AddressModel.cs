@@ -8,6 +8,13 @@ public class AddressModel {
     public string? Street { get; set; }
 
     [Required]
+    public string? BuildingNo { get; set; }
+
+    [Required]
+    public string? HouseNo { get; set; }
+
+
+    [Required]
     public string? City { get; set; }
 
     [Required]
