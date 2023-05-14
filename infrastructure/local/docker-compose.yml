@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    build: "../../backend/SoftwareEngineering2"
+    build: "../../backend/"
     ports:
       - "8080:80"
     depends_on:
