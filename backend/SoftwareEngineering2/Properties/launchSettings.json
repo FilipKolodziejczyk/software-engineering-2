@@ -30,7 +30,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "USE_IN_MEMORY_DB": "false",
-        "CREATE_AND_DROP_DB": "true"
+        "CREATE_AND_DROP_DB": "true",
+        "CONNSTR": "Server=localhost;Database=flowershopdb;MultipleActiveResultSets=true;Encrypt=False"
       }
     },
     "sqlserver_https": {
@@ -42,7 +43,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "USE_IN_MEMORY_DB": "false",
-        "CREATE_AND_DROP_DB": "false"
+        "CREATE_AND_DROP_DB": "false",
+        "CONNSTR": "Server=localhost;Database=flowershopdb;MultipleActiveResultSets=true;Encrypt=False"
       }
     }
   }
