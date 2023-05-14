@@ -34,3 +34,7 @@ resource "aws_iam_instance_profile" "ecs_agent" {
     Environment = var.app_environment
   }
 }
+
+output "ecs_agent_role_arn" {
+  value = aws_iam_role.ecs_agent.arn
+}

@@ -22,3 +22,13 @@ variable "cluster_id" {
   type        = string
   description = "Cluster ID"
 }
+
+variable "repository_url" {
+  type        = string
+  description = "Repository URL"
+}
+
+variable "ecs_agent_role_arn" {
+  type        = string
+  description = "ECS Agent Role ARN"
+}
