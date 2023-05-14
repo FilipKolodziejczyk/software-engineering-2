@@ -1,23 +1,17 @@
 name: Backend CI
 run-name: Running backend CI on commit ${{ github.sha }}
 
-inputs:
-  environment:
-    description: 'The environment to deploy to'
-    required: true
-    default: 'dev'
-    validation:
-      pattern: '^(dev|prod)$'
-      message: 'Must be one of dev or prod'
-  mode:
-    description: 'The mode to run the CI in'
-    required: true
-    default: 'test'
-    validation:
-      pattern: '^(test|publish)$'
-      message: 'Must be one of test or publish'
-
 on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        default: 'test'
+        required: true
+        type: choice
+        description: 'test or publish'
+        options:
+          - 'test'
+          - 'publish'
   push:
     branches:
       - master
@@ -30,9 +24,8 @@ on:
       - 'backend/**'
 
 env:
-  AWS_REGION:          'eu-west-1'
-  ECS_SERVICE:  'flowershop-${{ inputs.environment }}-backend'
-  ECS_CLUSTER:  'flowershop-${{ inputs.environment }}-ecs-cluster'
+  ECS_SERVICE:  '${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-backend-service'
+  ECS_CLUSTER:  '${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-ecs-cluster'
 
 jobs:
   test:
@@ -58,7 +51,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -81,5 +74,3 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG backend/
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-
-        
