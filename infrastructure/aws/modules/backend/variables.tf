@@ -8,11 +8,6 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
-variable "vpc_id" {
-  type        = string
-  description = "VPC ID"
-}
-
 variable "subnet_id" {
   type        = string
   description = "Subnet ID"
@@ -31,4 +26,29 @@ variable "repository_url" {
 variable "ecs_agent_role_arn" {
   type        = string
   description = "ECS Agent Role ARN"
+}
+
+variable "sqlserver_endpoint" {
+  type        = string
+  description = "SQL Server Endpoint"
+}
+
+variable "sa_password_kms_key_id" {
+  type        = string
+  description = "SQL Server SA Password KMS Key ID"
+}
+
+variable "db_password_secret_arn" {
+  type        = string
+  description = "Database Password Secret ARN"
+}
+
+variable "lb_tg" {
+  type        = string
+  description = "Load Balancer Target Group ARN"
+}
+
+variable "sg_id" {
+  type        = string
+  description = "Security Group ID"
 }
