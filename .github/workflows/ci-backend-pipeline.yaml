@@ -26,8 +26,6 @@ on:
 env:
   ECR_REPOSITORY: '${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-backend-ecr'
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_IDS }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
-  ECS_SERVICE:  '${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-backend-service'
-  ECS_CLUSTER:  '${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-ecs-cluster'
 
 jobs:
   test:
