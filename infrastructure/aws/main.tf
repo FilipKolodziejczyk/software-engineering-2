@@ -12,11 +12,14 @@ module "network" {
 module "ecs" {
   source = "./modules/ecs"
 
-  app_name        = var.app_name
-  app_environment = var.app_environment
-  subnet_ids      = module.network.public_subnet_ids
-  vpc_id          = module.network.vpc_id
-  backend_sg_id   = module.network.backend_sg_id
+  app_name               = var.app_name
+  app_environment        = var.app_environment
+  subnet_ids             = module.network.public_subnet_ids
+  vpc_id                 = module.network.vpc_id
+  backend_sg_id          = module.network.backend_sg_id
+  account_id             = var.account_id
+  aws_region             = var.aws_region
+  sa_password_kms_key_id = var.sa_password_kms_key_id
 }
 
 module "sqlserver" {

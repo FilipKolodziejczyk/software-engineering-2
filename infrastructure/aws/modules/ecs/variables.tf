@@ -22,3 +22,18 @@ variable "backend_sg_id" {
   type        = string
   description = "Backend Security Group ID"
 }
+
+variable "aws_region" {
+  type        = string
+  description = "AWS Region"
+}
+
+variable "account_id" {
+  type        = string
+  description = "AWS Account ID"
+}
+
+variable "sa_password_kms_key_id" {
+  type        = string
+  description = "SQL Server SA Password KMS Key ID"
+}
