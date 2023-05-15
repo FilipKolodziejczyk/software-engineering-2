@@ -1,5 +1,10 @@
 export type Product = {
-    id: String;
-    name: Number;
-    price: String;
+    productID: number;
+    name: String;
+    price: Number;
+    quantity: Number;
+    description: String;
+    image: String;
+    archived: Boolean;
+    category: String;
   };
