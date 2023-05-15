@@ -3,7 +3,7 @@ resource "aws_ecs_task_definition" "backend_task_definition" {
   network_mode             = "awsvpc"
   requires_compatibilities = ["EC2"]
   memory                   = 512
-  cpu                      = 256
+  cpu                      = 512
   execution_role_arn       = var.ecs_agent_role_arn
   task_role_arn            = var.ecs_agent_role_arn
 
@@ -29,6 +29,7 @@ resource "aws_ecs_service" "backend_service" {
   network_configuration {
     subnets = var.subnet_ids
     security_groups = [var.sg_id]
+    assign_public_ip = false
   }
 
   load_balancer {
