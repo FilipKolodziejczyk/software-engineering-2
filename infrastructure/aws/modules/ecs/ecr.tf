@@ -26,10 +26,10 @@ resource "aws_ecr_repository" "frontend_delivery_ecr" {
 }
 
 resource "aws_ecr_repository" "frontend_shop_ecr" {
-  name = "${var.app_name}-${var.app_environment}-frontend_shop-ecr"
+  name = "${var.app_name}-${var.app_environment}-frontend-shop-ecr"
   
   tags = {
-    Name        = "${var.app_name}-frontend_shop-ecr"
+    Name        = "${var.app_name}-frontend-shop-ecr"
     Environment = var.app_environment
   }
 }
