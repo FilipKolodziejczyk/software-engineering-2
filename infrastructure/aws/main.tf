@@ -14,7 +14,7 @@ module "ecs" {
 
   app_name        = var.app_name
   app_environment = var.app_environment
-  subnet_id       = module.network.public_subnet_ids[0]
+  subnet_ids      = module.network.public_subnet_ids
   vpc_id          = module.network.vpc_id
   backend_sg_id   = module.network.backend_sg_id
 }
@@ -34,7 +34,7 @@ module "backend" {
 
   app_name               = var.app_name
   app_environment        = var.app_environment
-  subnet_id              = module.network.public_subnet_ids[0]
+  subnet_ids             = module.network.public_subnet_ids
   cluster_id             = module.ecs.cluster_id
   repository_url         = module.ecs.backend_repository_url
   ecs_agent_role_arn     = module.ecs.ecs_agent_role_arn

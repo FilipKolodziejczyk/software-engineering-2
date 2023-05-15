@@ -27,7 +27,7 @@ resource "aws_ecs_service" "backend_service" {
   task_definition = aws_ecs_task_definition.backend_task_definition.arn
 
   network_configuration {
-    subnets = [var.subnet_id]
+    subnets = var.subnet_ids
     security_groups = [var.sg_id]
   }
 

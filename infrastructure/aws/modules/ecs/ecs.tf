@@ -28,7 +28,7 @@ resource "aws_launch_configuration" "ec2_config" {
 resource "aws_autoscaling_group" "ec2_autoscaling_group" {
   name                    = "${var.app_name}-${var.app_environment}-ec2-autoscaling-group"
   launch_configuration   = aws_launch_configuration.ec2_config.name
-  vpc_zone_identifier    = [var.subnet_id]
+  vpc_zone_identifier    = var.subnet_ids
 
   min_size                = 1
   max_size                = 5

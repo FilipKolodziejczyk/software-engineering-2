@@ -8,9 +8,9 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
-variable "subnet_id" {
-  type        = string
-  description = "Subnet ID"
+variable "subnet_ids" {
+  type        = list(string)
+  description = "Subnet IDs"
 }
 
 variable "vpc_id" {

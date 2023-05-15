@@ -1,7 +1,7 @@
 resource "aws_lb" "default" {
     name               = "${var.app_name}-${var.app_environment}-lb"
     security_groups    = [var.backend_sg_id]
-    subnets            = [var.subnet_id]
+    subnets            = var.subnet_ids
     
     tags = {
         Name        = "${var.app_name}-lb"
