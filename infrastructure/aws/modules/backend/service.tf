@@ -3,11 +3,16 @@ resource "aws_ecs_task_definition" "backend_task_definition" {
   network_mode             = "awsvpc"
   requires_compatibilities = ["EC2"]
   memory                   = 512
-  cpu                      = 2
+  cpu                      = 256
   execution_role_arn       = var.ecs_agent_role_arn
   task_role_arn            = var.ecs_agent_role_arn
 
-  container_definitions = file("${path.module}/definition.json")
+  container_definitions = templatefile("${path.module}/definition.tftpl", {
+    repository_url         = var.repository_url
+    db_password_secret_arn = var.db_password_secret_arn
+    sqlserver_endpoint     = var.sqlserver_endpoint
+    env_file_arn           = "arn:aws:s3:::${var.app_name}-${var.app_environment}-env-files/backend.env"
+  })
 
   tags = {
     Name        = "${var.app_name}-backend-task-definition"
@@ -16,9 +21,21 @@ resource "aws_ecs_task_definition" "backend_task_definition" {
 }
 
 resource "aws_ecs_service" "backend_service" {
-  name          = "${var.app_name}-${var.app_environment}-backend-service"
-  cluster       = var.cluster_id
-  desired_count = 1
+  name            = "${var.app_name}-${var.app_environment}-backend-service"
+  cluster         = var.cluster_id
+  desired_count   = 1
+  task_definition = aws_ecs_task_definition.backend_task_definition.arn
+
+  network_configuration {
+    subnets = [var.subnet_id]
+    security_groups = [var.sg_id]
+  }
+
+  load_balancer {
+    target_group_arn = var.lb_tg
+    container_name   = "backend"
+    container_port   = 80
+  }
 
   tags = {
     Name        = "${var.app_name}-backend-service"

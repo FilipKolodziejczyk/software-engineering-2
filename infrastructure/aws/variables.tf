@@ -48,3 +48,8 @@ variable "sa_password_kms_key_id" {
   type = string
   description = "SQL Server SA Password KMS Key ID"
 }
+
+variable "account_id" {
+  type = string
+  description = "AWS Account ID"
+}
