@@ -26,7 +26,7 @@ on:
 jobs:
   unit-tests:
     if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'test')
-    uses: ./.github/workflows/templates/image-unit-tests.yaml
+    uses: ./.github/workflows/templates/image-unit-test.yaml
     with:
       image-path: backend/
 
