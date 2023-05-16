@@ -37,10 +37,6 @@ jobs:
 
       - name: Run unit tests
         id: run-tests
-        env:
-          ECR_REGISTRY: ${{ inputs.registry }}
-          ECR_REPOSITORY: ${{ inputs.repository }}
-          IMAGE_TAG: ${{ inputs.image-tag }}
         run: |
           docker build --target test -t ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }} ${{ inputs.image-path }}
   
