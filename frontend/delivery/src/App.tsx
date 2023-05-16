@@ -11,8 +11,8 @@ function App() {
     <div className="flex flex-row h-screen w-screen m-0 p-0 bg-red-500">
         <BrowserRouter>
         <Routes>
-          <Route path="/" element={<><NavBarPage/><LoginPage /></>}/>
-          <Route path="/orders" element={<><NavBarPage/><OrdersPage/></>}/> 
+          <Route path="/delivery/" element={<><NavBarPage/><LoginPage /></>}/>
+          <Route path="/delivery/orders" element={<><NavBarPage/><OrdersPage/></>}/> 
         </Routes>
       </BrowserRouter>
       </div>
