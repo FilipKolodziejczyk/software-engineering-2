@@ -4,7 +4,7 @@ services:
   backend:
     build: "../../backend/"
     ports:
-      - "8080:80"
+      - "${BACKEND_PORT}:80"
     depends_on:
       - db
     environment:
@@ -33,21 +33,21 @@ services:
   frontend-client:
     build: "../../frontend/client"
     ports:
-      - "10000:5173"
+      - "${FRONTEND_CLIENT_PORT}:5173"
     networks:
       - net
 
   frontend-delivery:
     build: "../../frontend/delivery"
     ports:
-      - "10001:5173"
+      - "${FRONTEND_DELIVERY_PORT}:5173"
     networks:
       - net
 
   frontend-shop:
     build: "../../frontend/shop"
     ports:
-      - "10002:5173"
+      - "${FRONTEND_SHOP_PORT}:5173"
     networks:
       - net
 
