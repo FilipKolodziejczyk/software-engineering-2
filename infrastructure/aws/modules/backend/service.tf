@@ -13,6 +13,8 @@ resource "aws_ecs_task_definition" "backend_task_definition" {
     sqlserver_endpoint     = var.sqlserver_endpoint
     env_file_arn           = "arn:aws:s3:::${var.app_name}-${var.app_environment}-env-files/backend.env"
     default_image_tag      = var.default_image_tag
+    logs_group_name        = var.logs_group_name
+    aws_region             = var.aws_region
   })
 
   tags = {

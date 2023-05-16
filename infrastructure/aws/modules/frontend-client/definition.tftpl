@@ -5,8 +5,8 @@
     "essential": true,
     "portMappings": [
       {
-        "containerPort": 80,
-        "hostPort": 80
+        "containerPort": 5173,
+        "hostPort": 5173
       }
     ],
     "environmentFiles": [
@@ -14,6 +14,14 @@
         "value": "${env_file_arn}",
         "type": "s3"
       }
-    ]
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${logs_group_name}",
+        "awslogs-region": "${aws_region}",
+        "awslogs-stream-prefix": "frontend_client"
+      }
+    }
   }
 ]

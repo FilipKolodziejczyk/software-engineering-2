@@ -90,6 +90,28 @@ resource "aws_iam_role_policy" "get_secret" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "logging" {
+  name = "${var.app_name}-${var.app_environment}-logging"
+  role = aws_iam_role.ecs_agent.name
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "CloudWatchLogs",
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": [
+          "arn:aws:logs:${var.aws_region}:${var.account_id}:log-group:/aws/ecs/*"
+        ]
+      }
+    ]
+  })
+}
   
 resource "aws_iam_role" "ecs_agent" {
   name               = "${var.app_name}-${var.app_environment}-ecs-agent"

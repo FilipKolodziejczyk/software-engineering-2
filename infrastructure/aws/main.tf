@@ -1,3 +1,12 @@
+resource "aws_cloudwatch_log_group" "log_group" {
+  name = "${var.app_name}-${var.app_environment}-log-group"
+
+  tags = {
+    Name        = "${var.app_name}-log-group"
+    Environment = var.app_environment
+  }
+}
+
 module "network" {
   source = "./modules/network"
 
@@ -48,6 +57,8 @@ module "backend" {
   lb_tg                  = module.ecs.backend_lb_tg
   sg_id                  = module.network.backend_sg_id
   default_image_tag      = var.backend_default_image_tag
+  aws_region             = var.aws_region
+  logs_group_name        = aws_cloudwatch_log_group.log_group.name
 }
 
 module "frontend_client" {
@@ -62,4 +73,6 @@ module "frontend_client" {
   lb_tg                  = module.ecs.frontend_client_lb_tg
   sg_id                  = module.network.frontend_sg_id
   default_image_tag      = var.frontend_client_default_image_tag
+  aws_region             = var.aws_region
+  logs_group_name        = aws_cloudwatch_log_group.log_group.name
 }

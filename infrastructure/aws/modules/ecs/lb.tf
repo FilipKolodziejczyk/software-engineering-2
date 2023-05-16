@@ -30,6 +30,16 @@ resource "aws_lb_target_group" "backend" {
   vpc_id      = var.vpc_id
   target_type = "ip"
 
+  health_check {
+    path                = "/swagger/index.html"
+    port                = 80
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 10
+  }
+
   tags = {
     Name        = "${var.app_name}-backend-tg"
     Environment = var.app_environment
@@ -42,6 +52,16 @@ resource "aws_lb_target_group" "frontend_client" {
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
+
+  health_check {
+    path                = "/"
+    port                = 5173
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 10
+  }
 
   tags = {
     Name        = "${var.app_name}-frontend-client-tg"

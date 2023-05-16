@@ -57,3 +57,13 @@ variable "default_image_tag" {
   type        = string
   description = "Default Image Tag"
 }
+
+variable "aws_region" {
+  type        = string
+  description = "AWS Region"
+}
+
+variable "logs_group_name" {
+  type        = string
+  description = "Logs Group Name"
+}

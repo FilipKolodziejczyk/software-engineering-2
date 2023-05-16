@@ -11,6 +11,8 @@ resource "aws_ecs_task_definition" "frontend-client_task_definition" {
     repository_url         = var.repository_url
     env_file_arn           = "arn:aws:s3:::${var.app_name}-${var.app_environment}-env-files/frontend-client.env"
     default_image_tag      = var.default_image_tag
+    logs_group_name        = var.logs_group_name
+    aws_region             = var.aws_region
   })
 
   tags = {
@@ -34,7 +36,7 @@ resource "aws_ecs_service" "frontend-client_service" {
   load_balancer {
     target_group_arn = var.lb_tg
     container_name   = "frontend-client"
-    container_port   = 80
+    container_port   = 5173
   }
 
   tags = {
