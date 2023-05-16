@@ -25,14 +25,16 @@ on:
 
 jobs:
   unit-tests:
+    name: Running unit tests on image
     if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'test')
-    uses: ./.github/workflows/templates/image-unit-test.yaml
+    uses: ./.github/workflows/image-unit-test.yaml
     with:
       image-path: backend/
 
   push:
+    name: Building, tagging and pushing image to ECR
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish')
-    uses: ./.github/workflows/templates/image-push.yaml
+    uses: ./.github/workflows/image-push.yaml
     with:
       image-path: backend/
       image-tag: ${{ github.sha }}

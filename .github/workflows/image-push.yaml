@@ -21,13 +21,8 @@ on:
         required: true
 
 jobs:
-  test:
+  publish:
     runs-on: ubuntu-latest
-
-    env:
-      ECR_REGISTRY: ${{ inputs.registry }}
-      ECR_REPOSITORY: ${{ inputs.repository }}
-      IMAGE_TAG: ${{ inputs.image-tag }}
 
     steps:
       - uses: actions/checkout@v3
@@ -42,11 +37,19 @@ jobs:
 
       - name: Run unit tests
         id: run-tests
+        env:
+          ECR_REGISTRY: ${{ inputs.registry }}
+          ECR_REPOSITORY: ${{ inputs.repository }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
         run: |
           docker build --target test -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG backend/
   
       - name: Build, tag and push image
         id: build-image
+        env:
+          ECR_REGISTRY: ${{ inputs.registry }}
+          ECR_REPOSITORY: ${{ inputs.repository }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG backend/
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
