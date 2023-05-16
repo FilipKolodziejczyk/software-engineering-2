@@ -22,3 +22,8 @@ variable "sg_id" {
   type        = string
   description = "Security Group ID"
 }
+
+variable "backend_sg_id" {
+  type        = string
+  description = "Backend Security Group ID"
+}
