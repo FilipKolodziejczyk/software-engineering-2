@@ -39,7 +39,6 @@ module "sqlserver" {
   app_environment        = var.app_environment
   subnet_ids             = module.network.private_subnet_ids
   sg_id                  = module.network.sqlserver_sg_id
-  backend_sg_id          = module.network.backend_sg_id
 }
 
 module "backend" {
