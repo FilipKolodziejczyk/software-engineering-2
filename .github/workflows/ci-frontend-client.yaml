@@ -1,0 +1,43 @@
+name: Frontend Client CI
+run-name: Running Frontend Client CI on commit ${{ github.sha }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        default: 'test'
+        required: true
+        type: choice
+        description: 'test or publish'
+        options:
+          - 'test'
+          - 'publish'
+  push:
+    branches:
+      - master
+    paths:
+      - 'frontend/client/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'frontend/client/**'
+
+jobs:
+  unit-tests:
+    name: Running unit tests on image
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'test')
+    uses: ./.github/workflows/image-unit-test.yaml
+    with:
+      image-path: frontend/client/
+
+  push:
+    name: Building, tagging and pushing image to ECR
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish')
+    uses: ./.github/workflows/image-push.yaml
+    with:
+      image-path: frontend/client/
+      image-tag: ${{ github.sha }}
+      repository: ${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-frontend-client-ecr
+      registry: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+    secrets: inherit
