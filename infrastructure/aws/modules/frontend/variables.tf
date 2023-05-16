@@ -57,3 +57,8 @@ variable "logs_group_name" {
   type        = string
   description = "Logs Group Name"
 }
+
+variable "module_name" {
+  type        = string
+  description = "Module Name"
+}

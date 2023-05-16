@@ -1,6 +1,6 @@
 [
   {
-    "name": "frontend-client",
+    "name": "frontend-${module_name}",
     "image": "${repository_url}:${default_image_tag}",
     "essential": true,
     "portMappings": [
@@ -20,7 +20,7 @@
       "options": {
         "awslogs-group": "${logs_group_name}",
         "awslogs-region": "${aws_region}",
-        "awslogs-stream-prefix": "frontend_client"
+        "awslogs-stream-prefix": "frontend_${module_name}"
       }
     }
   }
