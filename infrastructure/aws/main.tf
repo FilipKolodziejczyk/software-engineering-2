@@ -62,7 +62,7 @@ module "backend" {
 }
 
 module "frontend_client" {
-  source = "./modules/frontend-client"
+  source = "./modules/frontend"
   
   app_name               = var.app_name
   app_environment        = var.app_environment
@@ -76,4 +76,41 @@ module "frontend_client" {
   default_image_tag      = var.frontend_client_default_image_tag
   aws_region             = var.aws_region
   logs_group_name        = aws_cloudwatch_log_group.log_group.name
+  module_name            = "client"
+}
+
+module "frontend_delivery" {
+  source = "./modules/frontend"
+  
+  app_name               = var.app_name
+  app_environment        = var.app_environment
+  subnet_ids             = module.network.public_subnet_ids
+  cluster_id             = module.ecs.cluster_id
+  repository_url         = module.ecs.frontend_delivery_repository_url
+  ecs_agent_role_arn     = module.ecs.ecs_agent_role_arn
+  lb_tg                  = module.ecs.frontend_delivery_lb_tg
+  sg_id                  = module.network.frontend_sg_id
+  lb_sg_id               = module.network.loadbalancer_sg_id
+  default_image_tag      = var.frontend_delivery_default_image_tag
+  aws_region             = var.aws_region
+  logs_group_name        = aws_cloudwatch_log_group.log_group.name
+  module_name            = "delivery"
+}
+
+module "frontend_shop" {
+  source = "./modules/frontend"
+  
+  app_name               = var.app_name
+  app_environment        = var.app_environment
+  subnet_ids             = module.network.public_subnet_ids
+  cluster_id             = module.ecs.cluster_id
+  repository_url         = module.ecs.frontend_shop_repository_url
+  ecs_agent_role_arn     = module.ecs.ecs_agent_role_arn
+  lb_tg                  = module.ecs.frontend_shop_lb_tg
+  sg_id                  = module.network.frontend_sg_id
+  lb_sg_id               = module.network.loadbalancer_sg_id
+  default_image_tag      = var.frontend_shop_default_image_tag
+  aws_region             = var.aws_region
+  logs_group_name        = aws_cloudwatch_log_group.log_group.name
+  module_name            = "shop"
 }
