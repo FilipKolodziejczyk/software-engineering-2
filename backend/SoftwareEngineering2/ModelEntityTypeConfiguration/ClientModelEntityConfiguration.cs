@@ -15,5 +15,7 @@ public class ClientModelEntityConfiguration : IEntityTypeConfiguration<ClientMod
 
         builder.HasMany(x => x.Complaints).WithOne(x => x.Client).HasForeignKey(x => x.ComplaintID);
         builder.HasMany(x => x.Orders).WithOne(x => x.Client).HasForeignKey(x => x.OrderID);
+
+        builder.HasOne(x => x.Address).WithOne(x => x.Client).HasForeignKey<ClientModel>(x => x.AddressID);
     }
 }

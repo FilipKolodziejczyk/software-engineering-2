@@ -13,5 +13,9 @@ public class OrderModelEntityConfiguration : IEntityTypeConfiguration<OrderModel
 
         builder.HasMany(x => x.OrderDetails).WithOne(x => x.Order).HasForeignKey(x => x.OrderID);
         builder.HasMany(x => x.Complaints).WithOne(x => x.Order).HasForeignKey(x => x.ComplaintID);
+
+        builder.HasOne(x => x.Address).WithMany(x => x.Orders).HasForeignKey(x => x.AddressID);
+        builder.HasOne(x => x.DeliveryMan).WithMany(x => x.Orders).HasForeignKey(x => x.DeliveryManID).IsRequired(false);
+        builder.HasOne(x => x.Client).WithMany(x => x.Orders).HasForeignKey(x => x.ClientID);
     }
 }

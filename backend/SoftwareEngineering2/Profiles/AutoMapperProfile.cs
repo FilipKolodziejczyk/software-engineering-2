@@ -40,7 +40,8 @@ public class AutoMapperProfile : Profile {
         CreateMap<OrderDetailsModel, OrderedItemDTO>();
 
         CreateMap<OrderModel, OrderDTO>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.OrderDetails));
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.OrderDetails))
+            .ForMember(dest => dest.DeliveryMan, opt => opt.MapFrom(src => src.DeliveryMan));
 
         CreateMap<NewOrderDTO, OrderModel>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "received"))

@@ -8,7 +8,7 @@ public class OrderModel {
     public int ClientID { get; set; }
     public ClientModel? Client { get; set; }
 
-    public int DeliveryManID { get; set; }
+    public int? DeliveryManID { get; set; }
     public DeliveryManModel? DeliveryMan { get; set; }
 
     [Required]

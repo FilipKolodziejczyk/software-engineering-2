@@ -61,30 +61,97 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(200, "OK")]
         [Authorize(Roles = "employee")]
         public ActionResult Modify([FromBody] OrderDTO newModel) {
-            return Ok("Order succesfully modified");
+            return Ok("Order succesfully modified"); // TODO
         }
 
-        // POST: api/orders/6
-        [HttpPost("{OrderID:int}")]
+        // POST: api/orders/6/change_status
+        [HttpPost("{orderId:int}/change_status")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
+        [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
         [Authorize(Roles = "employee,deliveryman")]
-        public ActionResult ChangeStatus([FromBody] OrderDTO newModel) {
-            return Ok("Order status succesfully changed");
+        public async Task<IActionResult> ChangeStatus(int orderId, [FromBody] OrderStatusDTO orderStatusDTO) {
+            if (string.IsNullOrEmpty(orderStatusDTO.OrderStatus))
+                return BadRequest(new { message = "Order status is not correct" });
+
+            var order = await _orderService.GetOrderById(orderId);
+            if (order is null)
+                return NotFound("Order not found");
+
+            if (User.IsInRole("deliveryman")
+                && (!int.TryParse(User.FindFirst("UserID")?.Value, out int deliverymanId)
+                    || order.DeliveryMan is null
+                    || order.DeliveryMan.UserID != deliverymanId))
+                return Forbid();
+
+            var result = await _orderService.ChangeOrderStatus(orderId, orderStatusDTO);
+
+            if (result is null)
+                return Unauthorized();
+
+            return Ok(result);
         }
 
+        // GET: api/orders/6
+        [HttpGet("{orderId:int}")]
+        [SwaggerResponse(401, "Unauthorised")]
+        [SwaggerResponse(403, "Forbidden")]
+        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(200, "OK")]
+        [Authorize(Roles = "employee,deliveryman")]
+        public async Task<IActionResult> GetOrder(int orderId) {
+            var order = await _orderService.GetOrderById(orderId);
+            if (order is null)
+                return NotFound("Order not found");
+
+            if (User.IsInRole("deliveryman")
+                && (!int.TryParse(User.FindFirst("UserID")?.Value, out int deliverymanId)
+                    || order.DeliveryMan is null
+                    || order.DeliveryMan.UserID != deliverymanId))
+                return Forbid();
+
+            return Ok(order);
+        }
 
         // GET: api/orders
         [HttpGet]
         [SwaggerResponse(401, "Unauthorised")]
-        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(200, "OK")]
         [Authorize(Roles = "employee,deliveryman")]
-        public ActionResult GetAssignedOrders([FromBody] OrderDTO newModel) {
-            return Ok("Succesfully get assigned order");
+        public async Task<IActionResult> GetAssignedOrders() {
+            List<OrderDTO>? result;
+
+            if (User.IsInRole("employee")) {
+                result = await _orderService.GetOrders();
+            } else if (User.IsInRole("deliveryman")) {
+                if (!int.TryParse(User.FindFirst("UserID")?.Value, out int deliverymanId))
+                    return Forbid();
+
+                result = await _orderService.GetOrdersByDeliverymanId(deliverymanId);
+            } else {
+                return Unauthorized();
+            }
+
+            return Ok(result);
         }
 
+        // DELETE: api/orders/6
+        [HttpDelete("{orderId:int}")]
+        [SwaggerResponse(401, "Unauthorised")]
+        [SwaggerResponse(403, "Forbidden")]
+        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(204, "Removed")]
+        [Authorize(Roles = "employee")]
+        public async Task<IActionResult> DeleteOrder(int orderId) {
+            var order = await _orderService.GetOrderById(orderId);
+            if (order is null)
+                return NotFound("Order not found");
+
+            await _orderService.DeleteModelAsync(orderId);
+            return NoContent();
+        }
     }
 }
