@@ -52,3 +52,8 @@ variable "sg_id" {
   type        = string
   description = "Security Group ID"
 }
+
+variable "default_image_tag" {
+  type        = string
+  description = "Default Image Tag"
+}

@@ -12,6 +12,7 @@ resource "aws_ecs_task_definition" "backend_task_definition" {
     db_password_secret_arn = var.db_password_secret_arn
     sqlserver_endpoint     = var.sqlserver_endpoint
     env_file_arn           = "arn:aws:s3:::${var.app_name}-${var.app_environment}-env-files/backend.env"
+    default_image_tag      = var.default_image_tag
   })
 
   tags = {

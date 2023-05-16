@@ -53,3 +53,23 @@ variable "account_id" {
   type = string
   description = "AWS Account ID"
 }
+
+variable "backend_default_image_tag" {
+  type = string
+  description = "Backend Default Image Tag"
+}
+
+variable "frontend_client_default_image_tag" {
+  type = string
+  description = "Frontend Client Default Image Tag"
+}
+
+variable "frontend_delivery_default_image_tag" {
+  type = string
+  description = "Frontend Delivery Default Image Tag"
+}
+
+variable "frontend_shop_default_image_tag" {
+  type = string
+  description = "Frontend Shop Default Image Tag"
+}

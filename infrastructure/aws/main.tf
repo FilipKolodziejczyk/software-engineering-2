@@ -46,4 +46,5 @@ module "backend" {
   db_password_secret_arn = module.sqlserver.secret_arn
   lb_tg                  = module.ecs.backend_lb_tg
   sg_id                  = module.network.backend_sg_id
+  default_image_tag      = var.backend_default_image_tag
 }
