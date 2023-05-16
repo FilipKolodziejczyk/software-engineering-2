@@ -18,14 +18,9 @@ variable "vpc_id" {
   description = "VPC ID"
 }
 
-variable "backend_sg_id" {
+variable "lb_sg_id" {
   type        = string
-  description = "Backend Security Group ID"
-}
-
-variable "frontend_sg_id" {
-  type        = string
-  description = "Frontend Security Group ID"
+  description = "Load Balancer Security Group ID"
 }
 
 variable "aws_region" {

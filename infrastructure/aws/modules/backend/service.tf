@@ -31,7 +31,10 @@ resource "aws_ecs_service" "backend_service" {
 
   network_configuration {
     subnets = var.subnet_ids
-    security_groups = [var.sg_id]
+    security_groups = [
+      var.sg_id,
+      var.lb_sg_id
+    ]
     assign_public_ip = false
   }
 

@@ -38,6 +38,11 @@ variable "sg_id" {
   description = "Security Group ID"
 }
 
+variable "lb_sg_id" {
+  type        = string
+  description = "Load Balancer Security Group ID"
+}
+
 variable "default_image_tag" {
   type        = string
   description = "Default Image Tag"

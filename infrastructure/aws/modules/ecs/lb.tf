@@ -1,10 +1,11 @@
 resource "aws_lb" "default" {
   name               = "${var.app_name}-${var.app_environment}-lb"
-  security_groups    = [var.backend_sg_id, var.frontend_sg_id]
+  security_groups    = [var.lb_sg_id]
   subnets            = var.subnet_ids
   internal           = false
   load_balancer_type = "application"
   ip_address_type    = "ipv4"
+
 
   tags = {
     Name        = "${var.app_name}-lb"
@@ -37,7 +38,7 @@ resource "aws_lb_target_group" "backend" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 5
-    interval            = 10
+    interval            = 60
   }
 
   tags = {
@@ -54,13 +55,12 @@ resource "aws_lb_target_group" "frontend_client" {
   target_type = "ip"
 
   health_check {
-    path                = "/"
-    port                = 5173
+    path                = ""
     protocol            = "HTTP"
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 5
-    interval            = 10
+    interval            = 60
   }
 
   tags = {
