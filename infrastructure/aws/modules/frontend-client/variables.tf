@@ -13,32 +13,32 @@ variable "subnet_ids" {
   description = "Subnet IDs"
 }
 
-variable "vpc_id" {
+variable "cluster_id" {
   type        = string
-  description = "VPC ID"
+  description = "Cluster ID"
 }
 
-variable "backend_sg_id" {
+variable "repository_url" {
   type        = string
-  description = "Backend Security Group ID"
+  description = "Repository URL"
 }
 
-variable "frontend_sg_id" {
+variable "ecs_agent_role_arn" {
   type        = string
-  description = "Frontend Security Group ID"
+  description = "ECS Agent Role ARN"
 }
 
-variable "aws_region" {
+variable "lb_tg" {
   type        = string
-  description = "AWS Region"
+  description = "Load Balancer Target Group ARN"
 }
 
-variable "account_id" {
+variable "sg_id" {
   type        = string
-  description = "AWS Account ID"
+  description = "Security Group ID"
 }
 
-variable "sa_password_kms_key_id" {
+variable "default_image_tag" {
   type        = string
-  description = "SQL Server SA Password KMS Key ID"
+  description = "Default Image Tag"
 }
