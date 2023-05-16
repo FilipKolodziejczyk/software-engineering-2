@@ -38,11 +38,11 @@ jobs:
       - name: Run unit tests
         id: run-tests
         run: |
-          docker build --target test -t ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }} ${{ inputs.image-path }}
+          docker build --target test -t '${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}' '${{ inputs.image-path }}'
   
       - name: Build, tag and push image
         id: build-image
         run: |
-          docker build -t ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }} ${{ inputs.image-path }}
-          docker push ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}
-          echo "image=${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}" >> $GITHUB_OUTPUT
+          docker build -t '${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}' '${{ inputs.image-path }}'
+          docker push '${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}'
+          echo 'image=${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}' >> $GITHUB_OUTPUT
