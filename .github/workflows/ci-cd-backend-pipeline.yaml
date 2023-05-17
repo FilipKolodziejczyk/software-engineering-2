@@ -47,6 +47,7 @@ jobs:
   deploy:
     name: Deploying image to ECS
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-and-deploy')
+    needs: push
     uses: ./.github/workflows/image-deploy-to-ecs.yaml
     with:
       app-name: ${{ vars.APP_NAME }}
