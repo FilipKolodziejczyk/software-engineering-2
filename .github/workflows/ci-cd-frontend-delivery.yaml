@@ -1,5 +1,5 @@
-name: Frontend Client CI
-run-name: Running Frontend Client CI on commit ${{ github.sha }}
+name: Frontend Delivery CI
+run-name: Running Frontend Delivery CI on commit ${{ github.sha }}
 
 on:
   workflow_dispatch:
@@ -16,12 +16,12 @@ on:
     branches:
       - master
     paths:
-      - 'frontend/client/**'
+      - 'frontend/delivery/**'
   pull_request:
     branches:
       - master
     paths:
-      - 'frontend/client/**'
+      - 'frontend/delivery/**'
 
 jobs:
   unit-tests:
@@ -29,15 +29,27 @@ jobs:
     if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'test')
     uses: ./.github/workflows/image-unit-test.yaml
     with:
-      image-path: frontend/client/
+      image-path: frontend/delivery/
 
   push:
     name: Building, tagging and pushing image to ECR
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish')
     uses: ./.github/workflows/image-push.yaml
     with:
-      image-path: frontend/client/
+      image-path: frontend/delivery/
       image-tag: ${{ github.sha }}
-      repository: ${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-frontend-client-ecr
+      repository: ${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-frontend-delivery-ecr
       registry: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+    secrets: inherit
+
+  deploy:
+    name: Deploying image to ECS
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-and-deploy')
+    uses: ./.github/workflows/image-deploy-to-ecs.yaml
+    with:
+      app-name: ${{ vars.APP_NAME }}
+      environment: ${{ vars.ENVIRONMENT }}
+      aws-region: ${{ vars.AWS_REGION }}
+      image: ${{ needs.push.outputs.image }}
+      mode: frontend-delivery
     secrets: inherit

@@ -54,5 +54,4 @@ jobs:
       aws-region: ${{ vars.AWS_REGION }}
       image: ${{ needs.push.outputs.image }}
       mode: backend
-      
     secrets: inherit
