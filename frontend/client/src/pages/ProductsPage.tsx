@@ -17,7 +17,7 @@ export default function ProductsPage() {
   useEffect(() => {
     setLoading(true);
     setError(false);
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`).then(res => res.json()).then((data) => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products?page=${page}&limit=10`).then(res => res.json()).then((data) => {
       setProducts((prevProducts) => [...prevProducts, ...data]);
       setHasMore(data.length > 0);
       setLoading(false);

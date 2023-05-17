@@ -42,9 +42,9 @@ export default function ProductDetailsPage() {
         <p className="mt-3 text-xl sm:text-3xl tracking-tight text-gray-900">${product.price}</p>
         <div className="mt-6">
           <h3 className="sr-only">Description</h3>
-          <p className="text-base text-gray-700 space-y-6">
+          <div className="text-base text-gray-700 space-y-6 whitespace-pre-line">
             {product.description}
-          </p>
+          </div>
         </div>
         <div className="mt-10">
           <div className="flex flex-row">
