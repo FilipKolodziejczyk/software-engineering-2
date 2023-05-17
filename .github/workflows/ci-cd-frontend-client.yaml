@@ -33,7 +33,7 @@ jobs:
 
   push:
     name: Building, tagging and pushing image to ECR
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish')
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' &&  (inputs.mode == 'publish' || inputs.mode == 'publish-and-deploy'))
     uses: ./.github/workflows/image-push.yaml
     with:
       image-path: frontend/client/
