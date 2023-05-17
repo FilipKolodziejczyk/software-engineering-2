@@ -33,7 +33,7 @@ jobs:
 
   push:
     name: Building, tagging and pushing image to ECR
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish')
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' &&  (inputs.mode == 'publish' || inputs.mode == 'publish-and-deploy'))
     uses: ./.github/workflows/image-push.yaml
     with:
       image-path: frontend/delivery/
@@ -45,11 +45,12 @@ jobs:
   deploy:
     name: Deploying image to ECS
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-and-deploy')
+    needs: push
     uses: ./.github/workflows/image-deploy-to-ecs.yaml
     with:
       app-name: ${{ vars.APP_NAME }}
       environment: ${{ vars.ENVIRONMENT }}
       aws-region: ${{ vars.AWS_REGION }}
       image: ${{ needs.push.outputs.image }}
-      mode: frontend-delivery
+      module: frontend-delivery
     secrets: inherit
