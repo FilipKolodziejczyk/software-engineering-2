@@ -6,6 +6,9 @@ import Root from "./pages/Root";
 import ErrorPage from "./pages/ErrorPage";
 import ProductsPage from "./pages/ProductsPage";
 import LoginPage from "./pages/LoginPage";
+import ProductDetailsPage, {loader as productLoader} from "./pages/ProductDetailsPage";
+import {Simulate} from "react-dom/test-utils";
+import load = Simulate.load;
 
 const router = createBrowserRouter([
   {
@@ -20,6 +23,11 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage/>
+      },
+      {
+        path: "products/:id",
+        element: <ProductDetailsPage/>,
+        loader: productLoader,
       }
     ]
   },
