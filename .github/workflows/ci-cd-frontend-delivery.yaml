@@ -1,5 +1,5 @@
-name: Frontend Delivery CI
-run-name: Running Frontend Delivery CI on commit ${{ github.sha }}
+name: Frontend Delivery CI/CD
+run-name: Running Frontend Delivery CI/CD on commit ${{ github.sha }}
 
 on:
   workflow_dispatch:

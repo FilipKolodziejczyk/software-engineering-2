@@ -1,5 +1,5 @@
-name: Frontend Shop CI
-run-name: Running Frontend Shop CI on commit ${{ github.sha }}
+name: Frontend Shop CI/CD
+run-name: Running Frontend Shop CI/CD on commit ${{ github.sha }}
 
 on:
   workflow_dispatch:

@@ -1,5 +1,5 @@
-name: Backend CI
-run-name: Running backend CI on commit ${{ github.sha }}
+name: Backend CI/CD
+run-name: Running backend CI/CD on commit ${{ github.sha }}
 
 on:
   workflow_dispatch:
