@@ -23,6 +23,39 @@ on:
         type: string
         description: 'The module to deploy'
         required: true
+  workflow_dispatch:
+    inputs:
+      app-name:
+        type: string
+        description: 'The name of the application'
+        required: true
+        default: 'flowershop'
+      environment:
+        type: choice
+        description: 'The environment of the application'
+        required: true
+        default: 'dev'
+        options:
+          - 'dev'
+          - 'prod'
+      aws-region:
+        type: string
+        description: 'The AWS region'
+        required: true
+        default: 'eu-west-1'
+      image:
+        type: string
+        description: 'The full id (registry/repository:tag) of the image to deploy'
+        required: true
+      module:
+        type: choice
+        description: 'The module to deploy'
+        required: true
+        options:
+          - 'backend'
+          - 'frontend-client'
+          - 'frontend-delivery'
+          - 'frontend-shop'
 
 jobs:
   deploy:
