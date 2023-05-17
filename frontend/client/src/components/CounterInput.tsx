@@ -9,7 +9,7 @@ export function CounterInput(props: { onDecrease: () => void, value: number, onC
       <MinusIcon className="w-6 h-6"/>
     </button>
     <div className="flex flex-row items-center justify-center w-12 h-12 rounded-md bg-gray-100 mx-2">
-      <input type="text" value={props.value} className="w-full h-full text-center text-gray-700"
+      <input type="text" value={props.value} className="w-full h-full text-center text-gray-700 rounded-md"
              onChange={props.onChange}
       />
     </div>

@@ -5,7 +5,8 @@ import {CounterInput} from "../components/CounterInput";
 import {ImageCarousel} from "../components/ImageCarousel";
 
 export async function loader({params}: any) {
-  const product: Product = await fetch(`https://fakestoreapi.com/products/${params.id}`).then(res => res.json());
+  const product: Product = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products/${params.id}`).then(res => res.json());
+  console.log(product)
   return {product};
 }
 
@@ -16,16 +17,16 @@ export default function ProductDetailsPage() {
   return (<div className="mx-auto max-w-2xl px-4 py-4 pb-12 sm:px-6 sm:py-8 lg:max-w-5xl 2xl:max-w-7xl lg:px-8">
     <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 lg:items-start">
       <div className="mb-4">
-        <ImageCarousel imageSources={['https://source.unsplash.com/random/1400x1400/?bouquet&sig=1', 'https://source.unsplash.com/random/900x900/?bouquet&sig=2', 'https://source.unsplash.com/random/900x700/?bouquet&sig=3', 'https://source.unsplash.com/random/900x700/?bouquet&sig=4', 'https://source.unsplash.com/random/900x700/?bouquet&sig=5']}/>
+        <ImageCarousel imageSources={product.image}/>
       </div>
       <div>
-        <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">{product.title}</h3>
+        <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">{product.name}</h3>
         <p className="mt-3 text-xl sm:text-3xl tracking-tight text-gray-900">${product.price}</p>
         <div className="mt-6">
           <h3 className="sr-only">Description</h3>
-          <div className="text-base text-gray-700 space-y-6">
+          <p className="text-base text-gray-700 space-y-6">
             {product.description}
-          </div>
+          </p>
         </div>
         <div className="mt-10">
           <div className="flex flex-row">
