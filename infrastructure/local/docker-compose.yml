@@ -14,6 +14,9 @@ services:
       - CONNSTR=Server=db;Database=flowershopdb;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=true
       - DbUser=sa
       - DbPassword=${DbPassword}
+      - FRONTEND_DELIVERY_URL=http://localhost:${FRONTEND_DELIVERY_PORT}
+      - FRONTEND_SHOP_URL=http://localhost:${FRONTEND_SHOP_PORT}
+      - FRONTEND_CLIENT_URL=http://localhost:${FRONTEND_CLIENT_PORT}
     networks: 
       - net
     
@@ -34,6 +37,8 @@ services:
     build: "../../frontend/client"
     ports:
       - "${FRONTEND_CLIENT_PORT}:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     networks:
       - net
 
@@ -41,6 +46,8 @@ services:
     build: "../../frontend/delivery"
     ports:
       - "${FRONTEND_DELIVERY_PORT}:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     networks:
       - net
 
@@ -48,6 +55,8 @@ services:
     build: "../../frontend/shop"
     ports:
       - "${FRONTEND_SHOP_PORT}:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     networks:
       - net
 
