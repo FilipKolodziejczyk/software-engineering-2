@@ -24,6 +24,9 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
+
     steps:
       - uses: actions/checkout@v3
 

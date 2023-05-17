@@ -1,0 +1,92 @@
+name: Deplopy image to ECS cluster
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        type: string
+        description: 'The name of the application'
+        required: true
+      environment:
+        type: string
+        description: 'The environment of the application'
+        required: true
+      aws-region:
+        type: string
+        description: 'The AWS region'
+        required: true
+      image:
+        type: string
+        description: 'The tag of the image to deploy'
+        required: true
+      module:
+        type: string
+        description: 'The module to deploy'
+        required: true
+  workflow_dispatch:
+    inputs:
+      app-name:
+        type: string
+        description: 'The name of the application'
+        required: true
+        default: 'flowershop'
+      environment:
+        type: choice
+        description: 'The environment of the application'
+        required: true
+        default: 'dev'
+        options:
+          - 'dev'
+          - 'prod'
+      aws-region:
+        type: string
+        description: 'The AWS region'
+        required: true
+        default: 'eu-west-1'
+      image:
+        type: string
+        description: 'The full id (registry/repository:tag) of the image to deploy'
+        required: true
+      module:
+        type: choice
+        description: 'The module to deploy'
+        required: true
+        options:
+          - 'backend'
+          - 'frontend-client'
+          - 'frontend-delivery'
+          - 'frontend-shop'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to AWS
+        id: login-aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Download current task definition
+        run: aws ecs describe-task-definition --task-definition ${{ inputs.app-name }}-${{ inputs.environment }}-${{ inputs.module }}-task-definition > task-def.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
+        with:
+            task-definition: task-def.json
+            container-name: ${{ inputs.module }}
+            image: ${{ inputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
+        with:
+            task-definition: ${{ steps.task-def.outputs.task-definition }}
+            service: ${{ inputs.app-name }}-${{ inputs.environment }}-${{ inputs.module }}-service
+            cluster: ${{ inputs.app-name }}-${{ inputs.environment }}-ecs-cluster
+            wait-for-service-stability: true
