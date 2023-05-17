@@ -73,13 +73,13 @@ jobs:
           aws-region: ${{ inputs.aws-region }}
 
       - name: Download current task definition
-        run: aws ecs describe-task-definition --task-definition ${{ inputs.app-name }}-${{ inputs.environment }}-${{ inputs.module }}-task-definition > task-def.json
+        run: aws ecs describe-task-definition --task-definition ${{ inputs.app-name }}-${{ inputs.environment }}-${{ inputs.module }}-task-definition --query "taskDefinition" > task-def.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
-            task-definition: task-def.json
+            task-definition: ./task-def.json
             container-name: ${{ inputs.module }}
             image: ${{ inputs.image }}
 
