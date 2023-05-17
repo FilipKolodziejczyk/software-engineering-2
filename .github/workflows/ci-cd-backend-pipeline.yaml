@@ -12,6 +12,8 @@ on:
         options:
           - 'test'
           - 'publish'
+          - 'publish-and-deploy'
+
   push:
     branches:
       - master
@@ -40,4 +42,17 @@ jobs:
       image-tag: ${{ github.sha }}
       repository: ${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-backend-ecr
       registry: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+    secrets: inherit
+
+  deploy:
+    name: Deploying image to ECS
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-and-deploy')
+    uses: ./.github/workflows/image-deploy-to-ecs.yaml
+    with:
+      app-name: ${{ vars.APP_NAME }}
+      environment: ${{ vars.ENVIRONMENT }}
+      aws-region: ${{ vars.AWS_REGION }}
+      image: ${{ needs.push.outputs.image }}
+      mode: backend
+      
     secrets: inherit
