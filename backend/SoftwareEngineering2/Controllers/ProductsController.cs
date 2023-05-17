@@ -56,7 +56,6 @@ namespace SoftwareEngineering2.Controllers
         [HttpGet]
         [SwaggerOperation(Summary = "Fetch Products", Description =  "This endpoint will return the list of all products matching provided criteria.")]
         [SwaggerResponse(200, "Returns a list of samples", typeof(ProductDTO[]))]
-        [SwaggerResponse(404, "No samples found")]
         public async Task<IActionResult> Get([FromQuery] string? searchQuery, [FromQuery] string? filteredCategory, [FromQuery] int? pageNumber, [FromQuery] int? elementsOnPage)
         {
             searchQuery ??= "";
@@ -67,7 +66,7 @@ namespace SoftwareEngineering2.Controllers
             var samples = await _productService.GetFilteredModelsAsync(searchQuery, filteredCategory, pageNumber.Value, elementsOnPage.Value);
             return samples.Any() ? 
                 Ok(samples) : 
-                NotFound(new { message = $"No samples found with name {searchQuery} and category {filteredCategory}" });
+                Ok(new ProductDTO[0] { });
         }
         
         
