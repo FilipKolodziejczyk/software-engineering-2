@@ -6,7 +6,6 @@ import {ImageCarousel} from "../components/ImageCarousel";
 
 export async function loader({params}: any) {
   const product: Product = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products/${params.id}`).then(res => res.json());
-  console.log(product)
   return {product};
 }
 

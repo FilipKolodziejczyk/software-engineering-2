@@ -17,10 +17,7 @@ export default function ProductsPage() {
   useEffect(() => {
     setLoading(true);
     setError(false);
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`).then(res => {
-      console.log(res)
-      return res.json();
-    }).then((data) => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`).then(res => res.json()).then((data) => {
       setProducts((prevProducts) => [...prevProducts, ...data]);
       setHasMore(data.length > 0);
       setLoading(false);
@@ -40,7 +37,7 @@ export default function ProductsPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [products]);
 
-  return (<div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-8 lg:max-w-5xl 2xl:max-w-7xl lg:px-8">
+  return (<div className="mx-auto w-full max-w-2xl px-4 py-4 sm:px-6 sm:py-8 lg:max-w-5xl 2xl:max-w-7xl lg:px-8">
     <h1 className="text-2xl font-bold sm:text-3xl sm:font-extrabold tracking-tight text-gray-900">Products</h1>
     <div className="flex justify-between items-center">
       {/*<p className="text-sm text-gray-700">Showing {products.length} results</p>*/}
