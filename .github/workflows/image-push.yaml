@@ -21,7 +21,7 @@ on:
         required: true
     outputs:
       image:
-        value: ${{ jobs.build-image.outputs.image }}
+        value: ${{ jobs.publish.outputs.image }}
 
 jobs:
   publish:
