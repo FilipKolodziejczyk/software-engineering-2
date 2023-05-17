@@ -53,6 +53,21 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.default_vpc.id
+
+  tags = {
+    Name        = "${var.app_name}-routing-table-private"
+    Environment = var.app_environment
+  }
+}
+
+resource "aws_route_table_association" "private" {
+  count          = var.subnet_count.private
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private.id
+}
+
 output "public_subnet_ids" {
   value = aws_subnet.public.*.id
 }
