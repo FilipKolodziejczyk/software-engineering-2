@@ -48,4 +48,5 @@ jobs:
         run: |
           docker build -t '${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}' '${{ inputs.image-path }}'
           docker push '${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}'
-          echo 'image=${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}' >> '$GITHUB_OUTPUT'
+          echo "image='${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}'" >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
