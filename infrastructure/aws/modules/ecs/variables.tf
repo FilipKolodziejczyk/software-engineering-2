@@ -8,7 +8,32 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
-variable "subnet_id" {
+variable "subnet_ids" {
+  type        = list(string)
+  description = "Subnet IDs"
+}
+
+variable "vpc_id" {
   type        = string
-  description = "Subnet ID"
+  description = "VPC ID"
+}
+
+variable "lb_sg_id" {
+  type        = string
+  description = "Load Balancer Security Group ID"
+}
+
+variable "aws_region" {
+  type        = string
+  description = "AWS Region"
+}
+
+variable "account_id" {
+  type        = string
+  description = "AWS Account ID"
+}
+
+variable "sa_password_kms_key_id" {
+  type        = string
+  description = "SQL Server SA Password KMS Key ID"
 }

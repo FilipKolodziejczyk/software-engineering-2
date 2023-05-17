@@ -28,21 +28,6 @@ variable "ecs_agent_role_arn" {
   description = "ECS Agent Role ARN"
 }
 
-variable "sqlserver_endpoint" {
-  type        = string
-  description = "SQL Server Endpoint"
-}
-
-variable "sa_password_kms_key_id" {
-  type        = string
-  description = "SQL Server SA Password KMS Key ID"
-}
-
-variable "db_password_secret_arn" {
-  type        = string
-  description = "Database Password Secret ARN"
-}
-
 variable "lb_tg" {
   type        = string
   description = "Load Balancer Target Group ARN"
@@ -71,4 +56,9 @@ variable "aws_region" {
 variable "logs_group_name" {
   type        = string
   description = "Logs Group Name"
+}
+
+variable "module_name" {
+  type        = string
+  description = "Module Name"
 }

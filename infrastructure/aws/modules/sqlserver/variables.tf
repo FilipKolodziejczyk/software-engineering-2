@@ -13,17 +13,12 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
-variable "vpc_id" {
-  type        = string
-  description = "VPC ID"
-}
-
 variable "subnet_ids" {
   type        = list(string)
   description = "Subnet IDs"
 }
 
-variable "backend_sg_id" {
+variable "sg_id" {
   type        = string
-  description = "Backend Security Group ID"
+  description = "Security Group ID"
 }

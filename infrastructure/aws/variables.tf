@@ -34,7 +34,7 @@ variable "subnet_count" {
   description = "The number of subnets to create."
   type        = map(number)
   default     = {
-    public  = 1
+    public  = 2
     private = 2
   }
 }
@@ -47,4 +47,29 @@ variable "availability_zones" {
 variable "sa_password_kms_key_id" {
   type = string
   description = "SQL Server SA Password KMS Key ID"
+}
+
+variable "account_id" {
+  type = string
+  description = "AWS Account ID"
+}
+
+variable "backend_default_image_tag" {
+  type = string
+  description = "Backend Default Image Tag"
+}
+
+variable "frontend_client_default_image_tag" {
+  type = string
+  description = "Frontend Client Default Image Tag"
+}
+
+variable "frontend_delivery_default_image_tag" {
+  type = string
+  description = "Frontend Delivery Default Image Tag"
+}
+
+variable "frontend_shop_default_image_tag" {
+  type = string
+  description = "Frontend Shop Default Image Tag"
 }
