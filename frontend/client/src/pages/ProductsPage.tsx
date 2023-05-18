@@ -13,8 +13,15 @@ export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [sort, setSort] = useState(sortOptions[0].value);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
     setLoading(true);
     setError(false);
     fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products?page=${page}&limit=10`).then(res => res.json()).then((data) => {
@@ -24,7 +31,7 @@ export default function ProductsPage() {
     }).catch(() => {
       setError(true);
     });
-  }, [page]);
+  }, [page, isMounted]);
 
   const onScroll = () => {
     if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || loading) return;
@@ -40,7 +47,6 @@ export default function ProductsPage() {
   return (<div className="mx-auto w-full max-w-2xl px-4 py-4 sm:px-6 sm:py-8 lg:max-w-5xl 2xl:max-w-7xl lg:px-8">
     <h1 className="text-2xl font-bold sm:text-3xl sm:font-extrabold tracking-tight text-gray-900">Products</h1>
     <div className="flex justify-between items-center">
-      {/*<p className="text-sm text-gray-700">Showing {products.length} results</p>*/}
       <div className="flex items-center gap-2">
         <label htmlFor="sort" className="text-sm text-gray-700">Sort by</label>
         <select id="sort" name="sort"
