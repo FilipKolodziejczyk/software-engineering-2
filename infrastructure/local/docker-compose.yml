@@ -34,29 +34,32 @@ services:
       - db-data:/var/opt/mssql
 
   frontend-client:
-    build: "../../frontend/client"
+    build: 
+      context: "../../frontend/client"
+      args:
+        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     ports:
       - "${FRONTEND_CLIENT_PORT}:5173"
-    environment:
-      - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     networks:
       - net
 
   frontend-delivery:
-    build: "../../frontend/delivery"
+    build:
+      context: "../../frontend/delivery"
+      args:
+        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     ports:
       - "${FRONTEND_DELIVERY_PORT}:5173"
-    environment:
-      - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     networks:
       - net
 
   frontend-shop:
-    build: "../../frontend/shop"
+    build: 
+      context: "../../frontend/shop"
+      args:
+        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     ports:
       - "${FRONTEND_SHOP_PORT}:5173"
-    environment:
-      - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
     networks:
       - net
 
