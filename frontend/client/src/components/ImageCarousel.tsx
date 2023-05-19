@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Tab} from '@headlessui/react'
 
-export function ImageCarousel(props: { imageSources: string[] }) {
+export default function ImageCarousel(props: { imageSources: string[] }) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [loading, setLoading] = useState(Array(props.imageSources.length).fill(true));
 
