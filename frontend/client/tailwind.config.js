@@ -9,8 +9,13 @@ module.exports = {
       fontFamily: {
         'quicksand': ['Quicksand', 'sans-serif'],
         'inter': ['Inter', 'sans-serif'],
+      },
+      colors: {
+        current: 'currentColor',
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }

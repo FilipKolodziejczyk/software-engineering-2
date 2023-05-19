@@ -7,8 +7,6 @@ import ErrorPage from "./pages/ErrorPage";
 import ProductsPage from "./pages/ProductsPage";
 import LoginPage from "./pages/LoginPage";
 import ProductDetailsPage, {loader as productLoader} from "./pages/ProductDetailsPage";
-import {Simulate} from "react-dom/test-utils";
-import load = Simulate.load;
 
 const router = createBrowserRouter([
   {
