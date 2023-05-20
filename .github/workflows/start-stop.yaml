@@ -1,0 +1,80 @@
+name: Start/Stop Environment
+run-name: Start/Stop Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        default: 'stop'
+        required: true
+        type: choice
+        description: 'What action to perform on the environment'
+        options:
+          - 'stop'
+          - 'start'
+      
+  schedule:
+    - cron: '0 2 * * *'
+
+env:
+  action: 'stop'
+  aws-region: 'us-east-1'
+
+jobs:
+  start-stop-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load input parameters
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "action=${{ github.event.inputs.action }}" >> $GITHUB_ENV
+
+      - name: Login to AWS
+        id: login-aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Start/Stop ECS Services
+        run: |
+          if [ "${{ env.action }}" == "stop" ]; then
+            desired_count=0
+            action="Stopping"
+          else
+            desired_count=1
+            action="Starting"
+          fi
+
+          cluster_arn=$(aws ecs list-clusters --query "clusterArns[?contains(@, '${{ vars.APP_NAME }}') && contains(@, '${{ vars.ENVIRONMENT }}')]" --output text)
+          echo "Target cluster: $cluster_arn"
+
+          echo "$action backend service"
+          aws ecs update-service --cluster $cluster_arn --service "${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-backend-service" --desired-count $desired_count --no-cli-pager
+
+          echo "$action frontend client service"
+          aws ecs update-service --cluster $cluster_arn --service "${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-frontend-client-service" --desired-count $desired_count --no-cli-pager
+
+          echo "$action frontend delivery service"
+          aws ecs update-service --cluster $cluster_arn --service "${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-frontend-delivery-service" --desired-count $desired_count --no-cli-pager
+
+          echo "$action frontend shop service"
+          aws ecs update-service --cluster $cluster_arn --service "${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-frontend-shop-service" --desired-count $desired_count --no-cli-pager
+
+      - name: Start/Stop EC2 Autoscaling Group
+        run: |
+          if [ "${{ env.action }}" == "stop" ]; then
+            desired_capacity=0
+            min_size=0
+            max_size=0
+            action="Stopping"
+          else
+            desired_capacity=4
+            min_size=1
+            max_size=5
+            action="Starting"
+          fi
+
+          echo "$action EC2 Autoscaling Group"
+          aws autoscaling update-auto-scaling-group --auto-scaling-group-name "flowershop-dev-ec2-autoscaling-group" --min-size $min_size --max-size $max_size --desired-capacity $desired_capacity --no-cli-pager
