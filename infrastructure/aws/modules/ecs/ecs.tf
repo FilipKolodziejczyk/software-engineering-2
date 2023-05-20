@@ -32,7 +32,7 @@ resource "aws_autoscaling_group" "ec2_autoscaling_group" {
 
   min_size                = 1
   max_size                = 5
-  desired_capacity        = 5
+  desired_capacity        = 4
   health_check_grace_period = 300
   health_check_type       = "EC2"
   force_delete            = true
