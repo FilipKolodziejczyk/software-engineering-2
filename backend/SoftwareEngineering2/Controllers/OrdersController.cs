@@ -19,6 +19,7 @@ namespace SoftwareEngineering2.Controllers {
 
         // POST: api/orders
         [HttpPost]
+        [SwaggerOperation(Summary = "Create new Order", Description = "Difference: No productId ")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(201, "Created")]
@@ -53,6 +54,7 @@ namespace SoftwareEngineering2.Controllers {
         }
 
         // PUT: api/orders
+        [SwaggerOperation(Summary = "Modify Product", Description = "")]
         [HttpPut]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
@@ -65,7 +67,8 @@ namespace SoftwareEngineering2.Controllers {
         }
 
         // POST: api/orders/6/change_status
-        [HttpPost("{orderId:int}/change_status")]
+        [HttpPut("{orderId:int}/change_status")]
+        [SwaggerOperation(Summary = "Change status", Description = "Difference: PUT instead of POST")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(403, "Forbidden")]
@@ -96,6 +99,7 @@ namespace SoftwareEngineering2.Controllers {
 
         // GET: api/orders/6
         [HttpGet("{orderId:int}")]
+        [SwaggerOperation(Summary = "Fetch a specific order", Description = "Difference: -")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(404, "Not found")]
@@ -117,6 +121,7 @@ namespace SoftwareEngineering2.Controllers {
 
         // GET: api/orders
         [HttpGet]
+        [SwaggerOperation(Summary = "Fetch assigned orders", Description = "Difference: Difference: Endpoint does not exist ")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(200, "OK")]
@@ -140,6 +145,7 @@ namespace SoftwareEngineering2.Controllers {
 
         // DELETE: api/orders/6
         [HttpDelete("{orderId:int}")]
+        [SwaggerOperation(Summary = "Delete order", Description = "Difference: -")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(404, "Not found")]
