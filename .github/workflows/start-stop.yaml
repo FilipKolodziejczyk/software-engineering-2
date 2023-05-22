@@ -78,3 +78,18 @@ jobs:
 
           echo "$action EC2 Autoscaling Group"
           aws autoscaling update-auto-scaling-group --auto-scaling-group-name "flowershop-dev-ec2-autoscaling-group" --min-size $min_size --max-size $max_size --desired-capacity $desired_capacity --no-cli-pager
+
+      - name: Start/Stop RDS Instance
+        run: |
+          if [ "${{ env.action }}" == "stop" ]; then
+            action="Stopping"
+          else
+            action="Starting"
+          fi
+
+          echo "$action RDS Instance"
+          if [ "${{ env.action }}" == "stop" ]; then
+            aws rds stop-db-instance --db-instance-identifier "flowershop-dev-rds-instance" --no-cli-pager
+          else
+            aws rds start-db-instance --db-instance-identifier "flowershop-dev-rds-instance" --no-cli-pager
+          fi
