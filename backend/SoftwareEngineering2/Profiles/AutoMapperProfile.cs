@@ -10,16 +10,16 @@ public class AutoMapperProfile : Profile {
         CreateMap<AddressModel, AddressDTO>();
 
         CreateMap<ClientModel, UserDTO>()
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => "client"))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => Roles.Client))
             .ForMember(dest => dest.Newsletter, opt => opt.MapFrom(src => src.HasNewsletterOn))
             .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => src.ClientID));
         CreateMap<EmployeeModel, UserDTO>()
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => "employee"))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => Roles.Employee))
             .ForMember(dest => dest.Address, opt => opt.Ignore())
             .ForMember(dest => dest.Newsletter, opt => opt.Ignore())
             .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => src.EmployeeID));
         CreateMap<DeliveryManModel, UserDTO>()
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => "deliveryman"))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => Roles.DeliveryMan))
             .ForMember(dest => dest.Address, opt => opt.Ignore())
             .ForMember(dest => dest.Newsletter, opt => opt.Ignore())
             .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => src.DeliveryManID));
@@ -32,7 +32,7 @@ public class AutoMapperProfile : Profile {
         CreateMap<NewProductDTO, ProductModel>()
             .ForMember(dest => dest.Archived, opt => opt.MapFrom(src => false));
 
-        CreateMap<ProductModel, ProductDTO>(); //Modification may be needed later to handle getting products from database
+        CreateMap<ProductModel, ProductDTO>();
 
         CreateMap<UpdateProductDTO, ProductModel>();
 
@@ -44,7 +44,7 @@ public class AutoMapperProfile : Profile {
             .ForMember(dest => dest.DeliveryMan, opt => opt.MapFrom(src => src.DeliveryMan));
 
         CreateMap<NewOrderDTO, OrderModel>()
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "received"))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => OrderStatus.Received))
             .ForMember(dest => dest.Complaints, opt => opt.Ignore())
             .ForMember(dest => dest.DeliveryMan, opt => opt.Ignore())
             .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());

@@ -13,8 +13,9 @@ public class ClientModelEntityConfiguration : IEntityTypeConfiguration<ClientMod
         builder.Property(x => x.HasNewsletterOn).IsRequired();
         builder.Property(x => x.Password).IsRequired();
 
-        builder.HasMany(x => x.Complaints).WithOne(x => x.Client).HasForeignKey(x => x.ComplaintID);
-        builder.HasMany(x => x.Orders).WithOne(x => x.Client).HasForeignKey(x => x.OrderID);
+        // TODO: fix schema, it should be working witout .OnDelete
+        builder.HasMany(x => x.Complaints).WithOne(x => x.Client).HasForeignKey(x => x.ComplaintID).OnDelete(DeleteBehavior.NoAction);
+        builder.HasMany(x => x.Orders).WithOne(x => x.Client).HasForeignKey(x => x.OrderID).OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(x => x.Address).WithOne(x => x.Client).HasForeignKey<ClientModel>(x => x.AddressID);
     }

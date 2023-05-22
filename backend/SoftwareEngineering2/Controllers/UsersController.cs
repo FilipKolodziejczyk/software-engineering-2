@@ -19,6 +19,7 @@ namespace SoftwareEngineering2.Controllers {
 
         // POST: api/users/log_in
         [HttpPost("log_in")]
+        [SwaggerOperation(Summary = "Log into system", Description = "Difference: -")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(200, "OK")]
@@ -36,7 +37,8 @@ namespace SoftwareEngineering2.Controllers {
 
         // GET: api/users
         [HttpGet(Name = "GetUser")]
-        [SwaggerResponse(200, "Get information about currently authenticated User", typeof(UserDTO))]
+        [SwaggerOperation(Summary = "Get information about currently authenticated user", Description = "Difference: user id")]
+        [SwaggerResponse(200, "Get information about currently authenticated user", typeof(UserDTO))]
         [SwaggerResponse(401, "Unauthorised")]
         public async Task<IActionResult> Get() {
             if (!int.TryParse(User.FindFirst("UserID")?.Value, out int id))
@@ -48,10 +50,15 @@ namespace SoftwareEngineering2.Controllers {
 
         // POST: api/users
         [HttpPost]
+        [SwaggerOperation(Summary = "Creates a user", Description = "Difference: role of created user (not based on email)")]
         [SwaggerResponse(201, "User created", typeof(UserDTO))]
         [SwaggerResponse(400, "User is invalid")]
+        [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(409, "User already exists")]
         public async Task<IActionResult> CreateUser([FromBody][Required] NewUserDTO newUser) {
+            if (!User.IsInRole(Roles.Employee) && newUser.Role != Roles.Client)
+                return Forbid();
+
             if (string.IsNullOrWhiteSpace(newUser.Email)
                 || string.IsNullOrWhiteSpace(newUser.Password)
                 || string.IsNullOrWhiteSpace(newUser.Name))
@@ -74,7 +81,7 @@ namespace SoftwareEngineering2.Controllers {
 
         // POST: api/users/profilePicture
         [HttpPost("profilePicture", Name = "profilePicture")]
-        [Authorize(Roles = "client")]
+        [Authorize(Roles = Roles.Client)]
         [SwaggerResponse(200, "Profil picture updated")]
         [SwaggerResponse(401, "Unauthorised")]
         public Task<IActionResult> UpdatePicture() {
@@ -83,7 +90,8 @@ namespace SoftwareEngineering2.Controllers {
 
         // POST: api/users/newsletter
         [HttpPost("newsletter")]
-        [Authorize(Roles = "client")]
+        [SwaggerOperation(Summary = "Update newsletter preference", Description = "Difference: -")]
+        [Authorize(Roles = Roles.Client)]
         [SwaggerResponse(200, "OK")]
         [SwaggerResponse(401, "Unauthorized")]
         public async Task<IActionResult> SubscribeNewsletter([FromBody] NewsletterDTO newsletterDTO) {

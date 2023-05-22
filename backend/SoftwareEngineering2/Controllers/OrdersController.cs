@@ -23,7 +23,7 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(201, "Created")]
-        [Authorize(Roles = "client")]
+        [Authorize(Roles = Roles.Client)]
         public async Task<IActionResult> PlaceOrder([FromBody] NewOrderDTO order) {
             //check validity
             if (order.Address is null ||
@@ -54,16 +54,16 @@ namespace SoftwareEngineering2.Controllers {
         }
 
         // PUT: api/orders
-        [SwaggerOperation(Summary = "Modify Product", Description = "")]
         [HttpPut]
+        [SwaggerOperation(Summary = "Modify order", Description = "")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        [Authorize(Roles = "employee")]
+        [Authorize(Roles = Roles.Employee)]
         public ActionResult Modify([FromBody] OrderDTO newModel) {
-            return Ok("Order succesfully modified"); // TODO
+            throw new NotImplementedException();
         }
 
         // POST: api/orders/6/change_status
@@ -74,16 +74,16 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        [Authorize(Roles = "employee,deliveryman")]
+        [Authorize(Roles = Roles.Employee + "," + Roles.DeliveryMan)]
         public async Task<IActionResult> ChangeStatus(int orderId, [FromBody] OrderStatusDTO orderStatusDTO) {
-            if (string.IsNullOrEmpty(orderStatusDTO.OrderStatus))
+            if (!OrderStatus.IsValid(orderStatusDTO.OrderStatus))
                 return BadRequest(new { message = "Order status is not correct" });
 
             var order = await _orderService.GetOrderById(orderId);
             if (order is null)
                 return NotFound("Order not found");
 
-            if (User.IsInRole("deliveryman")
+            if (User.IsInRole(Roles.DeliveryMan)
                 && (!int.TryParse(User.FindFirst("UserID")?.Value, out int deliverymanId)
                     || order.DeliveryMan is null
                     || order.DeliveryMan.UserID != deliverymanId))
@@ -104,13 +104,13 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(200, "OK")]
-        [Authorize(Roles = "employee,deliveryman")]
+        [Authorize(Roles = Roles.Employee + "," + Roles.DeliveryMan)]
         public async Task<IActionResult> GetOrder(int orderId) {
             var order = await _orderService.GetOrderById(orderId);
             if (order is null)
                 return NotFound("Order not found");
 
-            if (User.IsInRole("deliveryman")
+            if (User.IsInRole(Roles.DeliveryMan)
                 && (!int.TryParse(User.FindFirst("UserID")?.Value, out int deliverymanId)
                     || order.DeliveryMan is null
                     || order.DeliveryMan.UserID != deliverymanId))
@@ -125,17 +125,19 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(401, "Unauthorised")]
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(200, "OK")]
-        [Authorize(Roles = "employee,deliveryman")]
-        public async Task<IActionResult> GetAssignedOrders() {
+        [Authorize(Roles = Roles.Employee + "," + Roles.DeliveryMan)]
+        public async Task<IActionResult> GetAssignedOrders([FromQuery] int? pageNumber, [FromQuery] int? elementsOnPage) {
             List<OrderDTO>? result;
+            pageNumber ??= 1;
+            elementsOnPage ??= 32;
 
-            if (User.IsInRole("employee")) {
-                result = await _orderService.GetOrders();
-            } else if (User.IsInRole("deliveryman")) {
+            if (User.IsInRole(Roles.Employee)) {
+                result = await _orderService.GetOrders(pageNumber.Value, elementsOnPage.Value);
+            } else if (User.IsInRole(Roles.DeliveryMan)) {
                 if (!int.TryParse(User.FindFirst("UserID")?.Value, out int deliverymanId))
                     return Forbid();
 
-                result = await _orderService.GetOrdersByDeliverymanId(deliverymanId);
+                result = await _orderService.GetOrdersByDeliverymanId(deliverymanId, pageNumber.Value, elementsOnPage.Value);
             } else {
                 return Unauthorized();
             }
@@ -150,7 +152,7 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(404, "Not found")]
         [SwaggerResponse(204, "Removed")]
-        [Authorize(Roles = "employee")]
+        [Authorize(Roles = Roles.Employee)]
         public async Task<IActionResult> DeleteOrder(int orderId) {
             var order = await _orderService.GetOrderById(orderId);
             if (order is null)
