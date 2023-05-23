@@ -83,6 +83,11 @@ jobs:
             container-name: ${{ inputs.module }}
             image: ${{ inputs.image }}
 
+      - name: Stop current Amazon ECS task
+        run: |
+          task=$(aws ecs list-tasks --cluster ${{ inputs.app-name }}-${{ inputs.environment }}-ecs-cluster --service-name ${{ inputs.app-name }}-${{ inputs.environment }}-${{ inputs.module }}-service --query "taskArns[0]" --no-cli-pager --output text)
+          aws ecs stop-task --cluster ${{ inputs.app-name }}-${{ inputs.environment }}-ecs-cluster --task $task --no-cli-pager
+
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
         with:
