@@ -89,7 +89,7 @@ jobs:
 
           echo "$action RDS Instance"
           if [ "${{ env.action }}" == "stop" ]; then
-            aws rds stop-db-instance --db-instance-identifier "flowershop-dev-rds-instance" --no-cli-pager
+            aws rds stop-db-instance --db-instance-identifier "${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-sqlserver" --no-cli-pager
           else
-            aws rds start-db-instance --db-instance-identifier "flowershop-dev-rds-instance" --no-cli-pager
+            aws rds start-db-instance --db-instance-identifier "${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-sqlserver" --no-cli-pager
           fi
