@@ -15,11 +15,9 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
+builder.Services.AddCors(options => {
     options.AddPolicy(name: MyAllowSpecificOrigins,
-    policy =>
-    {
+    policy => {
         var frontendClientUrl = Environment.GetEnvironmentVariable("FRONTEND_CLIENT_URL");
         var frontendShopUrl = Environment.GetEnvironmentVariable("FRONTEND_SHOP_URL");
         var frontendDeliveryUrl = Environment.GetEnvironmentVariable("FRONTEND_DELIVERY_URL");
@@ -33,15 +31,14 @@ builder.Services.AddCors(options =>
         if (!string.IsNullOrEmpty(frontendDeliveryUrl)) {
             origins.Add(frontendDeliveryUrl);
         }
-        policy.WithOrigins(origins.ToArray());
+        policy.WithOrigins(origins.ToArray()).AllowAnyMethod().AllowAnyHeader();
     });
 });
 
 // Add services to the container.
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
+builder.Services.AddSwaggerGen(c => {
     c.EnableAnnotations();
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
@@ -73,11 +70,10 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 if (Environment.GetEnvironmentVariable("USE_IN_MEMORY_DB") == "true") {
     builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseInMemoryDatabase("FlowerShop"));
 } else {
-    var connectionStringBuilder = new SqlConnectionStringBuilder(Environment.GetEnvironmentVariable("CONNSTR"))
-        {
-            UserID = builder.Configuration["DbUser"],
-            Password = builder.Configuration["DbPassword"]
-        };
+    var connectionStringBuilder = new SqlConnectionStringBuilder(Environment.GetEnvironmentVariable("CONNSTR")) {
+        UserID = builder.Configuration["DbUser"],
+        Password = builder.Configuration["DbPassword"]
+    };
     var connectionString = connectionStringBuilder.ConnectionString;
 
     builder.Services.AddTransient<IDbConnection>(_ => new SqlConnection(connectionString));
