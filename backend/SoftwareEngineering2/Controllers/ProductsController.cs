@@ -43,7 +43,7 @@ namespace SoftwareEngineering2.Controllers {
             var product = await _productService.GetModelByIdAsync(ProductID);
             return product != null ?
                 Ok(product) :
-                NotFound(new { message = $"No product found with id {ProductID}" });
+                Ok(new { message = $"No product found with id {ProductID}" });
         }
 
         // GET: api/products
@@ -60,7 +60,7 @@ namespace SoftwareEngineering2.Controllers {
             var samples = await _productService.GetFilteredModelsAsync(searchQuery, filteredCategory, pageNumber.Value, elementsOnPage.Value);
             return samples.Any() ?
                 Ok(samples) :
-                NotFound(new { message = $"No samples found with name {searchQuery} and category {filteredCategory}" });
+                Ok(new { message = $"No samples found with name {searchQuery} and category {filteredCategory}" });
         }
 
 

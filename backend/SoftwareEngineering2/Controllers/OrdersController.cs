@@ -108,7 +108,7 @@ namespace SoftwareEngineering2.Controllers {
         public async Task<IActionResult> GetOrder(int orderId) {
             var order = await _orderService.GetOrderById(orderId);
             if (order is null)
-                return NotFound("Order not found");
+                return Ok("Order not found");
 
             if (User.IsInRole(Roles.DeliveryMan)
                 && (!int.TryParse(User.FindFirst("UserID")?.Value, out int deliverymanId)
