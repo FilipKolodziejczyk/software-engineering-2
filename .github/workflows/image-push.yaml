@@ -1,0 +1,54 @@
+name: Push image to ECR
+
+on:
+  workflow_call:
+    inputs:
+      image-tag:
+        type: string
+        description: 'The tag of the image to push to ECR'
+        required: true
+      image-path:
+        type: string
+        description: 'The path to the Dockerfile'
+        required: true
+      repository:
+        type: string
+        description: 'The ECR repository'
+        required: true
+      registry:
+        type: string
+        description: 'The ECR registry'
+        required: true
+    outputs:
+      image:
+        value: ${{ jobs.publish.outputs.image }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses:  docker/login-action@v2
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Run unit tests
+        id: run-tests
+        run: |
+          docker build --target test -t '${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}' '${{ inputs.image-path }}'
+  
+      - name: Build, tag and push image
+        id: build-image
+        run: |
+          docker build -t '${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}' '${{ inputs.image-path }}'
+          docker push '${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}'
+          echo 'image=${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image-tag }}' >> $GITHUB_OUTPUT

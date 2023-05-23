@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  backend:
+    build: "../../backend/"
+    ports:
+      - "${BACKEND_PORT}:80"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - USE_IN_MEMORY_DB=${USE_IN_MEMORY_DB}
+      - CREATE_AND_DROP_DB=${CREATE_AND_DROP_DB}
+      - CONNSTR=Server=db;Database=flowershopdb;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=true
+      - DbUser=sa
+      - DbPassword=${DbPassword}
+      - FRONTEND_DELIVERY_URL=http://localhost:${FRONTEND_DELIVERY_PORT}
+      - FRONTEND_SHOP_URL=http://localhost:${FRONTEND_SHOP_PORT}
+      - FRONTEND_CLIENT_URL=http://localhost:${FRONTEND_CLIENT_PORT}
+    networks: 
+      - net
+    
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DbPassword}
+    ports:
+      - "1433:1433"
+    networks:
+      - net
+    volumes:
+      - db-data:/var/opt/mssql
+
+  frontend-client:
+    build: 
+      context: "../../frontend/client"
+      args:
+        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
+    ports:
+      - "${FRONTEND_CLIENT_PORT}:5173"
+    networks:
+      - net
+
+  frontend-delivery:
+    build:
+      context: "../../frontend/delivery"
+      args:
+        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
+    ports:
+      - "${FRONTEND_DELIVERY_PORT}:5173"
+    networks:
+      - net
+
+  frontend-shop:
+    build: 
+      context: "../../frontend/shop"
+      args:
+        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
+    ports:
+      - "${FRONTEND_SHOP_PORT}:5173"
+    networks:
+      - net
+
+volumes:
+  db-data: {}
+
+networks:
+  net:
+    driver: bridge
