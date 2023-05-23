@@ -59,9 +59,6 @@ namespace SoftwareEngineering2.Controllers {
 
             var samples = await _productService.GetFilteredModelsAsync(searchQuery, filteredCategory, pageNumber.Value, elementsOnPage.Value);
             return Ok(samples);
-            // return samples.Any() ?
-            //     Ok(samples) :
-            //     Ok(new { message = $"No samples found with name {searchQuery} and category {filteredCategory}" });
         }
 
 
