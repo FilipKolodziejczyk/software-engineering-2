@@ -1,0 +1,56 @@
+name: Frontend Delivery CI/CD
+run-name: Running Frontend Delivery CI/CD on commit ${{ github.sha }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        default: 'test'
+        required: true
+        type: choice
+        description: 'test or publish'
+        options:
+          - 'test'
+          - 'publish'
+  push:
+    branches:
+      - master
+    paths:
+      - 'frontend/delivery/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'frontend/delivery/**'
+
+jobs:
+  unit-tests:
+    name: Running unit tests on image
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'test')
+    uses: ./.github/workflows/image-unit-test.yaml
+    with:
+      image-path: frontend/delivery/
+
+  push:
+    name: Building, tagging and pushing image to ECR
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' &&  (inputs.mode == 'publish' || inputs.mode == 'publish-and-deploy'))
+    uses: ./.github/workflows/image-push.yaml
+    with:
+      image-path: frontend/delivery/
+      image-tag: ${{ github.sha }}
+      repository: ${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-frontend-delivery-ecr
+      registry: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+    secrets: inherit
+
+  deploy:
+    name: Deploying image to ECS
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-and-deploy')
+    needs: push
+    uses: ./.github/workflows/image-deploy-to-ecs.yaml
+    with:
+      app-name: ${{ vars.APP_NAME }}
+      environment: ${{ vars.ENVIRONMENT }}
+      aws-region: ${{ vars.AWS_REGION }}
+      image: ${{ needs.push.outputs.image }}
+      module: frontend-delivery
+    secrets: inherit

@@ -13,11 +13,11 @@ function App() {
     <div className="flex flex-row h-screen w-screen m-0 p-0 bg-red-500">
         <BrowserRouter>
         <Routes>
-          <Route path="/" element={<><NavBarPage/><LoginPage /></>}/>
-          <Route path="/products" element={<><NavBarPage/><ProductsPage/></>}/> 
-          <Route path="/products/new" element={<><NavBarPage/><ProductItemAddPage/></>}/> 
-          <Route path="/orders" element={<><NavBarPage/><OrdersPage/></>}/> 
-          <Route path="/complaints" element={<><NavBarPage/><ComplaintsPage/></>}/> 
+          <Route path="/shop/" element={<><NavBarPage/><LoginPage /></>}/>
+          <Route path="/shop/products" element={<><NavBarPage/><ProductsPage/></>}/> 
+          <Route path="/shop/products/new" element={<><NavBarPage/><ProductItemAddPage/></>}/> 
+          <Route path="/shop/orders" element={<><NavBarPage/><OrdersPage/></>}/> 
+          <Route path="/shop/complaints" element={<><NavBarPage/><ComplaintsPage/></>}/> 
         </Routes>
       </BrowserRouter>
       </div>

@@ -1,0 +1,18 @@
+name: Testing docker image (unit tests)
+
+on:
+  workflow_call:
+    inputs:
+      image-path:
+        type: string
+        description: 'The path to the Dockerfile'
+        required: true
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          docker build --target test --output type=local,dest=/dev/null ${{ inputs.image-path }}

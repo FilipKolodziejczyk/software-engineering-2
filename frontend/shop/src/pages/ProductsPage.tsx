@@ -1,9 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProductItem from "../components/ProductItem";
 import ProductItemAdd from "./ProductItemAddPage";
+import { Product } from "../models/Product";
 
 function ProductsPage  ()  {  
+
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => { // add search in fetch
+        setLoading(true);
+        setError(false);
+        fetch(`https://fakestoreapi.com/products?limit=10&page=${page}`).then(res => res.json()).then((data) => {
+          setProducts((prevProducts) => [...prevProducts, ...data]);
+          setHasMore(data.length > 0);
+          setLoading(false);
+        }).catch(() => {
+          setError(true);
+        });
+    }, [page, searchQuery]);
+
+    const getProducts = () => {
+        setLoading(true);
+        setError(false);
+        fetch(`https://fakestoreapi.com/products?limit=10&page=${page}`).then(res => res.json()).then((data) => {
+          setProducts((prevProducts) => [...prevProducts, ...data]);
+          setHasMore(data.length > 0);
+          setLoading(false);
+        }).catch(() => {
+          setError(true);
+        });
+    };
+
+    const updateList = () => {
+        getProducts();
+    };
 
     return (
     
@@ -14,13 +50,11 @@ function ProductsPage  ()  {
                 add
             </button>
             </Link>
-            <input className="bg-gray-100 text-gray-950 ml-2 rounded" type="text" placeholder="search" />
+            <input className="bg-gray-100 text-gray-950 ml-2 rounded" type="text" placeholder="search" onChange={(e)=>setSearchQuery(e.target.value)}/>
         </div>
 
         <div className="h-full overflow-y-auto w-full mt-10">
-            <ProductItem/>
-            <ProductItem/>
-            <ProductItem/>
+            {products.map((product) => (<ProductItem key={product.productID} product={product} updateList={updateList}/>))}
         </div>
     </div>
     )
