@@ -12,5 +12,9 @@ public class ComplaintModelEntityConfiguration : IEntityTypeConfiguration<Compla
         builder.Property(x => x.EmployeeID).IsRequired();
         builder.Property(x => x.Topic).IsRequired();
         builder.Property(x => x.Description).IsRequired();
+
+        builder.HasOne(x => x.Order).WithMany(x => x.Complaints).HasForeignKey(x => x.OrderID);
+        builder.HasOne(x => x.Client).WithMany(x => x.Complaints).HasForeignKey(x => x.ClientID);
+        builder.HasOne(x => x.Employee).WithMany(x => x.Complaints).HasForeignKey(x => x.EmployeeID);
     }
 }

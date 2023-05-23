@@ -84,10 +84,6 @@ if (Environment.GetEnvironmentVariable("USE_IN_MEMORY_DB") == "true") {
 }
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<ISampleModelRepository, SampleModelRepository>();
-builder.Services.AddTransient<ISampleModelTypeRepository, SampleModelTypeRepository>();
-builder.Services.AddTransient<ISampleService, SampleService>();
-
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IClientModelRepository, ClientModelRepository>();
 builder.Services.AddTransient<IEmployeeModelRepository, EmployeeModelRepository>();
@@ -95,6 +91,9 @@ builder.Services.AddTransient<IDeliveryManModelRepository, DeliveryManModelRepos
 builder.Services.AddTransient<IAddressModelRepository, AddressModelRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderModelRepository, OrderModelRepository>();
+builder.Services.AddTransient<IOrderDetailsModelRepository, OrderDetailsModelRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {

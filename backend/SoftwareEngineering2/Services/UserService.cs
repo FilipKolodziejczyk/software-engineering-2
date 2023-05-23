@@ -47,9 +47,9 @@ public class UserService : IUserService {
             return null;
 
         (int id, string role) = result switch {
-            EmployeeModel => ((result as EmployeeModel)!.EmployeeID, "employee"),
-            DeliveryManModel => ((result as DeliveryManModel)!.DeliveryManID, "deliveryman"),
-            _ => ((result as ClientModel)!.ClientID, "client"),
+            EmployeeModel => ((result as EmployeeModel)!.EmployeeID, Roles.Employee),
+            DeliveryManModel => ((result as DeliveryManModel)!.DeliveryManID, Roles.DeliveryMan),
+            _ => ((result as ClientModel)!.ClientID, Roles.Client),
         };
 
         // TODO: get secret key from configuration
@@ -76,11 +76,11 @@ public class UserService : IUserService {
         IUserModel model;
 
         switch (newUser.Role) {
-        case "deliveryman":
+        case Roles.DeliveryMan:
             model = _mapper.Map<DeliveryManModel>(newUser);
             await _deliveryManModelRepository.AddAsync((DeliveryManModel) model);
             break;
-        case "employee":
+        case Roles.Employee:
             model = _mapper.Map<EmployeeModel>(newUser);
             await _employeeModelRepository.AddAsync((EmployeeModel) model);
             break;
@@ -97,14 +97,10 @@ public class UserService : IUserService {
     }
 
     public async Task<UserDTO?> GetUserByID(string role, int id) {
-        //IUserModel? result = await _clientModelRepository.GetByID(id);
-        //result ??= await _deliveryManModelRepository.GetByID(id);
-        //result ??= await _employeeModelRepository.GetByID(id);
-
         IUserModel? result = role switch {
-            "client" => await _clientModelRepository.GetByID(id),
-            "employee" => await _employeeModelRepository.GetByID(id),
-            "deliveryman" => await _deliveryManModelRepository.GetByID(id),
+            Roles.Client => await _clientModelRepository.GetByID(id),
+            Roles.Employee => await _employeeModelRepository.GetByID(id),
+            Roles.DeliveryMan => await _deliveryManModelRepository.GetByID(id),
             _ => null,
         };
 
