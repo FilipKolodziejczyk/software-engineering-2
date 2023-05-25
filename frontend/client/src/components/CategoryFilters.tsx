@@ -1,53 +1,53 @@
-import React, {Fragment, useState} from 'react'
+import React, {FormEvent, Fragment, useState} from 'react'
 import {Dialog, Disclosure, Menu, Transition} from '@headlessui/react'
 import {XMarkIcon} from '@heroicons/react/24/outline'
 import {ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon} from '@heroicons/react/20/solid'
-import Slider from '@mui/material/Slider';
+import {Form, useSubmit} from 'react-router-dom';
+import PriceRange from "./PriceRange";
 
-const sortOptions = [{name: 'Newest', href: '#', current: true}, {
-  name: 'Price: Low to High',
-  href: '#',
-  current: false
-}, {name: 'Price: High to Low', href: '#', current: false},]
-const subCategories = [{name: 'Roses', href: '#'}, {name: 'Lilies', href: '#'}, {
-  name: 'Orchids',
-  href: '#'
-}, {name: 'Seasonal', href: '#'}, {name: 'Bouquets', href: '#'},]
+const subCategories = [
+  {name: 'All', value: '', current: true},
+  {name: 'Roses', value: 'rose', current: false},
+  {name: 'Lilies', value: 'lily', current: false},
+  {name: 'Orchids', value: 'orchid', current: false},
+  {name: 'Seasonal', value: 'seasonal', current: false},
+  {name: 'Bouquets', value: 'bouquet', current: false},
+]
+
+const sortOptions = [
+  {name: 'Newest', href: '#', current: true},
+  {name: 'Price: Low to High', href: '#', current: false},
+  {name: 'Price: High to Low', href: '#', current: false},
+]
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
-}
-
-function PriceRange(props: { numbers: number[], onChange: (event: Event, newValue: (number | number[])) => void }) {
-  return <div className="px-4">
-    <div className="flex justify-end">
-      <span className={`text-sm text-gray-600`}>${props.numbers[0]}</span>
-      <span className="text-sm text-gray-600 mx-2">-</span>
-      <span className={`text-sm text-gray-600`}>${props.numbers[1]}</span>
-    </div>
-    <Slider className="mt-4" value={props.numbers} onChange={props.onChange} min={0}
-            max={100} step={1}
-            sx={{
-              color: "#3f3f46", "& .MuiSlider-track": {
-                border: "none",
-              }, "&:before": {
-                boxShadow: "none",
-              }, "& .MuiSlider-thumb": {
-                width: 16, height: 16, "&:hover, &.Mui-focusVisible, &.Mui-active": {
-                  boxShadow: "none",
-                },
-              },
-            }}
-    />
-  </div>;
 }
 
 export function CategoryFilters({children}: { children: React.ReactNode }) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [priceRange, setPriceRange] = useState<number[]>([30, 60]);
 
+  let submit = useSubmit();
+
   const handlePriceRangeChange = (event: Event, newValue: number | number[]) => {
     setPriceRange(newValue as number[]);
+  }
+
+  function submitForm() {
+    let formData = new FormData();
+    formData.append("minPrice", priceRange[0].toString());
+    formData.append("maxPrice", priceRange[1].toString());
+    const subCategory = subCategories.find((subCategory) => subCategory.current)?.value;
+    if (subCategory) {
+      formData.append("filteredCategory", subCategory);
+    }
+    submit(formData, {method: 'GET', action: '/'});
+  }
+
+  function handleFilterSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitForm();
   }
 
   return (<div className="bg-white">
@@ -92,13 +92,21 @@ export function CategoryFilters({children}: { children: React.ReactNode }) {
                 </div>
 
                 {/* Filters */}
-                <form className="mt-4 border-t border-gray-200">
+                <Form method="get" action="/" className="mt-4 border-t border-gray-200"
+                      onSubmit={(event) => handleFilterSubmit(event)} reloadDocument>
                   <h3 className="sr-only">Categories</h3>
                   <ul role="list" className="px-2 py-3 font-medium text-gray-900">
                     {subCategories.map((category) => (<li key={category.name}>
-                      <a href={category.href} className="block px-2 py-3">
+                      <p className={classNames(category.current ? "underline" : '', "block px-2 py-3")}
+                         onClick={
+                           () => {
+                             subCategories.forEach((c) => c.current = false);
+                             category.current = true;
+                             submitForm();
+                           }
+                         }>
                         {category.name}
-                      </a>
+                      </p>
                     </li>))}
                   </ul>
 
@@ -128,7 +136,7 @@ export function CategoryFilters({children}: { children: React.ReactNode }) {
                       Apply Filters
                     </button>
                   </div>
-                </form>
+                </Form>
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -137,7 +145,7 @@ export function CategoryFilters({children}: { children: React.ReactNode }) {
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-12">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">Products</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900">Products</h1>
 
           <div className="flex items-center">
             <Menu as="div" className="relative inline-block text-left">
@@ -195,11 +203,20 @@ export function CategoryFilters({children}: { children: React.ReactNode }) {
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
             {/* Filters */}
-            <form className="hidden lg:block">
+            <Form method="get" action="/" className="hidden lg:block" onSubmit={(event) => handleFilterSubmit(event)}
+                  reloadDocument>
               <h3 className="sr-only">Categories</h3>
               <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                 {subCategories.map((category) => (<li key={category.name}>
-                  <a href={category.href}>{category.name}</a>
+                  <p onClick={
+                    () => {
+                      subCategories.forEach((c) => c.current = false);
+                      category.current = true;
+                      submitForm();
+                    }
+                  }
+                     className={classNames(category.current ? 'underline' : '', 'cursor-pointer')}
+                  >{category.name}</p>
                 </li>))}
               </ul>
 
@@ -228,7 +245,7 @@ export function CategoryFilters({children}: { children: React.ReactNode }) {
                 Apply Filters
               </button>
 
-            </form>
+            </Form>
 
             <div className="lg:col-span-3">
               {children}

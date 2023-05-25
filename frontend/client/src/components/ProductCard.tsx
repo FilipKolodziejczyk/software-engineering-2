@@ -25,7 +25,8 @@ export function ProductCardSkeleton() {
     <h3 className="mt-4 text-sm text-gray-700">
       <div className="animate-pulse w-1/2 h-4 bg-gray-200 rounded-sm"/>
     </h3>
-    <span className="mt-1 text-lg font-medium text-gray-900"><div
-      className="animate-pulse w-1/4 h-4 bg-gray-200 rounded-sm"/></span>
+    <span className="mt-1 text-lg font-medium text-gray-900">
+      <div className="animate-pulse w-1/4 h-4 bg-gray-200 rounded-sm"/>
+    </span>
   </div>);
 }
