@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Tab} from '@headlessui/react'
 
-export function ImageCarousel(props: { imageSources: string[] }) {
+export default function ImageCarousel(props: { imageSources: string[] }) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [loading, setLoading] = useState(Array(props.imageSources.length).fill(true));
 
@@ -35,12 +35,12 @@ export function ImageCarousel(props: { imageSources: string[] }) {
       <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
         <Tab.Panels>
           {props.imageSources.map((image, index) => (<Tab.Panel key={index + props.imageSources.length}>
-              {
-                loading[index]
-                  ? (<div className="w-full aspect-square bg-gray-200 animate-pulse rounded-xl"/>)
-                  : (<img src={image} alt="Product Image" className="w-full aspect-square object-cover rounded-xl"/>)
-              }
-            </Tab.Panel>))}
+            {
+              loading[index]
+                ? (<div className="w-full aspect-square bg-gray-200 animate-pulse rounded-xl"/>)
+                : (<img src={image} alt="Product Image" className="w-full aspect-square object-cover rounded-xl"/>)
+            }
+          </Tab.Panel>))}
         </Tab.Panels>
         <Tab.List className="flex gap-6 mt-6">
           {props.imageSources.map((image, index) => (

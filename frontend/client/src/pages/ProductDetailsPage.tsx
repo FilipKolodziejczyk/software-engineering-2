@@ -2,7 +2,7 @@ import {useLoaderData} from "react-router-dom";
 import {Product} from "../models/Product";
 import React from "react";
 import {CounterInput} from "../components/CounterInput";
-import {ImageCarousel} from "../components/ImageCarousel";
+import ImageCarousel from "../components/ImageCarousel";
 
 export async function loader({params}: any) {
   const product: Product = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products/${params.id}`).then(res => res.json());

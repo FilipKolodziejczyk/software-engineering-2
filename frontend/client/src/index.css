@@ -5,3 +5,45 @@
 body {
     @apply font-inter;
 }
+
+@layer components {
+    input[type=range] {
+        @apply absolute w-full pointer-events-none appearance-none h-full opacity-0 z-10 p-0;
+    }
+
+    input[type=range]::-ms-track {
+        @apply appearance-none bg-transparent border-transparent;
+    }
+
+    input[type=range]::-moz-range-track {
+        @apply appearance-none bg-transparent border-transparent;
+    }
+
+    input[type=range]:focus::-webkit-slider-runnable-track {
+        @apply appearance-none bg-transparent border-transparent;
+    }
+
+    input[type=range]::-ms-thumb {
+        @apply appearance-none pointer-events-auto w-4 h-4 border-0 cursor-grab;
+    }
+
+    input[type=range]::-ms-thumb:active {
+        @apply cursor-grabbing;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        @apply appearance-none pointer-events-auto w-4 h-4 border-0 cursor-grab;
+    }
+
+    input[type=range]::-moz-range-thumb:active {
+        @apply cursor-grabbing;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        @apply appearance-none pointer-events-auto w-4 h-4 border-0 cursor-grab;
+    }
+
+    input[type=range]::-webkit-slider-thumb:active {
+        @apply cursor-grabbing;
+    }
+}
