@@ -13,6 +13,7 @@ module "network" {
   aws_region         = var.aws_region
   app_name           = var.app_name
   app_environment    = var.app_environment
+  app_domain_name    = var.app_domain_name
   cidr               = var.cidr
   subnet_count       = var.subnet_count
   availability_zones = var.availability_zones

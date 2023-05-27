@@ -25,6 +25,11 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
+variable "app_domain_name" {
+  type        = string
+  description = "Application Domain Name"
+}
+
 variable "cidr" {
   description = "The CIDR block for the VPC."
   default     = "10.0.0.0/16"
