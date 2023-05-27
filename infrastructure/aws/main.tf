@@ -13,6 +13,7 @@ module "network" {
   aws_region         = var.aws_region
   app_name           = var.app_name
   app_environment    = var.app_environment
+  app_domain_name    = var.app_domain_name
   cidr               = var.cidr
   subnet_count       = var.subnet_count
   availability_zones = var.availability_zones
@@ -23,12 +24,15 @@ module "ecs" {
 
   app_name               = var.app_name
   app_environment        = var.app_environment
+  app_domain_name        = var.app_domain_name
   subnet_ids             = module.network.public_subnet_ids
   vpc_id                 = module.network.vpc_id
   lb_sg_id               = module.network.loadbalancer_sg_id
   account_id             = var.account_id
   aws_region             = var.aws_region
   sa_password_kms_key_id = var.sa_password_kms_key_id
+  acm_ssl_cert_arn       = module.network.ssl_cert_arn
+  dns_zone_id            = module.network.dns_zone_id
 }
 
 module "sqlserver" {

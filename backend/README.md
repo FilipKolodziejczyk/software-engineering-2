@@ -5,7 +5,26 @@ As a basic prequesitise one must have installed .Net Core 7.0 ([guide](https://l
 Application has several different run options for development process ([config file](SoftwareEngineering2/Properties/launchSettings.json)) described above:
 - *inmemdb_http_create_and_drop_db* - Using plain HTTP. Database is created in memory and does not persists (dies when the app dies) and it's whole schema (and population) is done automatically, based on code. Therefore this is the easiest setup, since no db configuration is required. Development settings, i.e. Swagger is up and endpoints returns error messages.
 - *sqlserver_http_create_and_drop_db* - Using plain HTTP and development settings. Database is running on SQL Server instance but it is recreated based on code each time app is started (old database is dropped).
+- *sqlserver_https_create_and_drop_db* - Still using development settings but HTTPS. Database is running on SQL Server instance but it is recreated based on code each time app is started (old database is dropped).
 - *sqlserver_https* - Still using development settings but HTTPS. Database is running on SQL Server instance and it is persisted betweeen application runs. When schema of db changes, migrations are required to be prepared (if appropriate miogration exists, it is applied during boot up).
+
+## HTTPS
+
+To use HTTPS run options (one have to generate developer certificate. To do so, the following command must be executed:
+
+### Windows and macOS
+```
+dotnet dev-certs https --trust
+```
+
+### Linux 
+```
+dotnet dev-certs https
+sudo -E dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM
+sudo update-ca-certificates
+```
+
+For more details check [official guide](https://learn.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-7.0&tabs=visual-studio%2Clinux-ubuntu).
 
 ## SQL Server local instance setup
 
