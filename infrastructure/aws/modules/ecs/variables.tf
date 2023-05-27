@@ -8,6 +8,21 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
+variable "app_domain_name" {
+  type        = string
+  description = "Application Domain Name"
+}
+
+variable "acm_ssl_cert_arn" {
+  type        = string
+  description = "ACM SSL Certificate ARN"
+}
+
+variable "dns_zone_id" {
+  type        = string
+  description = "DNS Zone ID"
+}
+
 variable "subnet_ids" {
   type        = list(string)
   description = "Subnet IDs"
