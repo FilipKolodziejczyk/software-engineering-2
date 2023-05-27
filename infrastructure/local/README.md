@@ -27,9 +27,9 @@ FRONTEND_DELIVERY_PORT=10002
 FRONTEND_SHOP_PORT=10003
 CERT_PASSWD=[cert_passwd]
 
-CORS1=https://localhost:10000
-CORS2=https://localhost:10001
-CORS3=https://localhost:10002
+CORS1=https://localhost:10001
+CORS2=https://localhost:10002
+CORS3=https://localhost:10003
 ```
 **.env file, as well below commands should be run withing this directory.**
 
