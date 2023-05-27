@@ -34,12 +34,25 @@
         "CONNSTR": "Server=localhost;Database=flowershopdb;MultipleActiveResultSets=true;Encrypt=False"
       }
     },
+    "sqlserver_https_create_and_drop_db": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7134",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "USE_IN_MEMORY_DB": "false",
+        "CREATE_AND_DROP_DB": "true",
+        "CONNSTR": "Server=localhost;Database=flowershopdb;MultipleActiveResultSets=true;Encrypt=False"
+      }
+    },
     "sqlserver_https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7134;http://localhost:5019",
+      "applicationUrl": "https://localhost:7134",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "USE_IN_MEMORY_DB": "false",
