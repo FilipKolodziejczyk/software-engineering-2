@@ -18,9 +18,9 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - DbUser=sa
       - DbPassword=${DbPassword}
-      - FRONTEND_DELIVERY_URL=http://localhost:${FRONTEND_DELIVERY_PORT}
-      - FRONTEND_SHOP_URL=http://localhost:${FRONTEND_SHOP_PORT}
-      - FRONTEND_CLIENT_URL=http://localhost:${FRONTEND_CLIENT_PORT}
+      - CORS1=${CORS1}
+      - CORS2=${CORS2}
+      - CORS3=${CORS3}
     volumes:
       - ~/.aspnet/https:/https:ro
     networks: 

@@ -9,7 +9,6 @@ using SoftwareEngineering2.Services;
 using SoftwareEngineering2.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -18,20 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options => {
     options.AddPolicy(name: MyAllowSpecificOrigins,
     policy => {
-        var frontendClientUrl = Environment.GetEnvironmentVariable("FRONTEND_CLIENT_URL");
-        var frontendShopUrl = Environment.GetEnvironmentVariable("FRONTEND_SHOP_URL");
-        var frontendDeliveryUrl = Environment.GetEnvironmentVariable("FRONTEND_DELIVERY_URL");
-        var origins = new List<string>();
-        if (!string.IsNullOrEmpty(frontendClientUrl)) {
-            origins.Add(frontendClientUrl);
+        var origins = new List<string?>();
+        for (int i = 0; i < 10; i++) {
+            origins.Add(Environment.GetEnvironmentVariable($"CORS{i}"));
         }
-        if (!string.IsNullOrEmpty(frontendShopUrl)) {
-            origins.Add(frontendShopUrl);
-        }
-        if (!string.IsNullOrEmpty(frontendDeliveryUrl)) {
-            origins.Add(frontendDeliveryUrl);
-        }
-        policy.WithOrigins(origins.ToArray()).AllowAnyMethod().AllowAnyHeader();
+
+        policy.WithOrigins(origins.Where(x => x != null).ToArray()!).AllowAnyMethod().AllowAnyHeader();
     });
 });
 
