@@ -102,6 +102,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.UseCors(MyAllowSpecificOrigins);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
@@ -117,8 +119,6 @@ if (Environment.GetEnvironmentVariable("CREATE_AND_DROP_DB") == "true") {
 } else {
     dbContext.Database.Migrate();
 }
-
-app.UseCors(MyAllowSpecificOrigins);
 
 app.ConfigureExceptionHandler(detailedErrors: app.Environment.IsDevelopment());
 
