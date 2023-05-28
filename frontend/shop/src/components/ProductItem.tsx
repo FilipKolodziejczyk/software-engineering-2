@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Product } from "../models/Product";
+import { properties } from "../resources/properties";
+import { Context } from "../App";
 
 export interface ProductItemProps {
    product: Product;
@@ -10,30 +12,56 @@ const ProductItem: React.FC<ProductItemProps> = (props: ProductItemProps) => {
 
     const [editing, setEditing] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(props.product);
-    
+    const { token, setToken } = useContext(Context);
+
     const discardlHandle = () => {
       setEditing(false);
     }
 
-    const saveHandle = () => {
-      //fetch(`https://fakestoreapi.com/api/products/${props.product.productID}`).then(res => res.json()).then((data) => {
-       // method: "PUT",
-       // body: JSON.stringify(currentProduct)
-     // }).catch(() => {
-        
-     // });
-        props.updateList();
-        setEditing(false);
+    const saveHandle = async (id: number) => {
+      await fetch(`${properties.url}/api/products`, {
+        method: "PUT",
+        headers: {
+         'Authorization': `Bearer ${token}`,
+          "Content-type": "application/json; charset=UTF-8",
+        },
+        body: JSON.stringify(currentProduct)
+      })
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            throw new Error("ERROR " + response.status);
+          }
+        })
+        .then(() => {
+          console.log("Success editing product.");
+        })
+        .catch((e) => {
+          console.log("Error when trying to edit product: " + e);
+        })
+        .finally(()=> {
+          props.updateList();
+          setEditing(false);
+        });
     }
 
-    const deleteHandle = () => {
-      //fetch(`https://fakestoreapi.com/api/products/${props.product.productID}`).then(res => res.json()).then((data) => {
-       // method: "DELETE",
-       // body: JSON.stringify(currentProduct)
-     // }).catch(() => {
-     // });
+    const deleteHandle = async (id: number) => {
+      await fetch(`${properties.url}/api/products/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((response) => {
+        if (response.ok) return response.json()
+        else throw new Error("ERROR " + response.status)
+      }).then(() => {
+        console.log("Success deleting product.")
+      }).catch((e) => {
+        console.log("Error when trying to delete product: " + e)
+      }).finally(()=>{
         props.updateList();
-        setEditing(false);
+      });
+        
     }
 
     return (
@@ -61,7 +89,7 @@ const ProductItem: React.FC<ProductItemProps> = (props: ProductItemProps) => {
         </div>
       </div>
       <div className="w-1/3 flex flex-col items-end justify-end justify-end">
-        <button className="w-1/2 bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded" onClick={()=>saveHandle()}>
+        <button className="w-1/2 bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded" onClick={()=>saveHandle(props.product.productID)}>
           save
         </button>
         <button className="w-1/2 bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded mt-1" onClick={()=>{discardlHandle(); setCurrentProduct(props.product);}}>
@@ -94,7 +122,7 @@ const ProductItem: React.FC<ProductItemProps> = (props: ProductItemProps) => {
         <button className="w-1/2 bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded" onClick={()=>setEditing(!editing)}>
           edit
         </button>
-        <button className="w-1/2 bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded mt-1" onClick={()=>deleteHandle()}>
+        <button className="w-1/2 bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded mt-1" onClick={()=>deleteHandle(props.product.productID)}>
           delete
         </button>
       </div>

@@ -1,29 +1,46 @@
 import { Link } from "react-router-dom";
-import { Product } from "../models/Product";
-import { useState } from "react";
+import { ProductNew } from "../models/ProductNew";
+import { useContext, useState } from "react";
+import { properties } from "../resources/properties";
+import { Context } from "../App";
 
 function ProductItemAddPage () {
 
-  let product_: Product = {
-    productID: -1,
+  let product_: ProductNew = {
     name: "",
     price: -1,
     quantity: -1,
     description: "",
     image: "",
-    archived: false,
-    category: "",
+    category: "none",
   };
 
     const [addedProduct, setAddedProduct] = useState(product_);
+    const { token, setToken } = useContext(Context);
 
-    const saveHandle = () => {
-      //fetch(`https://fakestoreapi.com/api/products/${props.product.productID}`).then(res => res.json()).then((data) => {
-       // method: "POST",
-       // body: JSON.stringify(currentProduct)
-     // }).catch(() => {
-        
-     // });
+    const saveHandle = async () => {
+      await fetch(`${properties.url}/api/products`, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify(addedProduct)
+
+      })
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            throw new Error("ERROR " + response.status);
+          }
+        })
+        .then(() => {
+          console.log("Success adding product.");
+        })
+        .catch((e) => {
+          console.log("Error when trying to add product: " + e);
+          console.log(product_);
+        })
     }
 
     return (
@@ -49,12 +66,12 @@ function ProductItemAddPage () {
         </div>
       </div>
       <div className="w-1/3 flex flex-col items-end justify-end justify-end">
-        <Link to="/products">
+        <Link to="/shop/products">
         <button className="bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded" onClick={()=>saveHandle()}>
           save
         </button>
         </Link>
-        <Link to="/products">
+        <Link to="/shop/products">
         <button className="bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded mt-1">
           cancel
         </button>

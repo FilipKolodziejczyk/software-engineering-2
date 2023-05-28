@@ -2,11 +2,20 @@ import { useState } from "react";
 import { Order } from "../models/Order";
 
 export interface OrderItemProps {
-   // order: Order;
-   // updateList: () => void;
+   order: Order;
+   updateList: () => void;
 }
 
 const OrderItem: React.FC<OrderItemProps> = (props: OrderItemProps) => {
+
+    const deliveredHandle = () => {
+        //fetch(`https://fakestoreapi.com/api/products/${props.product.productID}`).then(res => res.json()).then((data) => {
+         // method: "PUT",
+         // body: JSON.stringify(currentProduct)
+       // }).catch(() => {
+       // });
+          props.updateList();
+    }
 
     return (
         <div className="m-2 bg-gray-100 rounded p-1">
@@ -19,7 +28,7 @@ const OrderItem: React.FC<OrderItemProps> = (props: OrderItemProps) => {
                     <span className="text-gray-950 mt-2">country: </span>
                 </div>
                 <div className="w-full md:w-1/5 p-4 flex flex-col items-end justify-end justify-end">
-                    <button className="w-1/2 bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded">
+                    <button className="w-1/2 bg-gray-300 hover:bg-gray-300 text-gray-950 py-2 px-4 rounded" onClick={()=>deliveredHandle()}>
                         delivered
                     </button>
                 </div>
