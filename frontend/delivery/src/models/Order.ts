@@ -1,5 +1,5 @@
 export type Order = {
-    id: String;
-    name: Number;
-    price: String;
-  };
+  orderID: number;
+  clientID: number;
+  status: String;
+};
