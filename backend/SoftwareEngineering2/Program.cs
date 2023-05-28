@@ -17,14 +17,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options => {
     options.AddPolicy(name: MyAllowSpecificOrigins,
     policy => {
-        var origins = new List<string>();
-        for (int i = 0; i < 10; i++) {
-            var cors = Environment.GetEnvironmentVariable($"CORS{i}");
-            if (cors != null)
-                origins.Add(cors);
-        }
+        // var origins = new List<string>();
+        // for (int i = 0; i < 10; i++) {
+        //     var cors = Environment.GetEnvironmentVariable($"CORS{i}");
+        //     if (cors != null)
+        //         origins.Add(cors);
+        // }
     
-        policy.WithOrigins(origins.ToArray()).AllowAnyMethod().AllowAnyHeader();
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
 
