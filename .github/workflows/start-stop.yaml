@@ -87,6 +87,12 @@ jobs:
             action="Starting"
           fi
 
+          dbstatus=$(aws rds describe-db-instances --db-instance-identifier "${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-sqlserver" --query "DBInstances[0].ActivityStreamStatus" --output text)
+          if [ "$dbstatus" == "stopped" ] && [ "${{ env.action }}" == "stop" ]; then
+            echo "RDS Instance is already stopped"
+            exit 0
+          fi
+
           echo "$action RDS Instance"
           if [ "${{ env.action }}" == "stop" ]; then
             aws rds stop-db-instance --db-instance-identifier "${{ vars.APP_NAME }}-${{ vars.ENVIRONMENT }}-sqlserver" --no-cli-pager
