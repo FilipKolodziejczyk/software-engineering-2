@@ -16,7 +16,7 @@ export default function CheckoutPage() {
           Return to cart
         </Link>
       </div>
-      <div className="mb-8 grid grid-cols-2 gap-8">
+      <div className="mb-8 lg:grid lg:grid-cols-2 gap-8">
         {/*  payment and shipping details */}
         <Form className="py-8 px-4">
           <div className="mx-auto max-w-none">
@@ -110,7 +110,7 @@ export default function CheckoutPage() {
                          id="card-number" name="card-number" autoComplete="card-number"/>
                 </div>
               </div>
-              <div className="mt-4 grid grid-cols-7 gap-4">
+              <div className="mt-4 grid grid-cols-9 gap-4">
                 <div className="col-span-5">
                   <label htmlFor="card-holder" className="text-gray-500 font-medium text-sm">Card holder</label>
                   <div className="mt-1">
@@ -119,7 +119,7 @@ export default function CheckoutPage() {
                            id="card-holder" name="card-holder" autoComplete="card-holder"/>
                   </div>
                 </div>
-                <div className="col-span-1">
+                <div className="col-span-2">
                   <label htmlFor="card-expiration" className="text-gray-500 font-medium text-sm">Expiration</label>
                   <div className="mt-1">
                     <input type="text"
@@ -127,7 +127,7 @@ export default function CheckoutPage() {
                            id="card-expiration" name="card-expiration" autoComplete="card-expiration"/>
                   </div>
                 </div>
-                <div className="col-span-1">
+                <div className="col-span-2">
                   <label htmlFor="card-cvc" className="text-gray-500 font-medium text-sm">CVC</label>
                   <div className="mt-1">
                     <input type="text"
