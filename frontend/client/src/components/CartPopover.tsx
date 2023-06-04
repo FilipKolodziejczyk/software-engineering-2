@@ -19,7 +19,8 @@ export default function CartPopover() {
                   h-6 w-6 transition duration-150 ease-in-out group-hover:text-opacity-80`}
           aria-hidden="true"
         />
-        <div className="absolute inline-flex items-center justify-center w-4 h-4 text-2xs right-1/2 bottom-1/2 translate-x-1/2 translate-y-2/3">
+        <div
+          className="absolute inline-flex items-center justify-center w-4 h-4 text-2xs right-1/2 bottom-1/2 translate-x-1/2 translate-y-2/3">
           {items.length}
         </div>
       </Popover.Button>
