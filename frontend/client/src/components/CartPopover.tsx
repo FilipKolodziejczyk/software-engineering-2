@@ -65,13 +65,13 @@ export default function CartPopover() {
                 </a>))}
               </div>
               <div className="bg-gray-50 p-4">
-                <Link to={'#'}>
+                <Popover.Button as={Link} to={'checkout'}>
                         <span className="flex items-center justify-center bg-gray-950 p-2 rounded-lg my-4 mx-2">
                           <span className="text-sm font-medium text-white">
                             Checkout
                           </span>
                         </span>
-                </Link>
+                </Popover.Button>
                 <Popover.Button as={Link} to={'cart'}>
                         <span className="flex items-center justify-center">
                           <span className="text-sm font-medium text-gray-900 my-2">

@@ -131,7 +131,7 @@ export function CategoryFilters({children}: { children: React.ReactNode }) {
                   <div className="px-4">
                     <button
                       type="submit"
-                      className="mt-8 w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-all"
+                      className="mt-8 w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white bg-neutral-900 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900transition-all"
                     >
                       Apply Filters
                     </button>
@@ -242,7 +242,7 @@ export function CategoryFilters({children}: { children: React.ReactNode }) {
 
                 <button
                   type="submit"
-                  className="mt-8 w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900  transition-all"
+                  className="mt-8 w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white bg-neutral-900 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 transition-all"
                 >
                   Apply Filters
                 </button>

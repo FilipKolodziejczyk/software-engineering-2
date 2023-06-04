@@ -8,6 +8,7 @@ import ProductsPage, {loader as productListLoader} from "./pages/ProductsPage";
 import LoginPage from "./pages/LoginPage";
 import ProductDetailsPage, {loader as productLoader} from "./pages/ProductDetailsPage";
 import CartOverviewPage from "./pages/CartOverviewPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <CartOverviewPage/>
+      },
+      {
+        path: "checkout",
+        element: <CheckoutPage/>
       }
     ]
   },
