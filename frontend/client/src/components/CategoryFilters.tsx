@@ -203,49 +203,53 @@ export function CategoryFilters({children}: { children: React.ReactNode }) {
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
             {/* Filters */}
-            <Form method="get" action="/" className="hidden lg:block" onSubmit={(event) => handleFilterSubmit(event)}
-                  reloadDocument>
-              <h3 className="sr-only">Categories</h3>
-              <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                {subCategories.map((category) => (<li key={category.name}>
-                  <p onClick={
-                    () => {
-                      subCategories.forEach((c) => c.current = false);
-                      category.current = true;
-                      submitForm();
+            <div className="lg:col-span-1">
+              <Form method="get" action="/" className="hidden lg:block sticky top-24 "
+                    onSubmit={(event) => handleFilterSubmit(event)}
+                    reloadDocument>
+                <h3 className="sr-only">Categories</h3>
+                <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
+                  {subCategories.map((category) => (<li key={category.name}>
+                    <p onClick={
+                      () => {
+                        subCategories.forEach((c) => c.current = false);
+                        category.current = true;
+                        submitForm();
+                      }
                     }
-                  }
-                     className={classNames(category.current ? 'underline' : '', 'cursor-pointer')}
-                  >{category.name}</p>
-                </li>))}
-              </ul>
+                       className={classNames(category.current ? 'underline' : '', 'cursor-pointer')}
+                    >{category.name}</p>
+                  </li>))}
+                </ul>
 
-              <Disclosure as="div" className="border-b border-gray-200 py-6">
-                {({open}) => (<>
-                  <h3 className="-my-3 flow-root">
-                    <Disclosure.Button
-                      className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                      <span className="font-medium text-gray-900">Price range</span>
-                      <span className="ml-6 flex items-center">
+                <Disclosure as="div" className="border-b border-gray-200 py-6">
+                  {({open}) => (<>
+                    <h3 className="-my-3 flow-root">
+                      <Disclosure.Button
+                        className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                        <span className="font-medium text-gray-900">Price range</span>
+                        <span className="ml-6 flex items-center">
                               {open ? (<MinusIcon className="h-5 w-5" aria-hidden="true"/>) : (
                                 <PlusIcon className="h-5 w-5" aria-hidden="true"/>)}
                             </span>
-                    </Disclosure.Button>
-                  </h3>
-                  <Disclosure.Panel className="pt-6">
-                    <PriceRange numbers={priceRange} onChange={handlePriceRangeChange}/>
-                  </Disclosure.Panel>
-                </>)}
-              </Disclosure>
+                      </Disclosure.Button>
+                    </h3>
+                    <Disclosure.Panel className="pt-6">
+                      <PriceRange numbers={priceRange} onChange={handlePriceRangeChange}/>
+                    </Disclosure.Panel>
+                  </>)}
+                </Disclosure>
 
-              <button
-                type="submit"
-                className="mt-8 w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900  transition-all"
-              >
-                Apply Filters
-              </button>
+                <button
+                  type="submit"
+                  className="mt-8 w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900  transition-all"
+                >
+                  Apply Filters
+                </button>
 
-            </Form>
+              </Form>
+
+            </div>
 
             <div className="lg:col-span-3">
               {children}

@@ -49,13 +49,12 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
   }
 
   async function updateItem(item: CartItem) {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
       method: 'PUT', headers: {
         'Content-Type': 'application/json'
       }, body: JSON.stringify(item)
     })
-    const updatedCartItem = await response.json()
-    setCartItems([...cartItems.filter((i) => i.product.productID !== item.product.productID), updatedCartItem])
+    setCartItems([...cartItems.map((i) => i.product.productID === item.product.productID ? item : i)])
   }
 
   async function removeItem(item: CartItem) {

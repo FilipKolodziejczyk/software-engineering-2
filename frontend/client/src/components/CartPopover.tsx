@@ -4,6 +4,7 @@ import {CartItem} from "../models/CartItem";
 import {Popover, Transition} from '@headlessui/react'
 import {ShoppingBagIcon, XMarkIcon} from "@heroicons/react/24/outline";
 import {useShoppingCart} from "../context/ShoppingCartContext";
+import {currencyFormat} from "../utilities/currencyFormat";
 
 export default function CartPopover() {
   const {items, removeItem} = useShoppingCart()
@@ -52,7 +53,7 @@ export default function CartPopover() {
                       {item.product.name}
                     </p>
                     <p className="text-sm text-gray-500">
-                      ${item.product.price} x {item.quantity}
+                      {currencyFormat(item.product.price)} x {item.quantity}
                     </p>
                   </div>
                   <div className="hidden group-hover:block ml-auto mr-2">
@@ -71,13 +72,13 @@ export default function CartPopover() {
                           </span>
                         </span>
                 </Link>
-                <Link to={'#'}>
+                <Popover.Button as={Link} to={'cart'}>
                         <span className="flex items-center justify-center">
                           <span className="text-sm font-medium text-gray-900 my-2">
                             View Cart
                           </span>
                         </span>
-                </Link>
+                </Popover.Button>
               </div>
             </>) : (<div className="relative bg-white p-7">
               <p className="text-sm w-full text-center">
