@@ -12,6 +12,9 @@ module.exports = {
       },
       colors: {
         current: 'currentColor',
+      },
+      fontSize: {
+        '2xs': '.65rem',
       }
     },
   },

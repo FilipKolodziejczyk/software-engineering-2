@@ -44,7 +44,7 @@ export default function ProductsPage() {
     setError(false);
 
     const url = new URL(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
-    url.searchParams.append('page', page.toString());
+    url.searchParams.append('pageNumber', page.toString());
     url.searchParams.append('elementsOnPage', '10');
 
     for (let [key, value] of query.entries()) {
