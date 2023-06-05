@@ -5,7 +5,12 @@ export function DoubleRangeSlider({
                                     max,
                                     value,
                                     onChange
-                                  }: { min: number, max: number, value: number[], onChange: (value: number[]) => void }) {
+                                  }: {
+  min: number,
+  max: number,
+  value: number[],
+  onChange: (value: number[]) => void
+}) {
   const [minValue, setMinValue] = useState(value ? value[0] : min);
   const [maxValue, setMaxValue] = useState(value ? value[1] : max);
 

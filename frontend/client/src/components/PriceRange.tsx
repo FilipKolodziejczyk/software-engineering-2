@@ -1,7 +1,10 @@
 import Slider from "@mui/material/Slider";
 import React from "react";
 
-export default function PriceRange(props: { numbers: number[], onChange: (event: Event, newValue: (number | number[])) => void }) {
+export default function PriceRange(props: {
+  numbers: number[],
+  onChange: (event: Event, newValue: (number | number[])) => void
+}) {
   return <div className="px-4">
     <div className="flex justify-end">
       <span className={`text-sm text-gray-600`}>${props.numbers[0]}</span>

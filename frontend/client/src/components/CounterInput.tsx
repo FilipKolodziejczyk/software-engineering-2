@@ -1,7 +1,12 @@
 import {MinusIcon, PlusIcon} from "@heroicons/react/20/solid";
 import React from "react";
 
-export function CounterInput(props: { onDecrease: () => void, value: number, onChange: (e: any) => void, onIncrease: () => void }) {
+export function CounterInput(props: {
+  onDecrease: () => void,
+  value: number,
+  onChange: (e: any) => void,
+  onIncrease: () => void
+}) {
   return <>
     <button type="button"
             className="w-12 h-12 rounded-md bg-gray-100 hover:bg-gray-200 flex flex-row items-center justify-center text-gray-500 hover:text-gray-600 transition-all"

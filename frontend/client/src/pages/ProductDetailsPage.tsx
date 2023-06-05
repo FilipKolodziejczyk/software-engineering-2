@@ -3,6 +3,9 @@ import {Product} from "../models/Product";
 import React from "react";
 import {CounterInput} from "../components/CounterInput";
 import ImageCarousel from "../components/ImageCarousel";
+import {useShoppingCart} from "../context/ShoppingCartContext";
+import {CartItem} from "../models/CartItem";
+import {currencyFormat} from "../utilities/currencyFormat";
 
 export async function loader({params}: any) {
   const product: Product = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products/${params.id}`).then(res => res.json());
@@ -12,25 +15,7 @@ export async function loader({params}: any) {
 export default function ProductDetailsPage() {
   const [quantity, setQuantity] = React.useState(1);
   const {product}: any = useLoaderData();
-
-  const addToCart = async () => {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        productId: product.id,
-        quantity: quantity
-      })
-    });
-
-    if (response.ok) {
-      alert('Added to cart');
-    } else {
-      alert('Failed to add to cart');
-    }
-  }
+  const {addItem} = useShoppingCart();
 
   return (<div className="mx-auto max-w-2xl px-4 py-4 pb-12 sm:px-6 sm:py-8 lg:max-w-5xl 2xl:max-w-7xl lg:px-8">
     <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 lg:items-start">
@@ -39,7 +24,7 @@ export default function ProductDetailsPage() {
       </div>
       <div>
         <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">{product.name}</h3>
-        <p className="mt-3 text-xl sm:text-3xl tracking-tight text-gray-900">${product.price}</p>
+        <p className="mt-3 text-xl sm:text-3xl tracking-tight text-gray-900">{currencyFormat(product.price)}</p>
         <div className="mt-6">
           <h3 className="sr-only">Description</h3>
           <div className="text-base text-gray-700 space-y-6 whitespace-pre-line">
@@ -65,7 +50,14 @@ export default function ProductDetailsPage() {
 
             <button type="button"
                     className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-neutral-950 hover:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
-                    onClick={addToCart}>
+                    onClick={() => {
+                      addItem(
+                        {
+                          product: product,
+                          quantity: quantity
+                        } as CartItem
+                      );
+                    }}>
               Add to cart
             </button>
           </div>
