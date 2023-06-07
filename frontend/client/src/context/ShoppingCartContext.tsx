@@ -1,5 +1,6 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {CartItem} from "../models/CartItem";
+import {debounce} from "@mui/material";
 
 type ShoppingCartProviderProps = {
   children: ReactNode
@@ -15,6 +16,16 @@ type ShoppingCart = {
 
 const ShoppingCartContext = createContext({} as ShoppingCart)
 
+async function sendItemUpdate(item: CartItem) {
+  await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
+    method: 'PUT', headers: {
+      'Content-Type': 'application/json'
+    }, body: JSON.stringify(item)
+  })
+}
+
+const debouncedUpdateItem = debounce(sendItemUpdate, 500)
+
 export function useShoppingCart() {
   return useContext(ShoppingCartContext)
 }
@@ -26,6 +37,9 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
   useEffect(() => {
     async function fetchBasket() {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket`)
+      if (!response.ok) {
+        return
+      }
       const items = await response.json()
       setCartItems(items)
     }
@@ -48,21 +62,16 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
     }
   }
 
+
   async function updateItem(item: CartItem) {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
-      method: 'PUT', headers: {
-        'Content-Type': 'application/json'
-      }, body: JSON.stringify(item)
-    })
     setCartItems([...cartItems.map((i) => i.product.productID === item.product.productID ? item : i)])
+    await debouncedUpdateItem(item)
   }
 
   async function removeItem(item: CartItem) {
     await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
       method: 'DELETE'
     })
-    console.log(item)
-    console.log(cartItems)
     setCartItems([...cartItems.filter((i) => i.product.productID !== item.product.productID)])
   }
 
@@ -75,7 +84,7 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
 
   return <ShoppingCartContext.Provider value={{
     items: cartItems, addItem, updateItem, removeItem, clear,
-  } as ShoppingCart}>
+  }}>
     {children}
   </ShoppingCartContext.Provider>
 }

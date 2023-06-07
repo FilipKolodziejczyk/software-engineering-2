@@ -14,7 +14,7 @@ export default function CartOverviewPage() {
           <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900">Shopping Cart</h1>
         </div>
 
-        <div className="my-12 grid grid-cols-12 gap-8">
+        <div className="my-12 sm:grid sm:grid-cols-12 gap-8">
           <div className="col-span-12 sm:col-span-7 -mt-4">
             <ul>
               {items.map((item, index) =>
