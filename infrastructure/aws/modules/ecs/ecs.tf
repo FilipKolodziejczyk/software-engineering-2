@@ -47,6 +47,14 @@ resource "aws_autoscaling_group" "ec2_autoscaling_group" {
       value               = var.app_environment
       propagate_at_launch = true
   }
+
+  lifecycle {
+    ignore_changes = [ 
+      min_size,
+      max_size,
+      desired_capacity,
+     ]
+  }
 }
 
 output "cluster_id" {

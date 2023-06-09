@@ -44,6 +44,13 @@ resource "aws_ecs_service" "backend_service" {
     container_port   = 80
   }
 
+  lifecycle {
+    ignore_changes = [
+      task_definition,
+      desired_count,
+    ]
+  }
+
   tags = {
     Name        = "${var.app_name}-backend-service"
     Environment = var.app_environment
