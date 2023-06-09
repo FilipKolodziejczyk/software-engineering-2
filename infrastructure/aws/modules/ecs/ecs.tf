@@ -23,6 +23,12 @@ resource "aws_launch_configuration" "ec2_config" {
   instance_type           = "t2.micro"
   user_data              = "#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name} >> /etc/ecs/ecs.config"
   iam_instance_profile    = aws_iam_instance_profile.ecs_agent.name
+
+  lifecycle {
+    ignore_changes = [ 
+      image_id,
+    ]
+  }
 }
 
 resource "aws_autoscaling_group" "ec2_autoscaling_group" {
