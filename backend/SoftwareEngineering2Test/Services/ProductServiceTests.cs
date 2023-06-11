@@ -32,11 +32,17 @@ namespace SoftwareEngineering2.Services.Tests
                 _unitOfWork = mockUnit.Object;
             }
 
-            mockRepo.Setup(e => e.GetByIdAsync(4)).Returns(Task.FromResult((ProductModel?)new ProductModel
+            mockRepo.Setup(e => e.GetByIdAsync(4)).Returns(Task.FromResult((ProductModel?) new ProductModel
             {
                 ProductID = 4, Name = "Rose", Description = "String", Archived = false,
                 Category = "flowers", Image = "", Price = 5, Quantity = 10
             }));
+            mockRepo.Setup(e => e.GetAllFilteredAsync("daffodil", "flower", 1,32))
+                    .Returns(Task.FromResult((IEnumerable<ProductModel>) new [] { new ProductModel
+            {
+                ProductID = 4, Name = "Rose", Description = "String", Archived = false,
+                Category = "flowers", Image = "", Price = 5, Quantity = 10
+            }}));
             
             if (_productService is null)
             {
@@ -68,7 +74,20 @@ namespace SoftwareEngineering2.Services.Tests
         [Test()]
         public async Task GetAllFilteredAsyncTest()
         {
-            Assert.Pass();
+            var dto = await _productService.GetFilteredModelsAsync("daffodil", "flower", 1,32 );
+            Assert.That(dto, Is.EqualTo(new List <ProductDTO> {
+                    new ProductDTO
+                    {
+                        Archived = false,
+                        Category = "flowers",
+                        Description = "String",
+                        Image = "",
+                        Name = "Rose",
+                        Price = 5,
+                        Quantity = 10,
+                        ProductID = 4
+                    }
+            }));
         }
         [Test()]
         public void CreateModelAsyncTest() {
