@@ -22,4 +22,10 @@ public class DeliveryManModelRepository : IDeliveryManModelRepository {
     public async Task<DeliveryManModel?> GetByID(int id) {
         return await _context.DeliveryManModels.FirstOrDefaultAsync(model => model.DeliveryManID == id);
     }
+
+    public async Task<IEnumerable<DeliveryManModel>> GetAll() {
+        return await _context.DeliveryManModels
+            .Include(model => model.Orders)
+            .ToListAsync();
+    }
 }

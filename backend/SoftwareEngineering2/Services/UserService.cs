@@ -114,6 +114,12 @@ public class UserService : IUserService {
         return _mapper.Map<UserDTO>(result);
     }
 
+    public async Task<UserDTO?> GetAvailableDeliveryMan() {
+        var deliveryMen = await _deliveryManModelRepository.GetAll();
+        var result = deliveryMen.OrderBy(model => model.Orders!.Count(order => order.Status == OrderStatus.Accepted)).First();
+        return _mapper.Map<UserDTO>(result);
+    }
+
     public async Task<bool> UpdateNewsletter(int id, bool subscribed) {
         var result = await _clientModelRepository.GetByID(id);
         if (result is null)
