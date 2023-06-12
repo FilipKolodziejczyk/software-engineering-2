@@ -25,17 +25,19 @@ public class OrderModelRepository : IOrderModelRepository {
             .FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<OrderModel>> GetAllModelsAsync() {
+    public async Task<IEnumerable<OrderModel>> GetAllModelsAsync(int pageNumber, int elementsOnPage) {
         return await _context.OrderModels
             .Include(model => model.OrderDetails)
             .Include(model => model.Address)
             .Include(model => model.Client)
             .Include(model => model.DeliveryMan)
             .Include(model => model.Complaints)
+            .Skip(elementsOnPage * (pageNumber - 1))
+            .Take(elementsOnPage)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<OrderModel>> GetByDeliverymanIdAsync(int deliverymanId) {
+    public async Task<IEnumerable<OrderModel>> GetByDeliverymanIdAsync(int deliverymanId, int pageNumber, int elementsOnPage) {
         return await _context.OrderModels
             .Where(model => model.DeliveryManID == deliverymanId)
             .Include(model => model.OrderDetails)
@@ -43,6 +45,8 @@ public class OrderModelRepository : IOrderModelRepository {
             .Include(model => model.Client)
             .Include(model => model.DeliveryMan)
             .Include(model => model.Complaints)
+            .Skip(elementsOnPage * (pageNumber - 1))
+            .Take(elementsOnPage)
             .ToListAsync();
     }
 

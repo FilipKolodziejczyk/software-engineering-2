@@ -68,12 +68,12 @@ public class OrderService : IOrderService {
     }
 
     public async Task<List<OrderDTO>?> GetOrders(int pageNumber, int elementsOnPage) {
-        var result = await _orderModelRepository.GetAllModelsAsync();
+        var result = await _orderModelRepository.GetAllModelsAsync(pageNumber, elementsOnPage);
         return new List<OrderDTO>(result.Select(_mapper.Map<OrderDTO>));
     }
 
     public async Task<List<OrderDTO>?> GetOrdersByDeliverymanId(int deliverymanId, int pageNumber, int elementsOnPage) {
-        var result = await _orderModelRepository.GetByDeliverymanIdAsync(deliverymanId);
+        var result = await _orderModelRepository.GetByDeliverymanIdAsync(deliverymanId, pageNumber, elementsOnPage);
         return new List<OrderDTO>(result.Select(_mapper.Map<OrderDTO>));
     }
 }
