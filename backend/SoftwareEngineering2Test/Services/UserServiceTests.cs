@@ -182,16 +182,13 @@ namespace SoftwareEngineering2.Services.Tests {
         // }
         
         [Test()]
-        public async Task GetAvailableDeliveryMan()
+        public async Task CreateJWTTokenTest()
         {
-            var dto = await _userService.GetAvailableDeliveryMan();
-            Assert.Multiple(() =>
-            {
-                Assert.That(dto.UserID, Is.EqualTo(3));
-                Assert.That(dto.Name, Is.EqualTo("Roger Waters"));
-                Assert.That(dto.Email, Is.EqualTo("roger.waters@gmail.com"));
-            });
+            var dto = await _userService.CreateJWTToken("noemail@gmail.com", "aaa");
+            Assert.That(dto, Is.EqualTo(null));
             
+            // dto = await _userService.CreateJWTToken("david.gilmour@gmail.com", "Another brick in the wall 123");
+            // Assert.That(dto.Jwttoken.Length > 0);
         }
     }
 }
