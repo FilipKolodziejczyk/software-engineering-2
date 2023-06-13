@@ -8,5 +8,6 @@ public interface IUserService {
     Task<UserDTO?> CreateUser(NewUserDTO newUser);
     Task<UserDTO?> GetUserByID(string role, int id);
     Task<UserDTO?> GetUserByEmail(string email);
+    Task<UserDTO?> GetAvailableDeliveryMan();
     Task<bool> UpdateNewsletter(int id, bool subscribed);
 }

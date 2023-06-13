@@ -23,14 +23,16 @@ public class OrderService : IOrderService {
         _mapper = mapper;
     }
 
-    public async Task<OrderDTO?> ChangeOrderStatus(int orderId, OrderStatusDTO orderStatusDTO) {
+    public async Task<OrderDTO?> ChangeOrderStatus(int orderId, OrderStatusDTO orderStatusDTO, int? deliverymanID = null) {
         var model = await _orderModelRepository.GetByIdAsync(orderId);
         if (model is null)
             return null;
 
         model.Status = orderStatusDTO.OrderStatus;
 
-        model.DeliveryManID ??= 1; // TODO: Choosing delivery man should happen here
+        if (orderStatusDTO.OrderStatus == OrderStatus.Accepted) {
+            model.DeliveryManID = deliverymanID ?? 1;
+        }
 
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<OrderDTO>(model);
@@ -66,12 +68,12 @@ public class OrderService : IOrderService {
     }
 
     public async Task<List<OrderDTO>?> GetOrders(int pageNumber, int elementsOnPage) {
-        var result = await _orderModelRepository.GetAllModelsAsync();
+        var result = await _orderModelRepository.GetAllModelsAsync(pageNumber, elementsOnPage);
         return new List<OrderDTO>(result.Select(_mapper.Map<OrderDTO>));
     }
 
     public async Task<List<OrderDTO>?> GetOrdersByDeliverymanId(int deliverymanId, int pageNumber, int elementsOnPage) {
-        var result = await _orderModelRepository.GetByDeliverymanIdAsync(deliverymanId);
+        var result = await _orderModelRepository.GetByDeliverymanIdAsync(deliverymanId, pageNumber, elementsOnPage);
         return new List<OrderDTO>(result.Select(_mapper.Map<OrderDTO>));
     }
 }

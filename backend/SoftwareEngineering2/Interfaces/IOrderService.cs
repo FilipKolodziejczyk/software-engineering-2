@@ -9,6 +9,6 @@ public interface IOrderService {
     Task<OrderDTO?> GetOrderById(int orderId);
     Task<List<OrderDTO>?> GetOrders(int pageNumber, int elementsOnPage);
     Task<List<OrderDTO>?> GetOrdersByDeliverymanId(int deliverymanId, int pageNumber, int elementsOnPage);
-    Task<OrderDTO?> ChangeOrderStatus(int orderId, OrderStatusDTO orderStatusDTO);
+    Task<OrderDTO?> ChangeOrderStatus(int orderId, OrderStatusDTO orderStatusDTO, int? deliverymanID = null);
     Task DeleteModelAsync(int orderId);
 }

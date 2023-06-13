@@ -14,6 +14,7 @@ public class FlowerShopContext : DbContext {
     public DbSet<OrderDetailsModel> OrderDetailsModels { get; set; }
     public DbSet<OrderModel> OrderModels { get; set; }
     public DbSet<ProductModel> ProductModels { get; set; }
+    public DbSet<BasketItemModel> BasketItemModels { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FlowerShopContext).Assembly);

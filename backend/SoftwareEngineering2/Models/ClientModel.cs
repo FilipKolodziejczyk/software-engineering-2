@@ -22,4 +22,5 @@ public class ClientModel : IUserModel {
 
     public ICollection<ComplaintModel>? Complaints { get; }
     public ICollection<OrderModel>? Orders { get; }
+    public ICollection<BasketItemModel>? BasketItems { get; }
 }

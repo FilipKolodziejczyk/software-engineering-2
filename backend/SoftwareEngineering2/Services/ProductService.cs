@@ -39,14 +39,12 @@ public class ProductService : IProductService {
 
     public async Task<List<ProductDTO>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage) {
         var result = await _productRepository.GetAllFilteredAsync(searchQuery, filteredCategory, pageNumber, elementsOnPage);
-        return new List<ProductDTO>(result.Select(item => _mapper.Map<ProductDTO>(item)));
+        return new List<ProductDTO>(result.Select(_mapper.Map<ProductDTO>));
     }
 
     public async Task<ProductDTO> UpdateModelAsync(UpdateProductDTO product) {
         var model = await _productRepository.GetByIdAsync(product.ProductID) ?? throw new Exception("Model not found");
 
-        //model = _mapper.Map<ProductModel>(product);
-        //to be done differently
         model.Name = product.Name;
         model.ProductID = product.ProductID;
         model.Archived = product.Archived;
