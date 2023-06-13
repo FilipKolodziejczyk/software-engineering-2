@@ -14,5 +14,6 @@ public class ProductModelEntityConfiguration : IEntityTypeConfiguration<ProductM
         builder.Property(x => x.Archived).IsRequired();
 
         builder.HasMany(x => x.OrderDetails).WithOne(x => x.Product).HasForeignKey(x => x.ProductID);
+        builder.HasMany(x => x.BasketItems).WithOne(x => x.Product).HasForeignKey(x => x.ProductID);
     }
 }
