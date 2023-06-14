@@ -18,10 +18,11 @@ public class ProductModel {
 
     [Required]
     public bool Archived { get; set; }
-    
+
     public string Category { get; set; }
     
     public List<ImageModel> Images { get; set; }
 
     public ICollection<OrderDetailsModel>? OrderDetails { get; set; }
+    public ICollection<BasketItemModel>? BasketItems { get; set; }
 }

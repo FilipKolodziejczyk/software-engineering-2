@@ -24,5 +24,6 @@ public class ProductModelEntityConfiguration : IEntityTypeConfiguration<ProductM
             r => r.HasOne(typeof(ProductModel)).WithMany().HasForeignKey("ProductIds").HasPrincipalKey(nameof(ProductModel.ProductID)),
             j => j.HasKey("ImageId", "ProductID")
             );
+        builder.HasMany(x => x.BasketItems).WithOne(x => x.Product).HasForeignKey(x => x.ProductID);
     }
 }
