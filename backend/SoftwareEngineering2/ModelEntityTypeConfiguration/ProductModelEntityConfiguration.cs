@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Drawing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SoftwareEngineering2.Models;
 
@@ -14,5 +15,14 @@ public class ProductModelEntityConfiguration : IEntityTypeConfiguration<ProductM
         builder.Property(x => x.Archived).IsRequired();
 
         builder.HasMany(x => x.OrderDetails).WithOne(x => x.Product).HasForeignKey(x => x.ProductID);
+        builder
+            .HasMany(x => x.Images)
+            .WithMany(x => x.Products)
+            .UsingEntity(
+            "ProductImage",
+            l => l.HasOne(typeof(ImageModel)).WithMany().HasForeignKey("ImageIds").HasPrincipalKey(nameof(ImageModel.ImageId)),
+            r => r.HasOne(typeof(ProductModel)).WithMany().HasForeignKey("ProductIds").HasPrincipalKey(nameof(ProductModel.ProductID)),
+            j => j.HasKey("ImageId", "ProductID")
+            );
     }
 }

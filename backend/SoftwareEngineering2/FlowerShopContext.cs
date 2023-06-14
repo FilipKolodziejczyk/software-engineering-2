@@ -14,6 +14,7 @@ public class FlowerShopContext : DbContext {
     public DbSet<OrderDetailsModel> OrderDetailsModels { get; set; }
     public DbSet<OrderModel> OrderModels { get; set; }
     public DbSet<ProductModel> ProductModels { get; set; }
+    public DbSet<ImageModel> ImageModels { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FlowerShopContext).Assembly);
@@ -21,7 +22,7 @@ public class FlowerShopContext : DbContext {
         // TODO: temporary solution (password: password)
         modelBuilder.Entity<EmployeeModel>().HasData(new EmployeeModel {
             Email = "admin@flowershop.com",
-            Name = "W³adys³aw Howalski",
+            Name = "Wï¿½adysï¿½aw Howalski",
             Password = "AQAAAAIAAYagAAAAEHiYiXUCLpBDCy3l60OqSPW+GNZExxF4PwXI8VtkhKZqjVsMFdhw68orF475JKPXkA==",
             EmployeeID = 1
         });

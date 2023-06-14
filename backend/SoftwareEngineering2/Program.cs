@@ -84,6 +84,8 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderModelRepository, OrderModelRepository>();
 builder.Services.AddTransient<IOrderDetailsModelRepository, OrderDetailsModelRepository>();
+builder.Services.AddTransient<IImageRepository, ImageRepository>();
+builder.Services.AddTransient<IImageService, ImageService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {

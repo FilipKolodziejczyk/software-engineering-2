@@ -21,6 +21,9 @@ services:
       - CORS1=${CORS1}
       - CORS2=${CORS2}
       - CORS3=${CORS3}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
     volumes:
       - ~/.aspnet/https:/https:ro
     networks: 
