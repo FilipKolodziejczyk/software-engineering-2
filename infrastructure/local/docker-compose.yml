@@ -6,7 +6,8 @@ services:
     ports:
       - "${BACKEND_PORT}:443"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - USE_IN_MEMORY_DB=${USE_IN_MEMORY_DB}
@@ -27,17 +28,22 @@ services:
       - net
     
   db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2022-RTM-GDR1-ubuntu-20.04
     platform: linux/amd64
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${DbPassword}
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-U", "sa", "-P", "zaq1@WSX", "-Q", "select 1"]
+      interval: 1s
+      retries: 20
     ports:
       - "1433:1433"
     networks:
       - net
     volumes:
       - db-data:/var/opt/mssql
+    
 
   frontend-client:
     build: 
