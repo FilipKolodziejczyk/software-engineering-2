@@ -65,11 +65,3 @@ resource "aws_iam_user_policy_attachment" "images_maintainer" {
   user       = aws_iam_user.images_maintainer.name
   policy_arn = aws_iam_policy.images_maintainer.arn
 }
-
-output "images_maintainer_access_key_id" {
-  value = aws_iam_access_key.images_maintainer.id
-}
-
-output "images_maintainer_secret_access_key" {
-  value = aws_iam_access_key.images_maintainer.secret
-}
