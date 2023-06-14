@@ -43,7 +43,9 @@ export default function ProductsPage() {
     setLoading(true);
     setError(false);
 
-    const url = new URL(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
+    console.log(`API Base URL: ${import.meta.env.VITE_API_BASE_URL}`)
+    const url = new URL("/api/products", `${import.meta.env.VITE_API_BASE_URL}`);
+    console.log(`URL: ${url}`)
     url.searchParams.append('pageNumber', page.toString());
     url.searchParams.append('elementsOnPage', '10');
 
@@ -56,6 +58,7 @@ export default function ProductsPage() {
       setHasMore(data.length > 0);
       setLoading(false);
     }).catch((reason) => {
+      console.log(`Error while fetching products from ${url}`);
       console.error(reason);
       setError(true);
       setLoading(false);
