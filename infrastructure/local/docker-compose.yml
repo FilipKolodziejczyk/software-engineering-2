@@ -43,7 +43,7 @@ services:
     build: 
       context: "../../frontend/client"
       args:
-        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
+        - VITE_API_BASE_URL=https://localhost:${BACKEND_PORT}
         - VITE_CONFIG_PATH=vite.local.config.ts
     ports:
       - "${FRONTEND_CLIENT_PORT}:5173"
@@ -54,7 +54,7 @@ services:
     build:
       context: "../../frontend/delivery"
       args:
-        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
+        - VITE_API_BASE_URL=https://localhost:${BACKEND_PORT}
         - VITE_CONFIG_PATH=vite.local.config.ts
     ports:
       - "${FRONTEND_DELIVERY_PORT}:5173"
@@ -65,7 +65,7 @@ services:
     build: 
       context: "../../frontend/shop"
       args:
-        - VITE_API_BASE_URL=http://localhost:${BACKEND_PORT}
+        - VITE_API_BASE_URL=https://localhost:${BACKEND_PORT}
         - VITE_CONFIG_PATH=vite.local.config.ts
     ports:
       - "${FRONTEND_SHOP_PORT}:5173"
