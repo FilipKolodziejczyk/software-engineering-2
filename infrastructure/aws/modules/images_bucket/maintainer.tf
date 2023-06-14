@@ -13,6 +13,11 @@ resource "aws_iam_access_key" "images_maintainer" {
 
 data "aws_iam_policy_document" "images_maintainer" {
   statement {
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_user.images_maintainer.arn]
+    }
+
     actions = [
       "s3:ListBucket",
       "s3:GetObject",
@@ -27,8 +32,7 @@ data "aws_iam_policy_document" "images_maintainer" {
   }
 }
 
-resource "aws_iam_policy" "images_maintainer" {
-  name        = "${var.app_name}-${var.app_environment}-images-maintainer"
-  description = "Policy for images maintainer"
-  policy      = data.aws_iam_policy_document.images_maintainer.json
+resource "aws_s3_bucket_policy" "images_maintainer" {
+  bucket = aws_s3_bucket.images_bucket.id
+  policy = data.aws_iam_policy_document.images_maintainer.json
 }
