@@ -31,7 +31,7 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(200, "Returns an image", typeof(ImageDTO))]
         [SwaggerResponse(404, "Image not found")]
         public async Task<IActionResult> GetImageById(int imageId) {
-            var image = await _imageService.GetImageById(imageId);
+            var image = await _imageService.GetImageByIdAsync(imageId);
             return image != null ?
                 Ok(image) :
                 NotFound(new { message = $"No image found with id {imageId}" });

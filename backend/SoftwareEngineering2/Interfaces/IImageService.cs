@@ -5,7 +5,7 @@ namespace SoftwareEngineering2.Interfaces;
 public interface IImageService {
     Task<ImageDTO> UploadImageAsync(NewImageDTO image);
     
-    Task<ImageDTO?> GetImageById(int imageId);
+    Task<ImageDTO?> GetImageByIdAsync(int imageId);
     
     Task DeleteImageAsync(int imageId);
 }

@@ -8,8 +8,5 @@ public class ImageModelEntityConfiguration : IEntityTypeConfiguration<ImageModel
     public void Configure(EntityTypeBuilder<ImageModel> builder) {
         builder.HasKey(x => x.ImageId);
         builder.Property(x => x.ImageUri).IsRequired();
-        builder
-            .HasMany(x => x.Products)
-            .WithMany(x => x.Images);
     }
 }

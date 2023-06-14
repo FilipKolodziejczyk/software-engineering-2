@@ -24,6 +24,7 @@ services:
       - CORS3=${CORS3}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - IMAGE_BUCKET_NAME=${IMAGE_BUCKET_NAME}
 
     volumes:
       - ~/.aspnet/https:/https:ro
