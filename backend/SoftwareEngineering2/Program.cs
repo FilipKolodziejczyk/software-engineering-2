@@ -1,4 +1,5 @@
 using System.Data;
+using Amazon;
 using AutoMapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SoftwareEngineering2.Services;
 using SoftwareEngineering2.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Amazon.S3;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -90,6 +92,7 @@ builder.Services.AddTransient<IImageService, ImageService>(_ => new ImageService
     _.GetRequiredService<IUnitOfWork>(),
     _.GetRequiredService<IImageRepository>(),
     Environment.GetEnvironmentVariable("IMAGE_BUCKET_NAME")!,
+    RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION")!),
     _.GetRequiredService<IMapper>()
 ));
 builder.Services.AddTransient<IBasketService, BasketService>();

@@ -1,3 +1,4 @@
+using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
 using AutoMapper;
@@ -18,11 +19,12 @@ public class ImageService : IImageService {
         IUnitOfWork unitOfWork,
         IImageRepository imageRepository,
         string bucketName,
+        RegionEndpoint regionEndpoint,
         IMapper mapper) {
         _unitOfWork = unitOfWork;
         _imageRepository = imageRepository;
         _bucketName = bucketName;
-        _s3Client = new AmazonS3Client();
+        _s3Client = new AmazonS3Client(regionEndpoint);
         _mapper = mapper;
     }
 
