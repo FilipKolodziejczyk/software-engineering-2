@@ -43,13 +43,19 @@ export default function ProductsPage() {
     setLoading(true);
     setError(false);
 
-    let base_url = import.meta.env.VITE_API_BASE_URL;
-    if (base_url === undefined) {
-      console.error("API Base URL is undefined");
-      base_url = window.location.origin;
+    console.log(`API Base URL: ${import.meta.env.VITE_API_BASE_URL}`);
+    let url: URL;
+    try {
+      url = new URL("/api/products", import.meta.env.VITE_API_BASE_URL);
+    } catch (e) {
+      console.log(`Error while parsing URL: ${e}`)
+      try {
+        url = new URL("/api/products", `${process.env.__VITE_API_BASE_URL__}`);
+      } catch (e) {
+        console.log(`Error while parsing URL: ${e}`)
+        url = new URL("/api/products", window.location.origin);
+      }
     }
-    console.log(`API Base URL: ${base_url}`);
-    const url = new URL("/api/products", base_url);
     console.log(`URL: ${url}`)
     url.searchParams.append('pageNumber', page.toString());
     url.searchParams.append('elementsOnPage', '10');
