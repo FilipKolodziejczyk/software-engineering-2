@@ -29,10 +29,22 @@ public class ImageService : IImageService {
     }
 
     public async Task<ImageDTO> UploadImageAsync(NewImageDTO image) {
+        var datatype = image.Image.FileName.Split('.').Last();
+        if (datatype != "png" && datatype != "jpg" && datatype != "jpeg") {
+            throw new Exception("Invalid image type");
+        }
+        
+        var filename = Guid.NewGuid().ToString() + "." + datatype;
+        var path = Path.Combine(Path.GetTempPath(), filename);
+        await using (var stream = new FileStream(path, FileMode.Create)) {
+            await image.Image.CopyToAsync(stream);
+        }
+
         var uploadRequest = new PutObjectRequest() {
             BucketName = _bucketName,
-            Key = Guid.NewGuid().ToString(),
-            ContentBody = image.base64Image
+            Key = filename,
+            ContentType = "image/" + datatype,
+            FilePath = path
         };
         
         var response = await _s3Client.PutObjectAsync(uploadRequest);
@@ -66,7 +78,7 @@ public class ImageService : IImageService {
         };
 
         var response = await _s3Client.DeleteObjectAsync(request);
-        if (response.HttpStatusCode != System.Net.HttpStatusCode.OK) {
+        if (response.HttpStatusCode != System.Net.HttpStatusCode.Accepted && response.HttpStatusCode != System.Net.HttpStatusCode.NoContent) {
             throw new Exception("Failed to delete image");
         }
         

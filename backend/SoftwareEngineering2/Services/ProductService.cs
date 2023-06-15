@@ -24,6 +24,15 @@ public class ProductService : IProductService {
 
     public async Task<ProductDTO> CreateModelAsync(NewProductDTO newProduct) {
         var model = _mapper.Map<ProductModel>(newProduct);
+        var imagesList = new List<ImageModel>();
+        foreach (var imageId in newProduct.ImageIds) {
+            var image = await _imageRepository.GetByIdAsync(imageId);
+            if (image == null) {
+                throw new KeyNotFoundException("Image not found");
+            }
+            imagesList.Add(image);
+        }
+        model.Images = imagesList;
         await _productRepository.AddAsync(model);
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<ProductDTO>(model);

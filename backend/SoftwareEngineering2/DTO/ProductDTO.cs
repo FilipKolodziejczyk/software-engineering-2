@@ -15,6 +15,8 @@ public record ProductDTO() {
 
     public List<int> ImageIds { get; init; }
     
+    public List<Uri> ImageUris { get; init; }
+    
     public bool Archived { get; init; }
     
     public string Category { get; init; }

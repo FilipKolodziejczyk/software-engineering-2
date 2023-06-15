@@ -32,7 +32,14 @@ public class AutoMapperProfile : Profile {
         CreateMap<NewProductDTO, ProductModel>()
             .ForMember(dest => dest.Archived, opt => opt.MapFrom(src => false));
 
-        CreateMap<ProductModel, ProductDTO>();
+        CreateMap<ProductModel, ProductDTO>()
+            .IncludeAllDerived()
+            .ForMember(dest => dest.ImageUris, opt => opt.MapFrom(src => src.Images))
+            .ForMember(dest => dest.ImageIds, opt => opt.MapFrom(src => src.Images));
+        CreateMap<ImageModel, Uri>().ConstructUsing(image => image.ImageUri);
+        CreateMap<ImageModel, int>().ConstructUsing(image => image.ImageId);
+            
+        CreateMap<ImageModel, ImageDTO>();
 
         CreateMap<UpdateProductDTO, ProductModel>();
 

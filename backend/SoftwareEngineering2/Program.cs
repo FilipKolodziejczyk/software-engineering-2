@@ -11,7 +11,6 @@ using SoftwareEngineering2.Services;
 using SoftwareEngineering2.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Amazon.S3;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 

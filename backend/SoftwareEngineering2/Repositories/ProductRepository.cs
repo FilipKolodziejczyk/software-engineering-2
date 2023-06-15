@@ -20,6 +20,7 @@ public class ProductRepository: IProductRepository
     public async Task<ProductModel?> GetByIdAsync(int id)
     {
         return await _context.ProductModels
+            .Include(product => product.Images)
             .FirstOrDefaultAsync(product => product.ProductID == id);
     }
 
@@ -31,6 +32,7 @@ public class ProductRepository: IProductRepository
     public async Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage)
     {
         return await _context.ProductModels
+            .Include(product => product.Images)
             .Where(product => product.Name.Contains(searchQuery))
             .Where(product => product.Category.Contains(filteredCategory))
             .Skip(elementsOnPage * (pageNumber - 1))
