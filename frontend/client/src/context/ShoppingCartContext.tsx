@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { CartItem } from "../models/CartItem";
+import {createContext, ReactNode, useContext, useEffect, useState} from "react";
+import {CartItem} from "../models/CartItem";
 import axios from "axios";
 import {debounce} from "@mui/material";
 
@@ -20,6 +20,7 @@ const ShoppingCartContext = createContext({} as ShoppingCart);
 export function useShoppingCart() {
   return useContext(ShoppingCartContext);
 }
+
 const updateItemDebounced = debounce(async (item: CartItem) => {
   try {
     await axios.put(
@@ -32,7 +33,7 @@ const updateItemDebounced = debounce(async (item: CartItem) => {
 }, 500);
 
 
-export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
+export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {

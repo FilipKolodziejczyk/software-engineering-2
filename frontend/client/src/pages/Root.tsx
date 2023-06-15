@@ -1,8 +1,8 @@
-import {UserIcon} from "@heroicons/react/24/outline";
 import {Link, Outlet} from "react-router-dom";
 import {MagnifyingGlassIcon} from "@heroicons/react/24/solid";
 import CartPopover from "../components/CartPopover";
 import {ShoppingCartProvider} from "../context/ShoppingCartContext";
+import UserPopover from "../components/UserPopover";
 
 export default function Root() {
   return (
@@ -22,7 +22,7 @@ export default function Root() {
                          className="hidden sm:block w-full h-full form-input bg-transparent border-0 focus:ring-0 outline-none text-sm text-gray-700 placeholder-gray-500 pl-2"/>
                 </div>
                 <CartPopover/>
-                <Link to="/login"><UserIcon className="w-6 h-6"/></Link>
+                <UserPopover/>
               </div>
             </div>
           </div>

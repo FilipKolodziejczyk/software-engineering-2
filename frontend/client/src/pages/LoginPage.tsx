@@ -1,10 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
-import { ArrowUturnLeftIcon } from "@heroicons/react/20/solid";
-import { useAuth } from "../context/AuthContext";
+import {Link, useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {ArrowUturnLeftIcon} from "@heroicons/react/20/solid";
+import {useAuth} from "../context/AuthContext";
 
 export default function LoginPage() {
-  const { token, setToken } = useAuth();
+  const {token, setToken} = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<Error | null>(null); // [1
@@ -16,7 +16,7 @@ export default function LoginPage() {
     // Send user credentials to /api/users/log_in
     fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/log_in`, {
       method: "POST",
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({username, password}),
       headers: {
         "Content-Type": "application/json"
       }
@@ -58,7 +58,8 @@ export default function LoginPage() {
     <div className="flex flex-col place-items-center py-16 w-full pt-12 sm:bg-indigo-50 h-screen">
       <div className="sm:border-gray-300 sm:rounded-xl bg-white sm:shadow-lg my-auto lg:grid lg:grid-cols-2">
         <div className="sm:p-12 lg:p-16 flex flex-col">
-          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 w-full text-center">Welcome back!</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 w-full text-center">Welcome
+            back!</h1>
           <div className="flex flex-col gap-2 mt-12 ">
             <label htmlFor="email">Email</label>
             <input
@@ -107,14 +108,15 @@ export default function LoginPage() {
           <div className="my-auto">
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center" role="alert">
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center"
+                   role="alert">
                 <span className="block sm:inline">{error.message}</span>
               </div>
             )}
 
-              <button className="button-main transition-colors w-full mt-4" onClick={handleLogin}>
-                <p>Login</p>
-              </button>
+            <button className="button-main transition-colors w-full mt-4" onClick={handleLogin}>
+              <p>Login</p>
+            </button>
 
             <div className="flex flex-row justify-center gap-4 mt-8">
               <p className="text-sm font-light">Don't have an account?</p>
@@ -128,15 +130,16 @@ export default function LoginPage() {
           <img
             src="https://images.unsplash.com/photo-1613375772563-af532af5cef9"
             className="object-cover rounded-r-xl"
-           alt="Login"/>
+            alt="Login"/>
         </div>
       </div>
-      <div className="hidden sm:inline absolute top-4 left-4 xl:top-8 xl:left-8 max-w-sm max-h-sm bg-white p-2 shadow-sm text-sm rounded-xl">
+      <div
+        className="hidden sm:inline absolute top-4 left-4 xl:top-8 xl:left-8 max-w-sm max-h-sm bg-white p-2 shadow-sm text-sm rounded-xl">
         <Link
           to="/"
           className="text-gray-700 hover:text-gray-800 flex items-center transition-colors"
         >
-          <ArrowUturnLeftIcon className="w-4 h-4 mr-2" /> Back to the store
+          <ArrowUturnLeftIcon className="w-4 h-4 mr-2"/> Back to the store
         </Link>
       </div>
     </div>
