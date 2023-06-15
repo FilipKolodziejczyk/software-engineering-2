@@ -9,7 +9,7 @@ public record UpdateProductDTO() {
     
     public string Description { get; init; }
     
-    public string Image { get; init; } //to discuss
+    public List<int> ImageIds { get; init; }
     
     public decimal Price { get; init; }
     

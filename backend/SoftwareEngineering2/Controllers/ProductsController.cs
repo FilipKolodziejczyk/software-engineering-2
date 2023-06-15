@@ -30,7 +30,13 @@ namespace SoftwareEngineering2.Controllers {
                 return BadRequest(new { message = "No name or description provided" });
             }
             //add to db
-            var result = await _productService.CreateModelAsync(productModel);
+            ProductDTO result;
+            try {
+                result = await _productService.CreateModelAsync(productModel);
+            } catch (KeyNotFoundException e) {
+                return BadRequest(new { message = e.Message });
+            }
+            
             return CreatedAtAction(nameof(Add), new { id = result.ProductID }, result);
         }
 

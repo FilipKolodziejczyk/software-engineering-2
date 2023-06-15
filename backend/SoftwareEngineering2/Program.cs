@@ -1,4 +1,6 @@
 using System.Data;
+using Amazon;
+using AutoMapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -84,6 +86,14 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderModelRepository, OrderModelRepository>();
 builder.Services.AddTransient<IOrderDetailsModelRepository, OrderDetailsModelRepository>();
+builder.Services.AddTransient<IImageRepository, ImageRepository>();
+builder.Services.AddTransient<IImageService, ImageService>(_ => new ImageService(
+    _.GetRequiredService<IUnitOfWork>(),
+    _.GetRequiredService<IImageRepository>(),
+    Environment.GetEnvironmentVariable("IMAGE_BUCKET_NAME")!,
+    RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION")!),
+    _.GetRequiredService<IMapper>()
+));
 builder.Services.AddTransient<IBasketService, BasketService>();
 builder.Services.AddTransient<IBasketItemModelRepository, BasketItemModelRepository>();
 

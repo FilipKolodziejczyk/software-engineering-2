@@ -43,6 +43,13 @@ resource "aws_ecs_service" "frontend_service" {
     container_port   = 5173
   }
 
+  lifecycle {
+    ignore_changes = [
+      task_definition,
+      desired_count,
+    ]
+  }
+
   tags = {
     Name        = "${var.app_name}-frontend-${var.module_name}-service"
     Environment = var.app_environment

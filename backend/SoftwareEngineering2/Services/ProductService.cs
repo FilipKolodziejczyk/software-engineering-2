@@ -8,19 +8,31 @@ namespace SoftwareEngineering2.Services;
 public class ProductService : IProductService {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IProductRepository _productRepository;
+    private readonly IImageRepository _imageRepository;
     private readonly IMapper _mapper;
 
     public ProductService(
         IUnitOfWork unitOfWork,
         IProductRepository productRepository,
+        IImageRepository imageRepository,
         IMapper mapper) {
         _unitOfWork = unitOfWork;
         _productRepository = productRepository;
+        _imageRepository = imageRepository;
         _mapper = mapper;
     }
 
     public async Task<ProductDTO> CreateModelAsync(NewProductDTO newProduct) {
         var model = _mapper.Map<ProductModel>(newProduct);
+        var imagesList = new List<ImageModel>();
+        foreach (var imageId in newProduct.ImageIds) {
+            var image = await _imageRepository.GetByIdAsync(imageId);
+            if (image == null) {
+                throw new KeyNotFoundException("Image not found");
+            }
+            imagesList.Add(image);
+        }
+        model.Images = imagesList;
         await _productRepository.AddAsync(model);
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<ProductDTO>(model);
@@ -32,7 +44,7 @@ public class ProductService : IProductService {
     }
 
     public async Task DeleteModelAsync(int id) {
-        var model = await _productRepository.GetByIdAsync(id) ?? throw new Exception("Product not found");
+        var model = await _productRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("Product not found");
         _productRepository.Delete(model);
         await _unitOfWork.SaveChangesAsync();
     }
@@ -43,14 +55,20 @@ public class ProductService : IProductService {
     }
 
     public async Task<ProductDTO> UpdateModelAsync(UpdateProductDTO product) {
-        var model = await _productRepository.GetByIdAsync(product.ProductID) ?? throw new Exception("Model not found");
+        var model = await _productRepository.GetByIdAsync(product.ProductID) ?? throw new KeyNotFoundException("Model not found");
+        foreach (var imageId in product.ImageIds) {
+            var image = await _imageRepository.GetByIdAsync(imageId);
+            if (image == null) {
+                throw new KeyNotFoundException("Image not found");
+            }
+            model.Images.Add(image);
+        }
 
         model.Name = product.Name;
         model.ProductID = product.ProductID;
         model.Archived = product.Archived;
         model.Category = product.Category;
         model.Price = product.Price;
-        model.Image = product.Image;
         model.Quantity = product.Quantity;
         model.Description = product.Description;
 

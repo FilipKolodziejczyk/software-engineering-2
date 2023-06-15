@@ -118,3 +118,10 @@ module "frontend_shop" {
   logs_group_name        = aws_cloudwatch_log_group.log_group.name
   module_name            = "shop"
 }
+
+module "images_bucket" {
+  source = "./modules/images_bucket"
+
+  app_name          = var.app_name
+  app_environment   = var.app_environment
+}
