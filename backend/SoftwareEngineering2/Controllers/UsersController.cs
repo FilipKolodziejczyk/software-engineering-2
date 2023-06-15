@@ -74,23 +74,6 @@ public class UsersController : ControllerBase {
         return CreatedAtAction(nameof(Get), result);
     }
 
-    // GET: api/users/profilePicture
-    [HttpGet("profilePicture", Name = "profilePicture")]
-    [SwaggerResponse(200, "Get profile picture")]
-    [SwaggerResponse(401, "Unauthorised")]
-    public Task<IActionResult> GetPicture(int id) {
-        throw new NotImplementedException();
-    }
-
-    // POST: api/users/profilePicture
-    [HttpPost("profilePicture", Name = "profilePicture")]
-    [Authorize(Roles = Roles.Client)]
-    [SwaggerResponse(200, "Profile picture updated")]
-    [SwaggerResponse(401, "Unauthorised")]
-    public Task<IActionResult> UpdatePicture() {
-        throw new NotImplementedException();
-    }
-
     // POST: api/users/newsletter
     [HttpPost("newsletter")]
     [SwaggerOperation(Summary = "Update newsletter preference", Description = "Difference: -")]
