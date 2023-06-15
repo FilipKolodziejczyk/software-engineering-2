@@ -8,13 +8,13 @@ export default function CartOverviewPage() {
   const {items, removeItem, updateItem} = useShoppingCart();
 
   return (
-    <div className="bg-white">
+    <div>
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-12">
           <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900">Shopping Cart</h1>
         </div>
 
-        <div className="my-12 grid grid-cols-12 gap-8">
+        <div className="my-12 sm:grid sm:grid-cols-12 gap-8">
           <div className="col-span-12 sm:col-span-7 -mt-4">
             <ul>
               {items.map((item, index) =>

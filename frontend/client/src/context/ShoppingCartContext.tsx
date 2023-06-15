@@ -17,6 +17,16 @@ type ShoppingCart = {
 
 const ShoppingCartContext = createContext({} as ShoppingCart);
 
+async function sendItemUpdate(item: CartItem) {
+  await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
+    method: 'PUT', headers: {
+      'Content-Type': 'application/json'
+    }, body: JSON.stringify(item)
+  })
+}
+
+const debouncedUpdateItem = debounce(sendItemUpdate, 500)
+
 export function useShoppingCart() {
   return useContext(ShoppingCartContext);
 }
@@ -67,6 +77,7 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
       }
     }
   }
+
 
   async function updateItem(item: CartItem) {
     try {

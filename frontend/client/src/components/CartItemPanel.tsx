@@ -14,7 +14,8 @@ export default function CartItemPanel({item, removeItem, updateItem}: CartItemPa
 
   return (<li className="py-8 flex odd:border-t odd:border-b last:border-b border-gray-200">
     <div className="shrink-0">
-      <img className="h-48 w-48 rounded-md object-cover" src={item.product.image} alt={item.product.name}/>
+      <img className="h-32 w-32 md:h-48 md:w-48 rounded-md object-cover" src={item.product.image}
+           alt={item.product.name}/>
     </div>
     <div className="flex flex-col ml-8 justify-between flex-1">
       <div className="flex flex-col h-full">
@@ -28,7 +29,7 @@ export default function CartItemPanel({item, removeItem, updateItem}: CartItemPa
         <p className="mt-2 text-sm text-gray-500">
           {currencyFormat(item.product.price)}
         </p>
-        <div className="my-auto flex">
+        <div className="mt-auto justify-end flex">
           <CounterInput value={item.quantity} onChange={
             (e) => {
               const value = parseInt(e.target.value);

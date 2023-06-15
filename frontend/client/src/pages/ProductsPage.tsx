@@ -5,13 +5,6 @@ import {CategoryFilters} from "../components/CategoryFilters";
 import {useLocation} from "react-router-dom";
 import SpinnerIcon from "../resources/SpinnerIcon";
 
-
-export function loader({request}: { request: Request }) {
-  let url = new URL(request.url);
-  console.log(url)
-  return null;
-}
-
 function useQuery() {
   const {search} = useLocation();
 
@@ -57,7 +50,7 @@ export default function ProductsPage() {
       url.searchParams.append(key, value);
     }
 
-    fetch(url).then(res => res.json()).then((data) => {
+    fetch(url).then(res => res.ok ? res.json() : Promise.reject(res)).then((data) => {
       setProducts((prevProducts) => [...prevProducts, ...data]);
       setHasMore(data.length > 0);
       setLoading(false);
