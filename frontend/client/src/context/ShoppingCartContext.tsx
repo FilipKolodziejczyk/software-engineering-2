@@ -1,81 +1,111 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {CartItem} from "../models/CartItem";
+import axios from "axios";
+import {debounce} from "@mui/material";
 
 type ShoppingCartProviderProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 type ShoppingCart = {
-  items: CartItem[],
-  addItem: (item: CartItem) => Promise<void>,
-  updateItem: (item: CartItem) => Promise<void>,
-  removeItem: (item: CartItem) => Promise<void>,
-  clear: () => Promise<void>,
-}
+  items: CartItem[];
+  addItem: (item: CartItem) => Promise<void>;
+  updateItem: (item: CartItem) => Promise<void>;
+  removeItem: (item: CartItem) => Promise<void>;
+  clear: () => Promise<void>;
+};
 
-const ShoppingCartContext = createContext({} as ShoppingCart)
+const ShoppingCartContext = createContext({} as ShoppingCart);
 
 export function useShoppingCart() {
-  return useContext(ShoppingCartContext)
+  return useContext(ShoppingCartContext);
 }
+
+const updateItemDebounced = debounce(async (item: CartItem) => {
+  try {
+    await axios.put(
+      `${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`,
+      item
+    );
+  } catch (error) {
+    console.error(error);
+  }
+}, 500);
 
 
 export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
     async function fetchBasket() {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket`)
-      const items = await response.json()
-      setCartItems(items)
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/basket`);
+        const items = response.data;
+        setCartItems(items);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
-    fetchBasket().catch((e) => console.error(e))
-  }, [])
+    fetchBasket();
+  }, []);
 
   async function addItem(item: CartItem) {
-    const existingItem = cartItems.find((i) => i.product.productID === item.product.productID)
+    const existingItem = cartItems.find((i) => i.product.productID === item.product.productID);
     if (existingItem) {
-      existingItem.quantity += item.quantity
-      await updateItem(existingItem)
+      existingItem.quantity += item.quantity;
+      await updateItem(existingItem);
     } else {
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket`, {
-        method: 'POST', headers: {
-          'Content-Type': 'application/json'
-        }, body: JSON.stringify(item)
-      })
-      setCartItems([...cartItems, item])
+      try {
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/basket`, {
+          productID: item.product.productID,
+          quantity: item.quantity,
+        });
+        setCartItems([...cartItems, item]);
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
   async function updateItem(item: CartItem) {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
-      method: 'PUT', headers: {
-        'Content-Type': 'application/json'
-      }, body: JSON.stringify(item)
-    })
-    setCartItems([...cartItems.map((i) => i.product.productID === item.product.productID ? item : i)])
+    try {
+      await updateItemDebounced(item);
+      setCartItems([...cartItems.map((i) => (i.product.productID === item.product.productID ? item : i))]);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function removeItem(item: CartItem) {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
-      method: 'DELETE'
-    })
-    console.log(item)
-    console.log(cartItems)
-    setCartItems([...cartItems.filter((i) => i.product.productID !== item.product.productID)])
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`);
+      setCartItems([...cartItems.filter((i) => i.product.productID !== item.product.productID)]);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function clear() {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket`, {
-      method: 'DELETE'
-    })
-    setCartItems([])
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/basket`);
+      setCartItems([]);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  return <ShoppingCartContext.Provider value={{
-    items: cartItems, addItem, updateItem, removeItem, clear,
-  } as ShoppingCart}>
-    {children}
-  </ShoppingCartContext.Provider>
+  return (
+    <ShoppingCartContext.Provider
+      value={{
+        items: cartItems,
+        addItem,
+        updateItem,
+        removeItem,
+        clear,
+      }}
+    >
+      {children}
+    </ShoppingCartContext.Provider>
+  );
 }
