@@ -22,9 +22,16 @@ public class FlowerShopContext : DbContext {
         // TODO: temporary solution (password: password)
         modelBuilder.Entity<EmployeeModel>().HasData(new EmployeeModel {
             Email = "admin@flowershop.com",
-            Name = "W³adys³aw Howalski",
+            Name = "Wï¿½adysï¿½aw Howalski",
             Password = "AQAAAAIAAYagAAAAEHiYiXUCLpBDCy3l60OqSPW+GNZExxF4PwXI8VtkhKZqjVsMFdhw68orF475JKPXkA==",
             EmployeeID = 1
+        });
+
+        modelBuilder.Entity<ClientModel>().HasData(new ClientModel {
+            Email = "johndoe@example.com",
+            Name = "John Doe",
+            Password = "AQAAAAIAAYagAAAAEHiYiXUCLpBDCy3l60OqSPW+GNZExxF4PwXI8VtkhKZqjVsMFdhw68orF475JKPXkA==",
+            ClientID = 1
         });
     }
 }

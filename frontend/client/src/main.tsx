@@ -4,10 +4,14 @@ import {createBrowserRouter, RouterProvider,} from "react-router-dom";
 import './index.css'
 import Root from "./pages/Root";
 import ErrorPage from "./pages/ErrorPage";
-import ProductsPage, {loader as productListLoader} from "./pages/ProductsPage";
+import ProductsPage from "./pages/ProductsPage";
 import LoginPage from "./pages/LoginPage";
 import ProductDetailsPage, {loader as productLoader} from "./pages/ProductDetailsPage";
 import CartOverviewPage from "./pages/CartOverviewPage";
+// import CheckoutPage from "./pages/CheckoutPage";
+import {AuthProvider} from "./context/AuthContext";
+import {ProtectedRoute} from "./pages/ProtectedRoute";
+import LogoutPage from "./pages/LogoutPage";
 
 const router = createBrowserRouter([
   {
@@ -17,12 +21,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <ProductsPage/>,
-        loader: productListLoader,
-      },
-      {
-        path: "login",
-        element: <LoginPage/>
+        element: <ProductsPage/>
       },
       {
         path: "products/:id",
@@ -32,13 +31,33 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <CartOverviewPage/>
-      }
+      },
+      // {
+      //   path: "checkout",
+      //   element: <CheckoutPage/>
+      // }
     ]
   },
+  {
+    path: "login",
+    element: <LoginPage/>
+  },
+  {
+    path: "logout",
+    element: <LogoutPage/>
+  },
+  {
+    element: <ProtectedRoute/>,
+    children: [
+
+    ]
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <AuthProvider>
+      <RouterProvider router={router}/>
+    </AuthProvider>
   </React.StrictMode>
 )
