@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
 
@@ -17,10 +18,14 @@ public class ImageRepository : IImageRepository {
     
     public async Task<ImageModel?> GetByIdAsync(int id) {
         return await _context.ImageModels
+            .Include(image => image.Products)
             .FirstOrDefaultAsync(image => image.ImageId == id);
     }
     
     public void Delete(ImageModel image) {
+        if (!image.Products.IsNullOrEmpty()) {
+            throw new InvalidOperationException("Cannot delete image that is assigned to a product");
+        }
         _context.ImageModels.Remove(image);
     }
 }

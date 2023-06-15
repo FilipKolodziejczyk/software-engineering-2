@@ -44,6 +44,7 @@ public class ImagesController : ControllerBase {
     [SwaggerOperation(Summary = "Delete a specific image")]
     [SwaggerResponse(204, "No Content")]
     [SwaggerResponse(404, "Image not found")]
+    [SwaggerResponse(400, "Bad Request - image in use")]
     [Authorize(Roles = Roles.Employee)]
     public async Task<IActionResult> DeleteImage(int imageId) {
         try {
@@ -51,6 +52,9 @@ public class ImagesController : ControllerBase {
         }
         catch (KeyNotFoundException) {
             return NotFound(new { message = $"No image found with id {imageId}" });
+        }
+        catch (BadHttpRequestException e) {
+            return BadRequest(new { message = e.Message });
         }
             
         return NoContent();

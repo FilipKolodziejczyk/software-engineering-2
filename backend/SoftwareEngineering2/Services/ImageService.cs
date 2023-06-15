@@ -70,6 +70,10 @@ public class ImageService : IImageService {
 
     public async Task DeleteImageAsync(int imageId) {
         var image = await _imageRepository.GetByIdAsync(imageId) ?? throw new KeyNotFoundException("Image not found");
+        if (image.Products.Count > 0) {
+            throw new BadHttpRequestException("Image is used in products");
+        }
+
         var objectName = image.ImageUri.Segments.Last();
         
         var request = new DeleteObjectRequest {
@@ -79,7 +83,7 @@ public class ImageService : IImageService {
 
         var response = await _s3Client.DeleteObjectAsync(request);
         if (response.HttpStatusCode != System.Net.HttpStatusCode.Accepted && response.HttpStatusCode != System.Net.HttpStatusCode.NoContent) {
-            throw new Exception("Failed to delete image");
+            throw new AmazonS3Exception("Failed to delete image");
         }
         
         _imageRepository.Delete(image);
