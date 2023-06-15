@@ -33,3 +33,30 @@ resource "aws_s3_bucket_acl" "images_bucket_acl" {
     aws_s3_bucket_ownership_controls.images_bucket_ownership_controls,
    ]
 }
+
+resource "aws_s3_bucket_policy" "images_bucket_policy" {
+  bucket = aws_s3_bucket.images_bucket.id
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${var.app_name}-${var.app_environment}-images-bucket/*"
+      ]
+    }
+  ]
+}
+EOF
+
+  depends_on = [ 
+    aws_s3_bucket_public_access_block.images_bucket_public_access_block,
+    aws_s3_bucket_ownership_controls.images_bucket_ownership_controls,
+   ]
+}
