@@ -9,6 +9,9 @@ import LoginPage from "./pages/LoginPage";
 import ProductDetailsPage, {loader as productLoader} from "./pages/ProductDetailsPage";
 import CartOverviewPage from "./pages/CartOverviewPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import {AuthProvider} from "./context/AuthContext";
+import {ProtectedRoute} from "./pages/ProtectedRoute";
+import LogoutPage from "./pages/LogoutPage";
 
 const router = createBrowserRouter([
   {
@@ -19,10 +22,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <ProductsPage/>
-      },
-      {
-        path: "login",
-        element: <LoginPage/>
       },
       {
         path: "products/:id",
@@ -39,10 +38,24 @@ const router = createBrowserRouter([
       }
     ]
   },
+  {
+    path: "login",
+    element: <LoginPage/>
+  },
+  {
+    path: "logout",
+    element: <LogoutPage/>
+  },
+  {
+    element: <ProtectedRoute/>,
+    children: []
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <AuthProvider>
+      <RouterProvider router={router}/>
+    </AuthProvider>
   </React.StrictMode>
 )

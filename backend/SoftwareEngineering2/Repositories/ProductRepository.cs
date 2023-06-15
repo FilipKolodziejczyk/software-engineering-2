@@ -33,6 +33,8 @@ public class ProductRepository: IProductRepository
         return await _context.ProductModels
             .Where(product => product.Name.Contains(searchQuery))
             .Where(product => product.Category.Contains(filteredCategory))
+            .Skip(elementsOnPage * (pageNumber - 1))
+            .Take(elementsOnPage)
             .ToListAsync();
     }
 }

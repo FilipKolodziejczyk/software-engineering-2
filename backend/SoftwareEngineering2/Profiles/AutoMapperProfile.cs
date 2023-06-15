@@ -48,6 +48,11 @@ public class AutoMapperProfile : Profile {
             .ForMember(dest => dest.Complaints, opt => opt.Ignore())
             .ForMember(dest => dest.DeliveryMan, opt => opt.Ignore())
             .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
+
+        CreateMap<BasketItemModel, BasketItemDTO>();
+
+        CreateMap<BasketItemDTO, BasketItemModel>()
+            .ForMember(dest => dest.ClientID, opt => opt.Ignore());
     }
 }
 

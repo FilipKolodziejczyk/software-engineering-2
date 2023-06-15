@@ -56,7 +56,9 @@ namespace SoftwareEngineering2.Controllers {
         [SwaggerResponse(403, "Forbidden")]
         [SwaggerResponse(409, "User already exists")]
         public async Task<IActionResult> CreateUser([FromBody][Required] NewUserDTO newUser) {
-            if (!User.IsInRole(Roles.Employee) && newUser.Role != Roles.Client)
+            string role = newUser.Role is null || !Roles.IsValid(newUser.Role) ? Roles.Client : newUser.Role;
+
+            if (!User.IsInRole(Roles.Employee) && role != Roles.Client)
                 return Forbid();
 
             if (string.IsNullOrWhiteSpace(newUser.Email)
@@ -67,7 +69,14 @@ namespace SoftwareEngineering2.Controllers {
             if (await _userService.GetUserByEmail(newUser.Email) is not null)
                 return Conflict(new { message = "User with given email address already exists" });
 
-            var result = await _userService.CreateUser(newUser);
+            var result = await _userService.CreateUser(new NewUserDTO() {
+                Name = newUser.Name,
+                Email = newUser.Email,
+                Password = newUser.Password,
+                Newsletter = newUser.Newsletter,
+                Address = newUser.Address,
+                Role = role,
+            });
             return CreatedAtAction(nameof(Get), result);
         }
 

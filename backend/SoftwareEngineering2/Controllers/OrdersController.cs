@@ -11,10 +11,12 @@ namespace SoftwareEngineering2.Controllers {
     public class OrdersController : ControllerBase {
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
+        private readonly IUserService _userService;
 
-        public OrdersController(IOrderService orderService, IProductService productService) {
+        public OrdersController(IOrderService orderService, IProductService productService, IUserService userService) {
             _orderService = orderService;
             _productService = productService;
+            _userService = userService;
         }
 
         // POST: api/orders
@@ -89,7 +91,15 @@ namespace SoftwareEngineering2.Controllers {
                     || order.DeliveryMan.UserID != deliverymanId))
                 return Forbid();
 
-            var result = await _orderService.ChangeOrderStatus(orderId, orderStatusDTO);
+            int? asssignDeliveryMan = null;
+            if (orderStatusDTO.OrderStatus == OrderStatus.Accepted) {
+                var availableDeliveryMan = await _userService.GetAvailableDeliveryMan();
+                if (availableDeliveryMan is null)
+                    return NotFound();
+                asssignDeliveryMan = availableDeliveryMan.UserID;
+            }
+
+            var result = await _orderService.ChangeOrderStatus(orderId, orderStatusDTO, asssignDeliveryMan);
 
             if (result is null)
                 return Unauthorized();

@@ -6,4 +6,5 @@ public interface IDeliveryManModelRepository {
     Task AddAsync(DeliveryManModel model);
     Task<DeliveryManModel?> GetByEmail(string emailAddress);
     Task<DeliveryManModel?> GetByID(int id);
+    Task<IEnumerable<DeliveryManModel>> GetAll();
 }
