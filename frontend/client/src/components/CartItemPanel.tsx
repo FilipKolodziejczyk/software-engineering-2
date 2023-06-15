@@ -14,7 +14,7 @@ export default function CartItemPanel({item, removeItem, updateItem}: CartItemPa
 
   return (<li className="py-8 flex odd:border-t odd:border-b last:border-b border-gray-200">
     <div className="shrink-0">
-      <img className="h-32 w-32 md:h-48 md:w-48 rounded-md object-cover" src={item.product.image}
+      <img className="h-32 w-32 md:h-48 md:w-48 rounded-md object-cover" src={item.product.imageUris[0]}
            alt={item.product.name}/>
     </div>
     <div className="flex flex-col ml-8 justify-between flex-1">

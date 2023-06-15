@@ -46,7 +46,7 @@ export default function CartPopover() {
                   className="group -m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                 >
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center text-white sm:h-14 sm:w-14">
-                    <img src={item.product.image} alt={item.product.name} className="h-full w-full rounded-lg"/>
+                    <img src={item.product.imageUris[0]} alt={item.product.name} className="h-full w-full rounded-lg"/>
                   </div>
                   <div className="ml-4">
                     <p className="text-md font-medium text-gray-900">

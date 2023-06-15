@@ -20,7 +20,7 @@ export default function ProductDetailsPage() {
   return (<div className="mx-auto max-w-2xl px-4 py-4 pb-12 sm:px-6 sm:py-8 lg:max-w-5xl 2xl:max-w-7xl lg:px-8">
     <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 lg:items-start">
       <div className="mb-4">
-        <ImageCarousel imageSources={[product.image]}/>
+        <ImageCarousel imageSources={product.imageUris}/>
       </div>
       <div>
         <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">{product.name}</h3>
