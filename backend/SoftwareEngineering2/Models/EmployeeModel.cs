@@ -2,7 +2,7 @@
 namespace SoftwareEngineering2.Models;
 
 public class EmployeeModel : IUserModel {
-    public int EmployeeID { get; set; }
+    public int EmployeeId { get; set; }
 
     [Required]
     public string? Name { get; set; }

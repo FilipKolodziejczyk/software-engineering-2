@@ -1,12 +1,10 @@
-using SoftwareEngineering2.Models;
-
 namespace SoftwareEngineering2.DTO;
 
-public record UserDTO() {
-    public int UserID { get; init; }
+public record UserDto {
+    public int UserId { get; init; }
     public string? Name { get; init; }
     public string? Email { get; init; }
     public string? Role { get; init; }
     public bool? Newsletter { get; init; }
-    public AddressDTO? Address { get; init; }
+    public AddressDto? Address { get; init; }
 }

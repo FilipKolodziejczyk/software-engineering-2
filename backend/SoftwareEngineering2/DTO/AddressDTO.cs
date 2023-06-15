@@ -1,8 +1,6 @@
-using SoftwareEngineering2.Models;
-
 namespace SoftwareEngineering2.DTO;
 
-public record AddressDTO() {
+public record AddressDto {
     public string Street { get; init; }
     public string City { get; init; }
     public string BuildingNo { get; init; }

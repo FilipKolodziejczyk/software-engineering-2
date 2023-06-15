@@ -11,7 +11,7 @@ namespace SoftwareEngineering2.Services;
 public class ImageService : IImageService {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IImageRepository _imageRepository;
-    private IAmazonS3 _s3Client;
+    private readonly IAmazonS3 _s3Client;
     private readonly string _bucketName;
     private readonly IMapper _mapper;
 
@@ -28,19 +28,19 @@ public class ImageService : IImageService {
         _mapper = mapper;
     }
 
-    public async Task<ImageDTO> UploadImageAsync(NewImageDTO image) {
+    public async Task<ImageDto> UploadImageAsync(NewImageDto image) {
         var datatype = image.Image.FileName.Split('.').Last();
         if (datatype != "png" && datatype != "jpg" && datatype != "jpeg") {
             throw new Exception("Invalid image type");
         }
         
-        var filename = Guid.NewGuid().ToString() + "." + datatype;
+        var filename = Guid.NewGuid() + "." + datatype;
         var path = Path.Combine(Path.GetTempPath(), filename);
         await using (var stream = new FileStream(path, FileMode.Create)) {
             await image.Image.CopyToAsync(stream);
         }
 
-        var uploadRequest = new PutObjectRequest() {
+        var uploadRequest = new PutObjectRequest {
             BucketName = _bucketName,
             Key = filename,
             ContentType = "image/" + datatype,
@@ -52,19 +52,19 @@ public class ImageService : IImageService {
             throw new Exception("Failed to upload image");
         }
 
-        var model = new ImageModel() {
+        var model = new ImageModel {
             ImageUri = new Uri($"https://{_bucketName}.s3.amazonaws.com/{uploadRequest.Key}")
         };
         
         await _imageRepository.AddAsync(model);
         await _unitOfWork.SaveChangesAsync();
-        return _mapper.Map<ImageDTO>(model);
+        return _mapper.Map<ImageDto>(model);
     }
     
-    public async Task<ImageDTO?> GetImageByIdAsync(int imageId) {
+    public async Task<ImageDto?> GetImageByIdAsync(int imageId) {
         var result = await _imageRepository.GetByIdAsync(imageId);
         return result != null ? 
-            _mapper.Map<ImageDTO>(result) : 
+            _mapper.Map<ImageDto>(result) : 
             null;
     }
 

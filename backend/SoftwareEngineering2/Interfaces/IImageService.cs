@@ -3,9 +3,9 @@ using SoftwareEngineering2.DTO;
 namespace SoftwareEngineering2.Interfaces; 
 
 public interface IImageService {
-    Task<ImageDTO> UploadImageAsync(NewImageDTO image);
+    Task<ImageDto> UploadImageAsync(NewImageDto image);
     
-    Task<ImageDTO?> GetImageByIdAsync(int imageId);
+    Task<ImageDto?> GetImageByIdAsync(int imageId);
     
     Task DeleteImageAsync(int imageId);
 }

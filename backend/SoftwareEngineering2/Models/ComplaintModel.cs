@@ -2,18 +2,18 @@
 namespace SoftwareEngineering2.Models;
 
 public class ComplaintModel {
-    public int ComplaintID { get; set; }
+    public int ComplaintId { get; set; }
 
     [Required]
-    public int ClientID { get; set; }
+    public int ClientId { get; set; }
     public ClientModel? Client { get; set; }
 
     [Required]
-    public int OrderID { get; set; }
+    public int OrderId { get; set; }
     public OrderModel? Order { get; set; }
 
     [Required]
-    public int EmployeeID { get; set; }
+    public int EmployeeId { get; set; }
     public EmployeeModel? Employee { get; set; }
 
     [Required]

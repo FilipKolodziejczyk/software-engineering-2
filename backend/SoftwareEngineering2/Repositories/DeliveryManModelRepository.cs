@@ -19,8 +19,8 @@ public class DeliveryManModelRepository : IDeliveryManModelRepository {
         return await _context.DeliveryManModels.FirstOrDefaultAsync(model => model.Email == emailAddress);
     }
 
-    public async Task<DeliveryManModel?> GetByID(int id) {
-        return await _context.DeliveryManModels.FirstOrDefaultAsync(model => model.DeliveryManID == id);
+    public async Task<DeliveryManModel?> GetById(int id) {
+        return await _context.DeliveryManModels.FirstOrDefaultAsync(model => model.DeliveryManId == id);
     }
 
     public async Task<IEnumerable<DeliveryManModel>> GetAll() {

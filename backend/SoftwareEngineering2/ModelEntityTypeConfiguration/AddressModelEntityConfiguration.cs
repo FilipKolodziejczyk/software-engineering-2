@@ -6,7 +6,7 @@ namespace SoftwareEngineering2.ModelEntityTypeConfiguration;
 
 public class AddressModelEntityConfiguration : IEntityTypeConfiguration<AddressModel> {
     public void Configure(EntityTypeBuilder<AddressModel> builder) {
-        builder.HasKey(x => x.AddressID);
+        builder.HasKey(x => x.AddressId);
         builder.Property(x => x.Street).IsRequired();
         builder.Property(x => x.City).IsRequired();
         builder.Property(x => x.PostalCode).IsRequired();
@@ -14,7 +14,7 @@ public class AddressModelEntityConfiguration : IEntityTypeConfiguration<AddressM
         builder.Property(x => x.BuildingNo).IsRequired();
         builder.Property(x => x.HouseNo).IsRequired();
 
-        builder.HasMany(x => x.Orders).WithOne(x => x.Address).HasForeignKey(x => x.OrderID);
-        builder.HasOne(x => x.Client).WithOne(x => x.Address).HasForeignKey<ClientModel>(x => x.AddressID);
+        builder.HasMany(x => x.Orders).WithOne(x => x.Address).HasForeignKey(x => x.OrderId);
+        builder.HasOne(x => x.Client).WithOne(x => x.Address).HasForeignKey<ClientModel>(x => x.AddressId);
     }
 }

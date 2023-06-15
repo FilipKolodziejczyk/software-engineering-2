@@ -1,4 +1,4 @@
-﻿namespace SoftwareEngineering2;
+﻿namespace SoftwareEngineering2.Profiles;
 
 public static class OrderStatus {
     public const string Received = "received";
@@ -7,5 +7,5 @@ public static class OrderStatus {
     public const string Delivered = "delivered";
 
     public static bool IsValid(string status) =>
-        status == Received || status == Accepted || status == Rejected || status == Delivered;
+        status is Received or Accepted or Rejected or Delivered;
 }

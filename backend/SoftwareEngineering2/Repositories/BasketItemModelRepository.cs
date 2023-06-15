@@ -15,7 +15,7 @@ public class BasketItemModelRepository : IBasketItemModelRepository {
         await _context.BasketItemModels.AddAsync(itemModel);
     }
 
-    public void Delete(BasketItemModel? model) {
+    public void Delete(BasketItemModel model) {
         _context.BasketItemModels.Remove(model);
     }
 
@@ -25,7 +25,7 @@ public class BasketItemModelRepository : IBasketItemModelRepository {
 
     public async Task<IEnumerable<BasketItemModel>> GetAllModels(int clientId) {
         return await _context.BasketItemModels
-             .Where(model => model.ClientID == clientId)
+             .Where(model => model.ClientId == clientId)
              .Include(model => model.Client)
              .Include(model => model.Product)
              .ToListAsync();
@@ -33,7 +33,7 @@ public class BasketItemModelRepository : IBasketItemModelRepository {
 
     public async Task<BasketItemModel?> GetByIds(int clientId, int productId) {
         return await _context.BasketItemModels
-             .Where(model => model.ClientID == clientId && model.ProductID == productId)
+             .Where(model => model.ClientId == clientId && model.ProductId == productId)
              .Include(model => model.Client)
              .Include(model => model.Product)
              .FirstOrDefaultAsync();

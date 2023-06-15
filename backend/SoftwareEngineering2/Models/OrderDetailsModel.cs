@@ -2,14 +2,14 @@
 namespace SoftwareEngineering2.Models;
 
 public class OrderDetailsModel {
-    public int CurrentOrderID { get; set; }
+    public int CurrentOrderId { get; set; }
 
     [Required]
-    public int OrderID { get; set; }
+    public int OrderId { get; set; }
     public OrderModel? Order { get; set; }
 
     [Required]
-    public int ProductID { get; set; }
+    public int ProductId { get; set; }
     public ProductModel? Product { get; set; }
 
     [Required]

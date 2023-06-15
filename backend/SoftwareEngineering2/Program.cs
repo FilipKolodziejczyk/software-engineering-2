@@ -12,12 +12,12 @@ using SoftwareEngineering2.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options => {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
+    options.AddPolicy(name: myAllowSpecificOrigins,
     policy => {
         // var origins = new List<string>();
         // for (int i = 0; i < 10; i++) {
@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen(c => {
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement() { {
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement { {
         new OpenApiSecurityScheme {
             Reference = new OpenApiReference {
                 Type = ReferenceType.SecurityScheme,
@@ -53,7 +53,7 @@ builder.Services.AddSwaggerGen(c => {
             },
             Scheme = "oauth2",
             Name = "Bearer",
-            In = ParameterLocation.Header,
+            In = ParameterLocation.Header
         },
         new List<string>()
     } });
@@ -106,7 +106,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = "your-issuer",
             ValidAudience = "your-audience",
-            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("your-secret-key has to be long enough"))
+            IssuerSigningKey = new SymmetricSecurityKey("your-secret-key has to be long enough"u8.ToArray())
         };
     });
 
@@ -114,7 +114,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(myAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {

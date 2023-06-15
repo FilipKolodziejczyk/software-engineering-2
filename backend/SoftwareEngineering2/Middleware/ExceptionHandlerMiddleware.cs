@@ -12,9 +12,9 @@ public static class ExceptionHandlerMiddleware {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                 if (contextFeature != null & detailedErrors) {
-                    await context.Response.WriteAsync(new ErrorDetails() {
+                    await context.Response.WriteAsync(new ErrorDetails {
                         StatusCode = context.Response.StatusCode,
-                        Message = contextFeature.Error.Message
+                        Message = contextFeature!.Error.Message
                     }.ToString());
                 }
             });

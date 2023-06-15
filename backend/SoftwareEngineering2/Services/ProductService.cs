@@ -22,7 +22,7 @@ public class ProductService : IProductService {
         _mapper = mapper;
     }
 
-    public async Task<ProductDTO> CreateModelAsync(NewProductDTO newProduct) {
+    public async Task<ProductDto> CreateModelAsync(NewProductDto newProduct) {
         var model = _mapper.Map<ProductModel>(newProduct);
         var imagesList = new List<ImageModel>();
         foreach (var imageId in newProduct.ImageIds) {
@@ -35,12 +35,12 @@ public class ProductService : IProductService {
         model.Images = imagesList;
         await _productRepository.AddAsync(model);
         await _unitOfWork.SaveChangesAsync();
-        return _mapper.Map<ProductDTO>(model);
+        return _mapper.Map<ProductDto>(model);
     }
 
-    public async Task<ProductDTO> GetModelByIdAsync(int id) {
+    public async Task<ProductDto?> GetModelByIdAsync(int id) {
         var result = await _productRepository.GetByIdAsync(id);
-        return _mapper.Map<ProductDTO>(result);
+        return _mapper.Map<ProductDto>(result);
     }
 
     public async Task DeleteModelAsync(int id) {
@@ -49,13 +49,13 @@ public class ProductService : IProductService {
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<List<ProductDTO>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage) {
+    public async Task<List<ProductDto>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage) {
         var result = await _productRepository.GetAllFilteredAsync(searchQuery, filteredCategory, pageNumber, elementsOnPage);
-        return new List<ProductDTO>(result.Select(_mapper.Map<ProductDTO>));
+        return new List<ProductDto>(result.Select(_mapper.Map<ProductDto>));
     }
 
-    public async Task<ProductDTO> UpdateModelAsync(UpdateProductDTO product) {
-        var model = await _productRepository.GetByIdAsync(product.ProductID) ?? throw new KeyNotFoundException("Model not found");
+    public async Task<ProductDto> UpdateModelAsync(UpdateProductDto product) {
+        var model = await _productRepository.GetByIdAsync(product.ProductId) ?? throw new KeyNotFoundException("Model not found");
         foreach (var imageId in product.ImageIds) {
             var image = await _imageRepository.GetByIdAsync(imageId);
             if (image == null) {
@@ -65,7 +65,7 @@ public class ProductService : IProductService {
         }
 
         model.Name = product.Name;
-        model.ProductID = product.ProductID;
+        model.ProductId = product.ProductId;
         model.Archived = product.Archived;
         model.Category = product.Category;
         model.Price = product.Price;
@@ -73,6 +73,6 @@ public class ProductService : IProductService {
         model.Description = product.Description;
 
         await _unitOfWork.SaveChangesAsync();
-        return _mapper.Map<ProductDTO>(model);
+        return _mapper.Map<ProductDto>(model);
     }
 }

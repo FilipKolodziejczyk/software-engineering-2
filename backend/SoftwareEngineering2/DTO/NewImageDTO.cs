@@ -1,5 +1,5 @@
 namespace SoftwareEngineering2.DTO;
 
-public record NewImageDTO() {
-    public IFormFile Image { get; init; }
-};
+public record NewImageDto {
+    public IFormFile Image { get; init; } = null!;
+}

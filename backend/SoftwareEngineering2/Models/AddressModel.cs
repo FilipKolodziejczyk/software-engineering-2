@@ -2,7 +2,7 @@
 namespace SoftwareEngineering2.Models;
 
 public class AddressModel {
-    public int AddressID { get; set; }
+    public int AddressId { get; set; }
 
     [Required]
     public string? Street { get; set; }

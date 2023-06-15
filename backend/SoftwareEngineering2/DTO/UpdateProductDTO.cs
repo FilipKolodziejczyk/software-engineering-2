@@ -1,9 +1,7 @@
-using SoftwareEngineering2.Models;
-
 namespace SoftwareEngineering2.DTO;
 
-public record UpdateProductDTO() {
-    public int ProductID { get; init; }
+public record UpdateProductDto {
+    public int ProductId { get; init; }
     
     public string Name { get; init; }
     

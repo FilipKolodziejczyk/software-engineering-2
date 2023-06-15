@@ -2,7 +2,7 @@
 namespace SoftwareEngineering2.Models;
 
 public class ClientModel : IUserModel {
-    public int ClientID { get; set; }
+    public int ClientId { get; set; }
 
     [Required]
     public string? Name { get; set; }
@@ -11,7 +11,7 @@ public class ClientModel : IUserModel {
     public string? Email { get; set; }
 
     [Required]
-    public int AddressID { get; set; }
+    public int AddressId { get; set; }
     public AddressModel? Address { get; set; }
 
     [Required]

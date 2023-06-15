@@ -21,7 +21,7 @@ public class ProductRepository: IProductRepository
     {
         return await _context.ProductModels
             .Include(product => product.Images)
-            .FirstOrDefaultAsync(product => product.ProductID == id);
+            .FirstOrDefaultAsync(product => product.ProductId == id);
     }
 
     public void Delete(ProductModel product)

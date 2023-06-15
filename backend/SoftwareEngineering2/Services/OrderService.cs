@@ -2,7 +2,7 @@ using AutoMapper;
 using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
-using SoftwareEngineering2.Repositories;
+using SoftwareEngineering2.Profiles;
 
 namespace SoftwareEngineering2.Services;
 
@@ -23,34 +23,34 @@ public class OrderService : IOrderService {
         _mapper = mapper;
     }
 
-    public async Task<OrderDTO?> ChangeOrderStatus(int orderId, OrderStatusDTO orderStatusDTO, int? deliverymanID = null) {
+    public async Task<OrderDto?> ChangeOrderStatus(int orderId, OrderStatusDto orderStatusDto, int? deliverymanId = null) {
         var model = await _orderModelRepository.GetByIdAsync(orderId);
         if (model is null)
             return null;
 
-        model.Status = orderStatusDTO.OrderStatus;
+        model.Status = orderStatusDto.OrderStatus;
 
-        if (orderStatusDTO.OrderStatus == OrderStatus.Accepted) {
-            model.DeliveryManID = deliverymanID ?? 1;
+        if (orderStatusDto.OrderStatus == OrderStatus.Accepted) {
+            model.DeliveryManId = deliverymanId ?? 1;
         }
 
         await _unitOfWork.SaveChangesAsync();
-        return _mapper.Map<OrderDTO>(model);
+        return _mapper.Map<OrderDto>(model);
     }
 
-    public async Task<OrderDTO?> CreateModelAsync(NewOrderDTO order, int clientId) {
+    public async Task<OrderDto?> CreateModelAsync(NewOrderDto order, int clientId) {
         var model = _mapper.Map<OrderModel>(order);
-        model.ClientID = clientId;
+        model.ClientId = clientId;
         await _orderModelRepository.AddAsync(model);
 
         foreach (var item in order.Items!) {
             var itemModel = _mapper.Map<OrderDetailsModel>(item);
-            itemModel.OrderID = model.OrderID;
+            itemModel.OrderId = model.OrderId;
             await _orderDetailsModelRepository.AddAsync(itemModel);
         }
 
         await _unitOfWork.SaveChangesAsync();
-        return _mapper.Map<OrderDTO>(model);
+        return _mapper.Map<OrderDto>(model);
     }
 
     public async Task DeleteModelAsync(int orderId) {
@@ -59,21 +59,18 @@ public class OrderService : IOrderService {
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<OrderDTO?> GetOrderById(int orderId) {
+    public async Task<OrderDto?> GetOrderById(int orderId) {
         var model = await _orderModelRepository.GetByIdAsync(orderId);
-        if (model is null)
-            return null;
-
-        return _mapper.Map<OrderDTO>(model);
+        return model is null ? null : _mapper.Map<OrderDto>(model);
     }
 
-    public async Task<List<OrderDTO>?> GetOrders(int pageNumber, int elementsOnPage) {
+    public async Task<List<OrderDto>?> GetOrders(int pageNumber, int elementsOnPage) {
         var result = await _orderModelRepository.GetAllModelsAsync(pageNumber, elementsOnPage);
-        return new List<OrderDTO>(result.Select(_mapper.Map<OrderDTO>));
+        return new List<OrderDto>(result.Select(_mapper.Map<OrderDto>));
     }
 
-    public async Task<List<OrderDTO>?> GetOrdersByDeliverymanId(int deliverymanId, int pageNumber, int elementsOnPage) {
+    public async Task<List<OrderDto>?> GetOrdersByDeliverymanId(int deliverymanId, int pageNumber, int elementsOnPage) {
         var result = await _orderModelRepository.GetByDeliverymanIdAsync(deliverymanId, pageNumber, elementsOnPage);
-        return new List<OrderDTO>(result.Select(_mapper.Map<OrderDTO>));
+        return new List<OrderDto>(result.Select(_mapper.Map<OrderDto>));
     }
 }

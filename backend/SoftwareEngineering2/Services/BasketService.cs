@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.CodeAnalysis;
 using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
@@ -21,23 +20,23 @@ public class BasketService : IBasketService {
         _mapper = mapper;
     }
 
-    public async Task<BasketItemDTO?> AddToBasket(int clientId, int productId, int quantity) {
-        BasketItemModel? model = await _basketItemModelRepository.GetByIds(clientId, productId);
+    public async Task<BasketItemDto?> AddToBasket(int clientId, int productId, int quantity) {
+        var model = await _basketItemModelRepository.GetByIds(clientId, productId);
 
         if (model is null) {
-            model = _mapper.Map<BasketItemModel>(new BasketItemDTO() { ProductID = productId, Quantity = 0 });
-            model.ClientID = clientId;
+            model = _mapper.Map<BasketItemModel>(new BasketItemDto { ProductId = productId, Quantity = 0 });
+            model.ClientId = clientId;
             await _basketItemModelRepository.AddAsync(model);
         }
 
         model.Quantity += quantity;
 
         await _unitOfWork.SaveChangesAsync();
-        return _mapper.Map<BasketItemDTO>(model);
+        return _mapper.Map<BasketItemDto>(model);
     }
 
-    public async Task<BasketItemDTO?> Modify(int clientId, int productId, int quantity) {
-        BasketItemModel? model = await _basketItemModelRepository.GetByIds(clientId, productId);
+    public async Task<BasketItemDto?> Modify(int clientId, int productId, int quantity) {
+        var model = await _basketItemModelRepository.GetByIds(clientId, productId);
 
         if (model is null)
             return null;
@@ -45,7 +44,7 @@ public class BasketService : IBasketService {
         model.Quantity = quantity;
 
         await _unitOfWork.SaveChangesAsync();
-        return _mapper.Map<BasketItemDTO>(model);
+        return _mapper.Map<BasketItemDto>(model);
     }
 
     public async Task DeleteByProductId(int clientId, int productId) {
@@ -60,16 +59,13 @@ public class BasketService : IBasketService {
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<List<BasketItemDTO>> GetForUser(int clientId) {
+    public async Task<List<BasketItemDto>> GetForUser(int clientId) {
         var result = await _basketItemModelRepository.GetAllModels(clientId);
-        return new List<BasketItemDTO>(result.Select(_mapper.Map<BasketItemDTO>));
+        return new List<BasketItemDto>(result.Select(_mapper.Map<BasketItemDto>));
     }
 
-    public async Task<BasketItemDTO?> GetItemByProductId(int clientId, int productId) {
+    public async Task<BasketItemDto?> GetItemByProductId(int clientId, int productId) {
         var model = await _basketItemModelRepository.GetByIds(clientId, productId);
-        if (model is null)
-            return null;
-
-        return _mapper.Map<BasketItemDTO>(model);
+        return model is null ? null : _mapper.Map<BasketItemDto>(model);
     }
 }

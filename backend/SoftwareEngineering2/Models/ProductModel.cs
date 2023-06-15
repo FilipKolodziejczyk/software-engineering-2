@@ -2,10 +2,10 @@
 namespace SoftwareEngineering2.Models;
 
 public class ProductModel {
-    public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
-    [Required]
-    public string? Name { get; set; }
+    [Required] 
+    public string Name { get; set; } = null!;
 
     [Required]
     public decimal Price { get; set; }
@@ -19,10 +19,10 @@ public class ProductModel {
     [Required]
     public bool Archived { get; set; }
 
-    public string Category { get; set; }
+    public string Category { get; set; } = null!;
     
     public List<ImageModel> Images { get; set; }
 
-    public ICollection<OrderDetailsModel>? OrderDetails { get; set; }
-    public ICollection<BasketItemModel>? BasketItems { get; set; }
+    public ICollection<OrderDetailsModel> OrderDetails { get; set; }
+    public ICollection<BasketItemModel> BasketItems { get; set; }
 }
