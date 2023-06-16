@@ -18,6 +18,26 @@ function ProductItemAddPage () {
     const [addedProduct, setAddedProduct] = useState(product_);
     const { token, setToken } = useContext(Context);
 
+    const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        const file = files[0];
+        convertToBase64(file);
+      }
+    };
+
+    const convertToBase64 = (file: File) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        setAddedProduct({...addedProduct, image: base64String})      
+      };
+      reader.onerror = (error) => {
+        console.error('Error converting file to base64:', error);
+      };
+    };
+
     const saveHandle = async () => {
       await fetch(`${properties.url}/api/products`, {
         method: "POST",
@@ -47,13 +67,7 @@ function ProductItemAddPage () {
     <div className="flex flex-col items-center justify-center h-screen w-5/6 p-4 bg-gray-300">
     <div className="flex flex-row m-2 bg-gray-100 rounded p-1">
       <div className="w-1/3 flex flex-col">
-        <div className="w-full">
-          <img
-            className="w-full object-cover rounded"
-            src="https://img.freepik.com/free-photo/purple-osteospermum-daisy-flower_1373-16.jpg?w=2000"
-            alt="example image"
-          />
-        </div>
+        <input className="bg-gray-100 text-gray-950 ml-2 mt-2 rounded" type="file" onChange={handleFileInputChange} />
         <input className="bg-gray-100 text-gray-950 ml-2 mt-2 rounded" type="text" placeholder="product name" onChange={(e)=>setAddedProduct({...addedProduct, name: e.target.value})}/>
       </div>
       <div className="w-1/3">

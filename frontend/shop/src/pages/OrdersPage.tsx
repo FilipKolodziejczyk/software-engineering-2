@@ -15,14 +15,13 @@ function OrdersPage  ()  {
     const { token, setToken } = useContext(Context);
 
     useEffect(() => { 
-        setOrders([]);
         getOrders();
     }, [page]);
 
     const getOrders = async () => {
         setLoading(true);
         setError(false);
-        await fetch(`${properties.url}/api/orders`, {
+        await fetch(`${properties.url}/api/orders?pageNumber=${page}&elementsOnPage=4`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -44,6 +43,17 @@ function OrdersPage  ()  {
             console.log("Error when trying to fetch orders: " + e);
           });
     };
+
+    const onScroll = () => {
+      if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || loading) return;
+      if (!hasMore) return;
+      setPage((prevPage) => prevPage + 1);
+    }
+
+    useEffect(() => {
+      window.addEventListener("scroll", onScroll);
+      return () => window.removeEventListener("scroll", onScroll);
+    }, [orders]);
 
     const updateList = () => {
         setOrders([]);

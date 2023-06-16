@@ -1,3 +1,4 @@
 export const properties = {
-    url: "http://localhost:8080"
+    url: "https://localhost:8080"
+    //url: "https://flowershop-dev.store"
 }

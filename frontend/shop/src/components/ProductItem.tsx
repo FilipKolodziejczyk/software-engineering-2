@@ -64,17 +64,34 @@ const ProductItem: React.FC<ProductItemProps> = (props: ProductItemProps) => {
         
     }
 
+    const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        const file = files[0];
+        convertToBase64(file);
+      }
+    };
+
+    const convertToBase64 = (file: File) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        setCurrentProduct({...currentProduct, image: base64String})      
+      };
+      reader.onerror = (error) => {
+        console.error('Error converting file to base64:', error);
+      };
+    };
+
+
     return (
       <div>
       {editing ? 
       <div className="flex flex-row m-2 bg-gray-100 rounded p-1">
       <div className="w-1/3 flex flex-col">
         <div className="w-full">
-          <img
-            className="w-full object-cover rounded" // add image
-            src="https://img.freepik.com/free-photo/purple-osteospermum-daisy-flower_1373-16.jpg?w=2000"
-            alt="example image"
-          />
+          <input className="bg-gray-100 text-gray-950 ml-2 mt-2 rounded" type="file" onChange={handleFileInputChange} />
         </div>
         <input className="bg-gray-100 mt-2 text-lg font-medium text-gray-950" defaultValue={String(props.product.name)} onChange={(e)=>setCurrentProduct({...currentProduct, name: e.target.value})}></input>
 
@@ -101,11 +118,7 @@ const ProductItem: React.FC<ProductItemProps> = (props: ProductItemProps) => {
     <div className="flex flex-row m-2 bg-gray-100 rounded p-1">
       <div className="w-1/3 flex flex-col">
         <div className="w-full">
-          <img
-            className="w-full object-cover rounded" // add image
-            src="https://img.freepik.com/free-photo/purple-osteospermum-daisy-flower_1373-16.jpg?w=2000"
-            alt="example image"
-          />
+          <img src={String(currentProduct.image)} alt="Selected Image" />
         </div>
         <div className="mt-2 text-lg font-medium text-gray-950">Name {props.product.name}</div>
       </div>
