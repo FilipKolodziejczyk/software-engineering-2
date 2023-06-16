@@ -3,5 +3,6 @@ using SoftwareEngineering2.Models;
 namespace SoftwareEngineering2.Interfaces;
 
 public interface IAddressModelRepository {
-    Task AddAsync(AddressModel model);
+    Task<AddressModel> AddAsync(AddressModel model);
+    Task<AddressModel?> GetByClient(ClientModel client);
 }

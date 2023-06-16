@@ -10,7 +10,5 @@ public class DeliveryManModelEntityConfiguration : IEntityTypeConfiguration<Deli
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Email).IsRequired();
         builder.Property(x => x.Password).IsRequired();
-
-        builder.HasMany(x => x.Orders).WithOne(x => x.DeliveryMan).HasForeignKey(x => x.OrderId);
     }
 }

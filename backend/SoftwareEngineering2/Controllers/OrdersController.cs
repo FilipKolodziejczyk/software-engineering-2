@@ -25,6 +25,7 @@ public class OrdersController : ControllerBase {
     [SwaggerOperation(Summary = "Create new Order", Description = "Difference: No productId ")]
     [SwaggerResponse(400, "Bad Request")]
     [SwaggerResponse(401, "Unauthorised")]
+    [SwaggerResponse(403, "Forbidden")]
     [SwaggerResponse(201, "Created")]
     [Authorize(Roles = Roles.Client)]
     public async Task<IActionResult> PlaceOrder([FromBody] NewOrderDto order) {

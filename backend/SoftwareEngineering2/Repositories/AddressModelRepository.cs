@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
 
@@ -10,7 +11,14 @@ public class AddressModelRepository : IAddressModelRepository {
         _context = context;
     }
 
-    public async Task AddAsync(AddressModel model) {
-        await _context.AddressModels.AddAsync(model);
+    public async Task<AddressModel> AddAsync(AddressModel model) {
+        var ret = await _context.AddressModels.AddAsync(model);
+        return ret.Entity;
+    }
+    
+    public async Task<AddressModel?> GetByClient(ClientModel client) {
+        return await _context.AddressModels
+            .Where(model => model.Client == client)
+            .FirstOrDefaultAsync();
     }
 }

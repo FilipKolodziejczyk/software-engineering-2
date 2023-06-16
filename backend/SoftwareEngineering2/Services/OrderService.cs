@@ -10,16 +10,25 @@ public class OrderService : IOrderService {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IOrderModelRepository _orderModelRepository;
     private readonly IOrderDetailsModelRepository _orderDetailsModelRepository;
+    private readonly IAddressModelRepository _addressModelRepository;
+    private readonly IClientModelRepository _clientModelRepository;
+    private readonly IDeliveryManModelRepository _deliveryManModelRepository;
     private readonly IMapper _mapper;
 
     public OrderService(
         IUnitOfWork unitOfWork,
         IOrderModelRepository orderModelRepository,
         IOrderDetailsModelRepository orderDetailsModelRepository,
+        IAddressModelRepository addressModelRepository,
+        IClientModelRepository clientModelRepository,
+        IDeliveryManModelRepository deliveryManModelRepository,
         IMapper mapper) {
         _unitOfWork = unitOfWork;
         _orderModelRepository = orderModelRepository;
         _orderDetailsModelRepository = orderDetailsModelRepository;
+        _addressModelRepository = addressModelRepository;
+        _clientModelRepository = clientModelRepository;
+        _deliveryManModelRepository = deliveryManModelRepository;
         _mapper = mapper;
     }
 
@@ -31,7 +40,23 @@ public class OrderService : IOrderService {
         model.Status = orderStatusDto.OrderStatus;
 
         if (orderStatusDto.OrderStatus == OrderStatus.Accepted) {
-            model.DeliveryManId = deliverymanId ?? 1;
+            DeliveryManModel deliveryman;
+            if (deliverymanId is null) {
+                var result = await _deliveryManModelRepository.GetAll();
+                if (!result.Any()) {
+                    throw new SystemException("No deliveryman available");
+                }
+                deliveryman = result.First();
+            }
+            else {
+                var result = await _deliveryManModelRepository.GetById(deliverymanId.Value);
+                if (result is null) {
+                    throw new ArgumentException("Deliveryman does not exist");
+                }
+                deliveryman = result;
+            }
+            
+            model.DeliveryMan = deliveryman;
         }
 
         await _unitOfWork.SaveChangesAsync();
@@ -40,12 +65,31 @@ public class OrderService : IOrderService {
 
     public async Task<OrderDto?> CreateModelAsync(NewOrderDto order, int clientId) {
         var model = _mapper.Map<OrderModel>(order);
-        model.ClientId = clientId;
+
+        var client = await _clientModelRepository.GetById(clientId);
+        if (client is null) {
+            throw new ArgumentException("Client does not exist");
+        }
+        model.Client = client;
+        
+        if (order.Address is null) {
+            var address = await _addressModelRepository.GetByClient(client);
+            if (address is null) {
+                throw new ArgumentException("Pass an address or add one to the client");
+            }
+        }
+        else {
+            var address = _mapper.Map<AddressModel>(order.Address);
+            model.Address = await _addressModelRepository.AddAsync(address);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        
         await _orderModelRepository.AddAsync(model);
+        await _unitOfWork.SaveChangesAsync();
 
         foreach (var item in order.Items!) {
             var itemModel = _mapper.Map<OrderDetailsModel>(item);
-            itemModel.OrderId = model.OrderId;
+            itemModel.Order = model;
             await _orderDetailsModelRepository.AddAsync(itemModel);
         }
 

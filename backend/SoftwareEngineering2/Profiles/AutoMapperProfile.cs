@@ -59,7 +59,7 @@ public class AutoMapperProfile : Profile {
         CreateMap<BasketItemModel, BasketItemDto>();
 
         CreateMap<BasketItemDto, BasketItemModel>()
-            .ForMember(dest => dest.ClientId, opt => opt.Ignore());
+            .ForMember(dest => dest.Client, opt => opt.Ignore());
     }
 }
 

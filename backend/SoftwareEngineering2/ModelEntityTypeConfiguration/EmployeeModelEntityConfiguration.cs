@@ -10,7 +10,5 @@ public class EmployeeModelEntityConfiguration : IEntityTypeConfiguration<Employe
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Email).IsRequired();
         builder.Property(x => x.Password).IsRequired();
-
-        builder.HasMany(x => x.Complaints).WithOne(x => x.Employee).HasForeignKey(x => x.ComplaintId);
     }
 }

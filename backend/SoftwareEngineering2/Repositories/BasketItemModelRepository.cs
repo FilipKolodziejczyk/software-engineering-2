@@ -25,7 +25,7 @@ public class BasketItemModelRepository : IBasketItemModelRepository {
 
     public async Task<IEnumerable<BasketItemModel>> GetAllModels(int clientId) {
         return await _context.BasketItemModels
-             .Where(model => model.ClientId == clientId)
+             .Where(model => model.Client != null && model.Client.ClientId == clientId)
              .Include(model => model.Client)
              .Include(model => model.Product)
              .ToListAsync();
@@ -33,7 +33,7 @@ public class BasketItemModelRepository : IBasketItemModelRepository {
 
     public async Task<BasketItemModel?> GetByIds(int clientId, int productId) {
         return await _context.BasketItemModels
-             .Where(model => model.ClientId == clientId && model.ProductId == productId)
+             .Where(model => model.Product != null && model.Client != null && model.Client.ClientId == clientId && model.Product.ProductId == productId)
              .Include(model => model.Client)
              .Include(model => model.Product)
              .FirstOrDefaultAsync();

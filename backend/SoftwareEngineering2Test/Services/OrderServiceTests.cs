@@ -4,7 +4,7 @@ using SoftwareEngineering2.Models;
 using SoftwareEngineering2.Profiles;
 using AutoMapper;
 
-namespace SoftwareEngineering2.Services.Tests; 
+namespace SoftwareEngineering2.Services.Tests;
 
 [TestFixture()]
 public class OrderServiceTests {
@@ -13,7 +13,9 @@ public class OrderServiceTests {
     private static readonly Mock<IOrderModelRepository> MockRepo = new();
     private static OrderService _orderService = null!;
     private static IOrderDetailsModelRepository _orderDetailsModelRepository = null!;
-
+    private static IAddressModelRepository _addressModelRepository = null!;
+    private static IClientModelRepository _clientModelRepository = null!;
+    private static IDeliveryManModelRepository _deliveryManModelRepository = null!;
 
     public OrderServiceTests() {
         if (_mapper is null) {
@@ -27,20 +29,17 @@ public class OrderServiceTests {
             _unitOfWork = mockUnit.Object;
         }
 
-        MockRepo.Setup(e => e.GetByIdAsync(6)).Returns(Task.FromResult((OrderModel?) new OrderModel {
+        MockRepo.Setup(e => e.GetByIdAsync(6)).Returns(Task.FromResult((OrderModel?)new OrderModel {
             OrderId = 6,
-            ClientId = 0,
             Client = null,
-            DeliveryManId = null,
             DeliveryMan = null,
-            AddressId = 0,
             Address = null,
             Status = null
         }));
 
         if (_orderService is null) {
-            var mockRepoObj = MockRepo.Object;
-            _orderService = new(_unitOfWork, mockRepoObj, _orderDetailsModelRepository, _mapper);
+            _orderService = new(_unitOfWork, MockRepo.Object, _orderDetailsModelRepository, _addressModelRepository,
+                _clientModelRepository, _deliveryManModelRepository, _mapper);
         }
     }
 

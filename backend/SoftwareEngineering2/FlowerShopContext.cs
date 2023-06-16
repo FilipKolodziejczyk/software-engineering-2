@@ -20,30 +20,12 @@ public class FlowerShopContext : DbContext {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FlowerShopContext).Assembly);
 
-        modelBuilder.Entity<AddressModel>().HasData(new AddressModel {
-            AddressId = 1,
-            Street = "ul. Kwiatowa",
-            BuildingNo = "1",
-            HouseNo = "1",
-            City = "Warszawa",
-            PostalCode = "00-001",
-            Country = "Polska"
-        });
-
         // TODO: temporary solution (password: password)
         modelBuilder.Entity<EmployeeModel>().HasData(new EmployeeModel {
             Email = "admin@flowershop.com",
             Name = "Władysław Howalski",
             Password = "AQAAAAIAAYagAAAAEHiYiXUCLpBDCy3l60OqSPW+GNZExxF4PwXI8VtkhKZqjVsMFdhw68orF475JKPXkA==",
             EmployeeId = 1
-        });
-
-        modelBuilder.Entity<ClientModel>().HasData(new ClientModel {
-            Email = "johndoe@example.com",
-            Name = "John Doe",
-            Password = "AQAAAAIAAYagAAAAEHiYiXUCLpBDCy3l60OqSPW+GNZExxF4PwXI8VtkhKZqjVsMFdhw68orF475JKPXkA==",
-            ClientId = 1,
-            AddressId = 1
         });
     }
 }

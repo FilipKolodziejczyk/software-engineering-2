@@ -9,23 +9,36 @@ namespace SoftwareEngineering2.Services;
 public class BasketService : IBasketService {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IBasketItemModelRepository _basketItemModelRepository;
+    private readonly IClientModelRepository _clientModelRepository;
+    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
 
     public BasketService(
         IUnitOfWork unitOfWork,
         IBasketItemModelRepository basketItemModelRepository,
+        IClientModelRepository clientModelRepository,
+        IProductRepository productRepository,
         IMapper mapper) {
         _unitOfWork = unitOfWork;
         _basketItemModelRepository = basketItemModelRepository;
+        _clientModelRepository = clientModelRepository;
+        _productRepository = productRepository;
         _mapper = mapper;
     }
 
     public async Task<BasketItemDto?> AddToBasket(int clientId, int productId, int quantity) {
         var model = await _basketItemModelRepository.GetByIds(clientId, productId);
 
+        var client = await _clientModelRepository.GetById(clientId);
+        
+        var product = await _productRepository.GetByIdAsync(productId);
+        if (product is null) {
+            throw new ArgumentException("Product does not exist");
+        }
+
         if (model is null) {
             model = _mapper.Map<BasketItemModel>(new BasketItemDto { ProductId = productId, Quantity = 0 });
-            model.ClientId = clientId;
+            model.Client = client;
             await _basketItemModelRepository.AddAsync(model);
         }
 

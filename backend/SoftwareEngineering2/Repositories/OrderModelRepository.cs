@@ -39,7 +39,7 @@ public class OrderModelRepository : IOrderModelRepository {
 
     public async Task<IEnumerable<OrderModel>> GetByDeliverymanIdAsync(int deliverymanId, int pageNumber, int elementsOnPage) {
         return await _context.OrderModels
-            .Where(model => model.DeliveryManId == deliverymanId)
+            .Where(model => model.DeliveryMan != null && model.DeliveryMan.DeliveryManId == deliverymanId)
             .Include(model => model.OrderDetails)
             .Include(model => model.Address)
             .Include(model => model.Client)

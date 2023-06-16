@@ -56,13 +56,15 @@ public class ProductService : IProductService {
 
     public async Task<ProductDto> UpdateModelAsync(UpdateProductDto product) {
         var model = await _productRepository.GetByIdAsync(product.ProductId) ?? throw new KeyNotFoundException("Model not found");
+        var imagesList = new List<ImageModel>();
         foreach (var imageId in product.ImageIds) {
             var image = await _imageRepository.GetByIdAsync(imageId);
             if (image == null) {
                 throw new KeyNotFoundException("Image not found");
             }
-            model.Images.Add(image);
+            imagesList.Add(image);
         }
+        model.Images = imagesList;
 
         model.Name = product.Name;
         model.ProductId = product.ProductId;
