@@ -20,20 +20,21 @@ function LoginPage  ()  {
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({password: credentials.password, username: event.target.value})
+    console.log(event.target.value)
   };
     
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({username: credentials.username, password: event.target.value})
+    console.log(event.target.value)
   };
     
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    setCredInvalid(true)
+  const handleSubmit =  () => {
     console.log("handle submit")
-    await fetch(properties.url+'/user/log_in', {
+    fetch(`${properties.url}/api/users/log_in`, {
       method: 'POST',
       body: JSON.stringify(credentials),
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
+        'Content-type': 'application/json',
       },
     }).then((response) => {
       if (response.ok)
@@ -42,7 +43,7 @@ function LoginPage  ()  {
         throw new Error("ERROR " + response.status)
       }
     }).then((token: Token) => {
-      console.log(token);
+      //console.log(token.jwttoken);
       setToken(token.jwttoken);
       console.log("Success logging in.")
       setCredInvalid(false)
@@ -89,6 +90,7 @@ function LoginPage  ()  {
   */
     return (
       <div className="flex flex-col items-center justify-center h-screen w-5/6 p-4 bg-gray-300">
+        {token == '' ?
         <div className="bg-gray-100 p-8 rounded shadow-md">
             <div className="mb-4">
               <label className="block font-medium mb-2 text-gray-950">Email</label>
@@ -112,17 +114,13 @@ function LoginPage  ()  {
                 required
               />
             </div>
-            <button className="bg-fuchsia-300 hover:bg-gray-300 text-gray-950 font-medium py-2 px-4 rounded" onClick={()=>handleSubmit}>
+            <button className="bg-fuchsia-300 hover:bg-gray-300 text-gray-950 font-medium py-2 px-4 rounded" onClick={()=>handleSubmit()}>
               Sign in
             </button>
         </div>
+        : <div></div>}
       </div>
       )
 };
-
-    
-  
-      
-    
 
 export default LoginPage;

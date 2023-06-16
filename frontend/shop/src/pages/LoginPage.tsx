@@ -90,6 +90,7 @@ function LoginPage  ()  {
   */
     return (
       <div className="flex flex-col items-center justify-center h-screen w-5/6 p-4 bg-gray-300">
+        {token == "" ? 
         <div className="bg-gray-100 p-8 rounded shadow-md">
             <div className="mb-4">
               <label className="block font-medium mb-2 text-gray-950">Email</label>
@@ -116,7 +117,7 @@ function LoginPage  ()  {
             <button className="bg-fuchsia-300 hover:bg-gray-300 text-gray-950 font-medium py-2 px-4 rounded" onClick={()=>handleSubmit()}>
               Sign in
             </button>
-        </div>
+        </div> : <div></div>}
       </div>
       )
 };
