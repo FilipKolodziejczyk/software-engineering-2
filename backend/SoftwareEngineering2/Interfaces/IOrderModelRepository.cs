@@ -1,6 +1,7 @@
+using SoftwareEngineering2.Models;
+
 namespace SoftwareEngineering2.Interfaces;
 
-using Models;
 public interface IOrderModelRepository {
     Task AddAsync(OrderModel model);
     Task<OrderModel?> GetByIdAsync(int orderId);

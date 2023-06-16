@@ -1,4 +1,4 @@
-namespace SoftwareEngineering2.Interfaces; 
+namespace SoftwareEngineering2.Interfaces;
 
 public interface IUnitOfWork {
     Task SaveChangesAsync();

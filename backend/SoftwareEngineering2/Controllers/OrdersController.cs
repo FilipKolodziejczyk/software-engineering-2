@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEngineering2.DTO;
-using Swashbuckle.AspNetCore.Annotations;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Profiles;
+using Swashbuckle.AspNetCore.Annotations;
 
-namespace SoftwareEngineering2.Controllers; 
+namespace SoftwareEngineering2.Controllers;
 
 [Route("api/orders")]
 [ApiController]
@@ -37,9 +37,8 @@ public class OrdersController : ControllerBase {
             string.IsNullOrWhiteSpace(order.Address.Street) ||
             string.IsNullOrWhiteSpace(order.Address.BuildingNo) ||
             string.IsNullOrWhiteSpace(order.Address.HouseNo) ||
-            string.IsNullOrWhiteSpace(order.Address.PostalCode)) {
+            string.IsNullOrWhiteSpace(order.Address.PostalCode))
             return BadRequest(new { message = "Address is not correct" });
-        }
 
         if (!int.TryParse(User.FindFirst("UserID")?.Value, out var clientId))
             return Unauthorized();
@@ -131,7 +130,8 @@ public class OrdersController : ControllerBase {
 
     // GET: api/orders
     [HttpGet]
-    [SwaggerOperation(Summary = "Fetch assigned orders", Description = "Difference: Difference: Endpoint does not exist ")]
+    [SwaggerOperation(Summary = "Fetch assigned orders",
+        Description = "Difference: Difference: Endpoint does not exist ")]
     [SwaggerResponse(401, "Unauthorised")]
     [SwaggerResponse(403, "Forbidden")]
     [SwaggerResponse(200, "OK")]
@@ -143,12 +143,15 @@ public class OrdersController : ControllerBase {
 
         if (User.IsInRole(Roles.Employee)) {
             result = await _orderService.GetOrders(pageNumber.Value, elementsOnPage.Value);
-        } else if (User.IsInRole(Roles.DeliveryMan)) {
+        }
+        else if (User.IsInRole(Roles.DeliveryMan)) {
             if (!int.TryParse(User.FindFirst("UserID")?.Value, out var deliverymanId))
                 return Forbid();
 
-            result = await _orderService.GetOrdersByDeliverymanId(deliverymanId, pageNumber.Value, elementsOnPage.Value);
-        } else {
+            result = await _orderService.GetOrdersByDeliverymanId(deliverymanId, pageNumber.Value,
+                elementsOnPage.Value);
+        }
+        else {
             return Unauthorized();
         }
 

@@ -38,7 +38,7 @@ public class AutoMapperProfile : Profile {
             .ForMember(dest => dest.ImageIds, opt => opt.MapFrom(src => src.Images));
         CreateMap<ImageModel, Uri>().ConstructUsing(image => image.ImageUri);
         CreateMap<ImageModel, int>().ConstructUsing(image => image.ImageId);
-            
+
         CreateMap<ImageModel, ImageDto>();
 
         CreateMap<UpdateProductDto, ProductModel>();
@@ -65,4 +65,3 @@ public class AutoMapperProfile : Profile {
             .ForMember(dest => dest.Client, opt => opt.Ignore());
     }
 }
-

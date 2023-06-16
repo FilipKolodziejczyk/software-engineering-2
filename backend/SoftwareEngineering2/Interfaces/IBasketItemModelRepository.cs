@@ -1,7 +1,6 @@
-namespace SoftwareEngineering2.Interfaces;
+using SoftwareEngineering2.Models;
 
-using Models;
-using System.Threading.Tasks;
+namespace SoftwareEngineering2.Interfaces;
 
 public interface IBasketItemModelRepository {
     Task AddAsync(BasketItemModel itemModel);

@@ -1,9 +1,9 @@
+using AutoMapper;
 using Moq;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Profiles;
-using AutoMapper;
 
-namespace SoftwareEngineering2.Services.Tests; 
+namespace SoftwareEngineering2.Services.Tests;
 
 [TestFixture]
 public class UserServiceTests {

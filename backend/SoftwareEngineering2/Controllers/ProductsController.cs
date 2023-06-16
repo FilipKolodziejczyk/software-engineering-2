@@ -1,10 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Interfaces;
-using Swashbuckle.AspNetCore.Annotations;
-using Microsoft.AspNetCore.Authorization;
 using SoftwareEngineering2.Profiles;
-
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SoftwareEngineering2.Controllers;
 
@@ -26,9 +25,8 @@ public class ProductsController : ControllerBase {
     [Authorize(Roles = Roles.Employee)]
     public async Task<IActionResult> Add([FromBody] NewProductDto productModel) {
         //check validity
-        if (string.IsNullOrWhiteSpace(productModel.Name) || string.IsNullOrWhiteSpace(productModel.Description)) {
+        if (string.IsNullOrWhiteSpace(productModel.Name) || string.IsNullOrWhiteSpace(productModel.Description))
             return BadRequest(new { message = "No name or description provided" });
-        }
 
         //add to db
         ProductDto result;
@@ -68,9 +66,10 @@ public class ProductsController : ControllerBase {
         maxPrice ??= decimal.MaxValue;
         pageNumber ??= 1;
         elementsOnPage ??= 32;
-        
+
         try {
-            var samples = await _productService.GetFilteredModelsAsync(searchQuery, filteredCategory, minPrice.Value, maxPrice.Value, pageNumber.Value,
+            var samples = await _productService.GetFilteredModelsAsync(searchQuery, filteredCategory, minPrice.Value,
+                maxPrice.Value, pageNumber.Value,
                 elementsOnPage.Value);
             return Ok(samples);
         }
@@ -89,9 +88,8 @@ public class ProductsController : ControllerBase {
     [SwaggerResponse(200, "OK")]
     [Authorize(Roles = Roles.Employee)]
     public async Task<IActionResult> Delete(int productId) {
-        if (await _productService.GetModelByIdAsync(productId) == null) {
+        if (await _productService.GetModelByIdAsync(productId) == null)
             return NotFound(new { message = $"No product found with id {productId}" });
-        }
 
         await _productService.DeleteModelAsync(productId);
         return NoContent();
@@ -106,13 +104,11 @@ public class ProductsController : ControllerBase {
     [SwaggerResponse(201, "Created")]
     [Authorize(Roles = Roles.Employee)]
     public async Task<IActionResult> Update([FromBody] UpdateProductDto product) {
-        if (string.IsNullOrWhiteSpace(product.Name) || string.IsNullOrWhiteSpace(product.Category)) {
+        if (string.IsNullOrWhiteSpace(product.Name) || string.IsNullOrWhiteSpace(product.Category))
             return BadRequest(new { message = "Nonempty product name and category are required" });
-        }
 
-        if (await _productService.GetModelByIdAsync(product.ProductId) == null) {
+        if (await _productService.GetModelByIdAsync(product.ProductId) == null)
             return NotFound(new { message = $"No sample found with id {product.ProductId})" });
-        }
 
         return Ok(await _productService.UpdateModelAsync(product));
     }

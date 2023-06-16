@@ -7,14 +7,14 @@ using SoftwareEngineering2.Profiles;
 namespace SoftwareEngineering2.Services;
 
 public class OrderService : IOrderService {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IOrderModelRepository _orderModelRepository;
-    private readonly IOrderDetailsModelRepository _orderDetailsModelRepository;
     private readonly IAddressModelRepository _addressModelRepository;
     private readonly IClientModelRepository _clientModelRepository;
     private readonly IDeliveryManModelRepository _deliveryManModelRepository;
-    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
+    private readonly IOrderDetailsModelRepository _orderDetailsModelRepository;
+    private readonly IOrderModelRepository _orderModelRepository;
+    private readonly IProductRepository _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public OrderService(
         IUnitOfWork unitOfWork,
@@ -35,7 +35,8 @@ public class OrderService : IOrderService {
         _mapper = mapper;
     }
 
-    public async Task<OrderDto?> ChangeOrderStatus(int orderId, OrderStatusDto orderStatusDto, int? deliverymanId = null) {
+    public async Task<OrderDto?> ChangeOrderStatus(int orderId, OrderStatusDto orderStatusDto,
+        int? deliverymanId = null) {
         var model = await _orderModelRepository.GetByIdAsync(orderId);
         if (model is null)
             return null;
@@ -46,19 +47,15 @@ public class OrderService : IOrderService {
             DeliveryManModel deliveryman;
             if (deliverymanId is null) {
                 var result = await _deliveryManModelRepository.GetAll();
-                if (!result.Any()) {
-                    throw new SystemException("No deliveryman available");
-                }
+                if (!result.Any()) throw new SystemException("No deliveryman available");
                 deliveryman = result.First();
             }
             else {
                 var result = await _deliveryManModelRepository.GetById(deliverymanId.Value);
-                if (result is null) {
-                    throw new ArgumentException("Deliveryman does not exist");
-                }
+                if (result is null) throw new ArgumentException("Deliveryman does not exist");
                 deliveryman = result;
             }
-            
+
             model.DeliveryMan = deliveryman;
         }
 
@@ -68,35 +65,27 @@ public class OrderService : IOrderService {
 
     public async Task<OrderDto?> CreateModelAsync(NewOrderDto order, int clientId) {
         var model = _mapper.Map<OrderModel>(order);
-        
+
         foreach (var item in order.Items!) {
             var product = await _productRepository.GetByIdAsync(item.ProductId);
-            if (product is null) {
-                throw new ArgumentException("Product does not exist");
-            }
-            if (product.Quantity < item.Quantity) {
-                throw new ArgumentException("Not enough products in stock");
-            }
+            if (product is null) throw new ArgumentException("Product does not exist");
+            if (product.Quantity < item.Quantity) throw new ArgumentException("Not enough products in stock");
         }
 
         var client = await _clientModelRepository.GetById(clientId);
-        if (client is null) {
-            throw new ArgumentException("Client does not exist");
-        }
+        if (client is null) throw new ArgumentException("Client does not exist");
         model.Client = client;
-        
+
         if (order.Address is null) {
             var address = await _addressModelRepository.GetByClient(client);
-            if (address is null) {
-                throw new ArgumentException("Pass an address or add one to the client");
-            }
+            if (address is null) throw new ArgumentException("Pass an address or add one to the client");
         }
         else {
             var address = _mapper.Map<AddressModel>(order.Address);
             model.Address = await _addressModelRepository.AddAsync(address);
             await _unitOfWork.SaveChangesAsync();
         }
-        
+
         await _orderModelRepository.AddAsync(model);
         await _unitOfWork.SaveChangesAsync();
 

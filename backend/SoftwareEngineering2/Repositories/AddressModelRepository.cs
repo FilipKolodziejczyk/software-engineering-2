@@ -15,7 +15,7 @@ public class AddressModelRepository : IAddressModelRepository {
         var ret = await _context.AddressModels.AddAsync(model);
         return ret.Entity;
     }
-    
+
     public async Task<AddressModel?> GetByClient(ClientModel client) {
         return await _context.AddressModels
             .Where(model => model.Client == client)

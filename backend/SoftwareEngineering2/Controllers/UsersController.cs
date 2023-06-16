@@ -1,13 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Interfaces;
-using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using SoftwareEngineering2.Profiles;
+using Swashbuckle.AspNetCore.Annotations;
 
-namespace SoftwareEngineering2.Controllers; 
+namespace SoftwareEngineering2.Controllers;
 
 [Route("api/users")]
 [ApiController]
@@ -38,7 +38,8 @@ public class UsersController : ControllerBase {
 
     // GET: api/users
     [HttpGet(Name = "GetUser")]
-    [SwaggerOperation(Summary = "Get information about currently authenticated user", Description = "Difference: user id")]
+    [SwaggerOperation(Summary = "Get information about currently authenticated user",
+        Description = "Difference: user id")]
     [SwaggerResponse(200, "Get information about currently authenticated user", typeof(UserDto))]
     [SwaggerResponse(401, "Unauthorised")]
     public async Task<IActionResult> Get() {
@@ -51,12 +52,13 @@ public class UsersController : ControllerBase {
 
     // POST: api/users
     [HttpPost]
-    [SwaggerOperation(Summary = "Creates a user", Description = "Difference: role of created user (not based on email)")]
+    [SwaggerOperation(Summary = "Creates a user",
+        Description = "Difference: role of created user (not based on email)")]
     [SwaggerResponse(201, "User created", typeof(UserDto))]
     [SwaggerResponse(400, "User is invalid")]
     [SwaggerResponse(403, "Forbidden")]
     [SwaggerResponse(409, "User already exists")]
-    public async Task<IActionResult> CreateUser([FromBody][Required] NewUserDto newUser) {
+    public async Task<IActionResult> CreateUser([FromBody] [Required] NewUserDto newUser) {
         var role = newUser.Role is null || !Roles.IsValid(newUser.Role) ? Roles.Client : newUser.Role;
 
         if (!User.IsInRole(Roles.Employee) && role != Roles.Client)

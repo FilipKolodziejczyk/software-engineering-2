@@ -6,6 +6,7 @@ public static class OrderStatus {
     public const string Rejected = "rejected";
     public const string Delivered = "delivered";
 
-    public static bool IsValid(string status) =>
-        status is Received or Accepted or Rejected or Delivered;
+    public static bool IsValid(string status) {
+        return status is Received or Accepted or Rejected or Delivered;
+    }
 }

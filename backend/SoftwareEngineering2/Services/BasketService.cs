@@ -3,15 +3,14 @@ using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
 
-
 namespace SoftwareEngineering2.Services;
 
 public class BasketService : IBasketService {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IBasketItemModelRepository _basketItemModelRepository;
     private readonly IClientModelRepository _clientModelRepository;
-    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
+    private readonly IProductRepository _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public BasketService(
         IUnitOfWork unitOfWork,
@@ -27,24 +26,18 @@ public class BasketService : IBasketService {
     }
 
     public async Task<BasketItemDto?> AddToBasket(int clientId, int productId, int quantity) {
-        if (quantity <= 0) {
-            throw new ArgumentException("Quantity must be greater than 0");
-        }
-        
+        if (quantity <= 0) throw new ArgumentException("Quantity must be greater than 0");
+
         var model = await _basketItemModelRepository.GetByIds(clientId, productId);
 
         var client = await _clientModelRepository.GetById(clientId);
-        
+
         var product = await _productRepository.GetByIdAsync(productId);
-        if (product is null) {
-            throw new ArgumentException("Product does not exist");
-        }
+        if (product is null) throw new ArgumentException("Product does not exist");
 
         if (model is null) {
-            if (product.Quantity < quantity) {
-                throw new ArgumentException("Not enough products in stock");
-            }
-            
+            if (product.Quantity < quantity) throw new ArgumentException("Not enough products in stock");
+
             model = new BasketItemModel {
                 Product = product,
                 Client = client,
@@ -52,10 +45,8 @@ public class BasketService : IBasketService {
             };
             await _basketItemModelRepository.AddAsync(model);
         }
-        
-        if (product.Quantity < model.Quantity + quantity) {
-            throw new ArgumentException("Not enough products in stock");
-        }
+
+        if (product.Quantity < model.Quantity + quantity) throw new ArgumentException("Not enough products in stock");
 
         model.Quantity += quantity;
 
@@ -68,7 +59,7 @@ public class BasketService : IBasketService {
 
         if (model is null)
             throw new ArgumentException("Product does not exist in basket");
-        
+
         if (quantity <= 0) {
             _basketItemModelRepository.Delete(model);
             await _unitOfWork.SaveChangesAsync();

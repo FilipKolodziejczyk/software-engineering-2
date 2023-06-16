@@ -5,5 +5,7 @@ public static class Roles {
     public const string Employee = "employee";
     public const string DeliveryMan = "deliveryman";
 
-    public static bool IsValid(string role) => role is Client or Employee or DeliveryMan;
+    public static bool IsValid(string role) {
+        return role is Client or Employee or DeliveryMan;
+    }
 }

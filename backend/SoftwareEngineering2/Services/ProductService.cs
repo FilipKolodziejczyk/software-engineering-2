@@ -6,10 +6,10 @@ using SoftwareEngineering2.Models;
 namespace SoftwareEngineering2.Services;
 
 public class ProductService : IProductService {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IProductRepository _productRepository;
     private readonly IImageRepository _imageRepository;
     private readonly IMapper _mapper;
+    private readonly IProductRepository _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public ProductService(
         IUnitOfWork unitOfWork,
@@ -27,11 +27,10 @@ public class ProductService : IProductService {
         var imagesList = new List<ImageModel>();
         foreach (var imageId in newProduct.ImageIds) {
             var image = await _imageRepository.GetByIdAsync(imageId);
-            if (image == null) {
-                throw new KeyNotFoundException("Image not found");
-            }
+            if (image == null) throw new KeyNotFoundException("Image not found");
             imagesList.Add(image);
         }
+
         model.Images = imagesList;
         await _productRepository.AddAsync(model);
         await _unitOfWork.SaveChangesAsync();
@@ -49,25 +48,25 @@ public class ProductService : IProductService {
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<List<ProductDto>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, decimal minPrice, decimal maxPrice, int pageNumber, int elementsOnPage) {
-        if (minPrice > maxPrice) {
-            throw new ArgumentException("Min price cannot be greater than max price");
-        }
-        
-        var result = await _productRepository.GetAllFilteredAsync(searchQuery, filteredCategory, minPrice, maxPrice, pageNumber, elementsOnPage);
+    public async Task<List<ProductDto>> GetFilteredModelsAsync(string searchQuery, string filteredCategory,
+        decimal minPrice, decimal maxPrice, int pageNumber, int elementsOnPage) {
+        if (minPrice > maxPrice) throw new ArgumentException("Min price cannot be greater than max price");
+
+        var result = await _productRepository.GetAllFilteredAsync(searchQuery, filteredCategory, minPrice, maxPrice,
+            pageNumber, elementsOnPage);
         return new List<ProductDto>(result.Select(_mapper.Map<ProductDto>));
     }
 
     public async Task<ProductDto> UpdateModelAsync(UpdateProductDto product) {
-        var model = await _productRepository.GetByIdAsync(product.ProductId) ?? throw new KeyNotFoundException("Model not found");
+        var model = await _productRepository.GetByIdAsync(product.ProductId) ??
+                    throw new KeyNotFoundException("Model not found");
         var imagesList = new List<ImageModel>();
         foreach (var imageId in product.ImageIds) {
             var image = await _imageRepository.GetByIdAsync(imageId);
-            if (image == null) {
-                throw new KeyNotFoundException("Image not found");
-            }
+            if (image == null) throw new KeyNotFoundException("Image not found");
             imagesList.Add(image);
         }
+
         model.Images = imagesList;
 
         model.Name = product.Name;

@@ -1,22 +1,22 @@
+using AutoMapper;
 using Moq;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
 using SoftwareEngineering2.Profiles;
-using AutoMapper;
 
 namespace SoftwareEngineering2.Services.Tests;
 
-[TestFixture()]
+[TestFixture]
 public class OrderServiceTests {
     private static IMapper _mapper = null!;
     private static IUnitOfWork _unitOfWork = null!;
     private static readonly Mock<IOrderModelRepository> MockRepo = new();
     private static OrderService _orderService = null!;
-    private static IOrderDetailsModelRepository _orderDetailsModelRepository = null!;
-    private static IAddressModelRepository _addressModelRepository = null!;
-    private static IClientModelRepository _clientModelRepository = null!;
-    private static IDeliveryManModelRepository _deliveryManModelRepository = null!;
-    private static IProductRepository _productRepository = null!;
+    private static readonly IOrderDetailsModelRepository _orderDetailsModelRepository = null!;
+    private static readonly IAddressModelRepository _addressModelRepository = null!;
+    private static readonly IClientModelRepository _clientModelRepository = null!;
+    private static readonly IDeliveryManModelRepository _deliveryManModelRepository = null!;
+    private static readonly IProductRepository _productRepository = null!;
 
     public OrderServiceTests() {
         if (_mapper is null) {
@@ -38,13 +38,13 @@ public class OrderServiceTests {
             Status = null
         }));
 
-        if (_orderService is null) {
-            _orderService = new(_unitOfWork, MockRepo.Object, _orderDetailsModelRepository, _addressModelRepository,
+        if (_orderService is null)
+            _orderService = new OrderService(_unitOfWork, MockRepo.Object, _orderDetailsModelRepository,
+                _addressModelRepository,
                 _clientModelRepository, _deliveryManModelRepository, _productRepository, _mapper);
-        }
     }
 
-    [Test()]
+    [Test]
     public async Task GetByIdAsyncTest() {
         var dto = await _orderService.GetOrderById(6);
         Assert.Multiple(() => {

@@ -1,22 +1,22 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using SoftwareEngineering2.Profiles;
 
 namespace SoftwareEngineering2.Services;
 
 public class UserService : IUserService {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IClientModelRepository _clientModelRepository;
-    private readonly IEmployeeModelRepository _employeeModelRepository;
     private readonly IDeliveryManModelRepository _deliveryManModelRepository;
+    private readonly IEmployeeModelRepository _employeeModelRepository;
     private readonly IMapper _mapper;
     private readonly PasswordHasher<UserDto> _passwordHasher;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UserService(
         IUnitOfWork unitOfWork,
@@ -40,7 +40,8 @@ public class UserService : IUserService {
         if (result is null)
             return null;
 
-        var passwordResult = _passwordHasher.VerifyHashedPassword(_mapper.Map<UserDto>(result), result.Password!, password);
+        var passwordResult =
+            _passwordHasher.VerifyHashedPassword(_mapper.Map<UserDto>(result), result.Password!, password);
         if (passwordResult != PasswordVerificationResult.Success)
             return null;
 
@@ -55,9 +56,9 @@ public class UserService : IUserService {
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: "your-issuer",
-            audience: "your-audience",
-            claims: new List<Claim> {
+            "your-issuer",
+            "your-audience",
+            new List<Claim> {
                 new(ClaimTypes.Role, role),
                 new("UserID", id.ToString())
             },
@@ -74,18 +75,18 @@ public class UserService : IUserService {
         IUserModel model;
 
         switch (newUser.Role) {
-        case Roles.DeliveryMan:
-            model = _mapper.Map<DeliveryManModel>(newUser);
-            await _deliveryManModelRepository.AddAsync((DeliveryManModel) model);
-            break;
-        case Roles.Employee:
-            model = _mapper.Map<EmployeeModel>(newUser);
-            await _employeeModelRepository.AddAsync((EmployeeModel) model);
-            break;
-        default:
-            model = _mapper.Map<ClientModel>(newUser);
-            await _clientModelRepository.AddAsync((ClientModel) model);
-            break;
+            case Roles.DeliveryMan:
+                model = _mapper.Map<DeliveryManModel>(newUser);
+                await _deliveryManModelRepository.AddAsync((DeliveryManModel)model);
+                break;
+            case Roles.Employee:
+                model = _mapper.Map<EmployeeModel>(newUser);
+                await _employeeModelRepository.AddAsync((EmployeeModel)model);
+                break;
+            default:
+                model = _mapper.Map<ClientModel>(newUser);
+                await _clientModelRepository.AddAsync((ClientModel)model);
+                break;
         }
 
         var userDto = _mapper.Map<UserDto>(model);
@@ -114,7 +115,8 @@ public class UserService : IUserService {
 
     public async Task<UserDto?> GetAvailableDeliveryMan() {
         var deliveryMen = await _deliveryManModelRepository.GetAll();
-        var result = deliveryMen.OrderBy(model => model.Orders!.Count(order => order.Status == OrderStatus.Accepted)).First();
+        var result = deliveryMen.OrderBy(model => model.Orders!.Count(order => order.Status == OrderStatus.Accepted))
+            .First();
         return _mapper.Map<UserDto>(result);
     }
 

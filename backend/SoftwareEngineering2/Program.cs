@@ -1,33 +1,33 @@
 using System.Data;
 using Amazon;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SoftwareEngineering2;
 using SoftwareEngineering2.Interfaces;
+using SoftwareEngineering2.Middleware;
 using SoftwareEngineering2.Repositories;
 using SoftwareEngineering2.Services;
-using SoftwareEngineering2.Middleware;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options => {
-    options.AddPolicy(name: myAllowSpecificOrigins,
-    policy => {
-        // var origins = new List<string>();
-        // for (int i = 0; i < 10; i++) {
-        //     var cors = Environment.GetEnvironmentVariable($"CORS{i}");
-        //     if (cors != null)
-        //         origins.Add(cors);
-        // }
-    
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    });
+    options.AddPolicy(myAllowSpecificOrigins,
+        policy => {
+            // var origins = new List<string>();
+            // for (int i = 0; i < 10; i++) {
+            //     var cors = Environment.GetEnvironmentVariable($"CORS{i}");
+            //     if (cors != null)
+            //         origins.Add(cors);
+            // }
+
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        });
 });
 
 // Add services to the container.
@@ -45,18 +45,20 @@ builder.Services.AddSwaggerGen(c => {
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement { {
-        new OpenApiSecurityScheme {
-            Reference = new OpenApiReference {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
             },
-            Scheme = "oauth2",
-            Name = "Bearer",
-            In = ParameterLocation.Header
-        },
-        new List<string>()
-    } });
+            new List<string>()
+        }
+    });
 });
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
@@ -64,7 +66,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 if (Environment.GetEnvironmentVariable("USE_IN_MEMORY_DB") == "true") {
     builder.Services.AddDbContextPool<FlowerShopContext>(options => options.UseInMemoryDatabase("FlowerShop"));
-} else {
+}
+else {
     var connectionStringBuilder = new SqlConnectionStringBuilder(Environment.GetEnvironmentVariable("CONNSTR")) {
         UserID = builder.Configuration["DbUser"],
         Password = builder.Configuration["DbPassword"]
@@ -128,11 +131,12 @@ if (Environment.GetEnvironmentVariable("CREATE_AND_DROP_DB") == "true") {
     Console.WriteLine("Creating and dropping database");
     dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
-} else {
+}
+else {
     dbContext.Database.Migrate();
 }
 
-app.ConfigureExceptionHandler(detailedErrors: app.Environment.IsDevelopment());
+app.ConfigureExceptionHandler(app.Environment.IsDevelopment());
 
 app.UseHttpsRedirection();
 

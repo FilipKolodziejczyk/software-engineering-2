@@ -10,6 +10,7 @@ public class OrderModelRepository : IOrderModelRepository {
     public OrderModelRepository(FlowerShopContext context) {
         _context = context;
     }
+
     public async Task AddAsync(OrderModel model) {
         await _context.OrderModels.AddAsync(model);
     }
@@ -37,7 +38,8 @@ public class OrderModelRepository : IOrderModelRepository {
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<OrderModel>> GetByDeliverymanIdAsync(int deliverymanId, int pageNumber, int elementsOnPage) {
+    public async Task<IEnumerable<OrderModel>> GetByDeliverymanIdAsync(int deliverymanId, int pageNumber,
+        int elementsOnPage) {
         return await _context.OrderModels
             .Where(model => model.DeliveryMan != null && model.DeliveryMan.DeliveryManId == deliverymanId)
             .Include(model => model.OrderDetails)

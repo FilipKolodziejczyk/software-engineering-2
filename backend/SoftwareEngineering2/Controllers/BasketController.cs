@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SoftwareEngineering2.DTO;
-using Swashbuckle.AspNetCore.Annotations;
 using SoftwareEngineering2.Interfaces;
 using SoftwareEngineering2.Profiles;
+using Swashbuckle.AspNetCore.Annotations;
 
-namespace SoftwareEngineering2.Controllers; 
+namespace SoftwareEngineering2.Controllers;
 
 [Route("api/basket")]
 [ApiController]
@@ -31,7 +31,8 @@ public class BasketController : ControllerBase {
         try {
             var result = await _basketService.AddToBasket(clientId, item.ProductId, item.Quantity);
             return CreatedAtAction(nameof(AddToBasket), result);
-        } catch (ArgumentException e) {
+        }
+        catch (ArgumentException e) {
             return BadRequest(e.Message);
         }
     }
@@ -67,7 +68,8 @@ public class BasketController : ControllerBase {
         try {
             await _basketService.DeleteByProductId(clientId, productId);
             return NoContent();
-        } catch (ArgumentException e) {
+        }
+        catch (ArgumentException e) {
             return NotFound(e.Message);
         }
     }
