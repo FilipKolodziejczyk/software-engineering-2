@@ -17,16 +17,6 @@ type ShoppingCart = {
 
 const ShoppingCartContext = createContext({} as ShoppingCart);
 
-async function sendItemUpdate(item: CartItem) {
-  await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`, {
-    method: 'PUT', headers: {
-      'Content-Type': 'application/json'
-    }, body: JSON.stringify(item)
-  })
-}
-
-const debouncedUpdateItem = debounce(sendItemUpdate, 500)
-
 export function useShoppingCart() {
   return useContext(ShoppingCartContext);
 }
@@ -34,7 +24,7 @@ export function useShoppingCart() {
 const updateItemDebounced = debounce(async (item: CartItem) => {
   try {
     await axios.put(
-      `${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productId}`,
       item
     );
   } catch (error) {
@@ -61,14 +51,14 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
   }, []);
 
   async function addItem(item: CartItem) {
-    const existingItem = cartItems.find((i) => i.product.productID === item.product.productID);
+    const existingItem = cartItems.find((i) => i.product.productId === item.product.productId);
     if (existingItem) {
       existingItem.quantity += item.quantity;
       await updateItem(existingItem);
     } else {
       try {
         await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/basket`, {
-          productID: item.product.productID,
+          productID: item.product.productId,
           quantity: item.quantity,
         });
         setCartItems([...cartItems, item]);
@@ -82,7 +72,7 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
   async function updateItem(item: CartItem) {
     try {
       await updateItemDebounced(item);
-      setCartItems([...cartItems.map((i) => (i.product.productID === item.product.productID ? item : i))]);
+      setCartItems([...cartItems.map((i) => (i.product.productId === item.product.productId ? item : i))]);
     } catch (error) {
       console.error(error);
     }
@@ -90,8 +80,8 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
 
   async function removeItem(item: CartItem) {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productID}`);
-      setCartItems([...cartItems.filter((i) => i.product.productID !== item.product.productID)]);
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/basket/${item.product.productId}`);
+      setCartItems([...cartItems.filter((i) => i.product.productId !== item.product.productId)]);
     } catch (error) {
       console.error(error);
     }
