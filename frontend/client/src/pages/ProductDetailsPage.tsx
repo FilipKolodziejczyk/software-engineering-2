@@ -33,6 +33,7 @@ export default function ProductDetailsPage() {
         </div>
         <div className="mt-10">
           <div className="flex flex-row">
+            {/*dupa*/}
 
             <div className="flex flex-row mr-4">
               <CounterInput
