@@ -15,7 +15,7 @@ public class BasketItemModelRepository : IBasketItemModelRepository {
         await _context.BasketItemModels.AddAsync(itemModel);
     }
 
-    public void Delete(BasketItemModel? model) {
+    public void Delete(BasketItemModel model) {
         _context.BasketItemModels.Remove(model);
     }
 
@@ -25,17 +25,18 @@ public class BasketItemModelRepository : IBasketItemModelRepository {
 
     public async Task<IEnumerable<BasketItemModel>> GetAllModels(int clientId) {
         return await _context.BasketItemModels
-             .Where(model => model.ClientID == clientId)
-             .Include(model => model.Client)
-             .Include(model => model.Product)
-             .ToListAsync();
+            .Where(model => model.Client != null && model.Client.ClientId == clientId)
+            .Include(model => model.Client)
+            .Include(model => model.Product)
+            .ToListAsync();
     }
 
     public async Task<BasketItemModel?> GetByIds(int clientId, int productId) {
         return await _context.BasketItemModels
-             .Where(model => model.ClientID == clientId && model.ProductID == productId)
-             .Include(model => model.Client)
-             .Include(model => model.Product)
-             .FirstOrDefaultAsync();
+            .Where(model => model.Product != null && model.Client != null && model.Client.ClientId == clientId &&
+                            model.Product.ProductId == productId)
+            .Include(model => model.Client)
+            .Include(model => model.Product)
+            .FirstOrDefaultAsync();
     }
 }

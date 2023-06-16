@@ -19,7 +19,7 @@ public class EmployeeModelRepository : IEmployeeModelRepository {
         return await _context.EmployeeModels.FirstOrDefaultAsync(model => model.Email == emailAddress);
     }
 
-    public async Task<EmployeeModel?> GetByID(int id) {
-        return await _context.EmployeeModels.FirstOrDefaultAsync(model => model.EmployeeID == id);
+    public async Task<EmployeeModel?> GetById(int id) {
+        return await _context.EmployeeModels.FirstOrDefaultAsync(model => model.EmployeeId == id);
     }
 }

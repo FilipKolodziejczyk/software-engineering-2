@@ -69,3 +69,6 @@ $RECYCLE.BIN/
 *.tfvars
 *.tfstate
 .terraform/
+
+# VS Code
+.vscode/

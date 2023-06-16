@@ -19,14 +19,14 @@ public class ClientModelRepository : IClientModelRepository {
         return await _context.ClientModels.FirstOrDefaultAsync(model => model.Email == emailAddress);
     }
 
-    public async Task<ClientModel?> GetByID(int id) {
+    public async Task<ClientModel?> GetById(int id) {
         return await _context.ClientModels
             .Include(model => model.Address)
-            .FirstOrDefaultAsync(model => model.ClientID == id);
+            .FirstOrDefaultAsync(model => model.ClientId == id);
     }
 
     public async Task UpdateNewsletter(int id, bool subscribed) {
-        ClientModel? model = await GetByID(id);
+        var model = await GetById(id);
         if (model is not null)
             model.HasNewsletterOn = subscribed;
     }

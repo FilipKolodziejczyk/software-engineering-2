@@ -1,12 +1,13 @@
-namespace SoftwareEngineering2.Interfaces;
-using SoftwareEngineering2.DTO;
 using SoftwareEngineering2.Models;
 
-public interface IProductRepository
-{
+namespace SoftwareEngineering2.Interfaces;
+
+public interface IProductRepository {
     public Task AddAsync(ProductModel sample);
     Task<ProductModel?> GetByIdAsync(int id);
-    
+
     void Delete(ProductModel product);
-    Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage);
+
+    Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string searchQuery, string filteredCategory, decimal minPrice,
+        decimal maxPrice, int pageNumber, int elementsOnPage);
 }

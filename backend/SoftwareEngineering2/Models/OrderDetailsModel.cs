@@ -1,17 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace SoftwareEngineering2.Models;
+﻿namespace SoftwareEngineering2.Models;
 
 public class OrderDetailsModel {
-    public int CurrentOrderID { get; set; }
+    public int CurrentOrderId { get; set; }
 
-    [Required]
-    public int OrderID { get; set; }
+    public int Quantity { get; set; }
+
     public OrderModel? Order { get; set; }
 
-    [Required]
-    public int ProductID { get; set; }
     public ProductModel? Product { get; set; }
-
-    [Required]
-    public int Quantity { get; set; }
 }

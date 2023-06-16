@@ -10,13 +10,14 @@ public class OrderModelRepository : IOrderModelRepository {
     public OrderModelRepository(FlowerShopContext context) {
         _context = context;
     }
+
     public async Task AddAsync(OrderModel model) {
         await _context.OrderModels.AddAsync(model);
     }
 
     public async Task<OrderModel?> GetByIdAsync(int orderId) {
         return await _context.OrderModels
-            .Where(model => model.OrderID == orderId)
+            .Where(model => model.OrderId == orderId)
             .Include(model => model.OrderDetails)
             .Include(model => model.Address)
             .Include(model => model.Client)
@@ -37,9 +38,10 @@ public class OrderModelRepository : IOrderModelRepository {
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<OrderModel>> GetByDeliverymanIdAsync(int deliverymanId, int pageNumber, int elementsOnPage) {
+    public async Task<IEnumerable<OrderModel>> GetByDeliverymanIdAsync(int deliverymanId, int pageNumber,
+        int elementsOnPage) {
         return await _context.OrderModels
-            .Where(model => model.DeliveryManID == deliverymanId)
+            .Where(model => model.DeliveryMan != null && model.DeliveryMan.DeliveryManId == deliverymanId)
             .Include(model => model.OrderDetails)
             .Include(model => model.Address)
             .Include(model => model.Client)
@@ -50,7 +52,7 @@ public class OrderModelRepository : IOrderModelRepository {
             .ToListAsync();
     }
 
-    public void Delete(OrderModel? model) {
+    public void Delete(OrderModel model) {
         _context.OrderModels.Remove(model);
     }
 }

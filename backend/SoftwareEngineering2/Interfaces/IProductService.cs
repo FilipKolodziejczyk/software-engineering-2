@@ -1,13 +1,14 @@
 using SoftwareEngineering2.DTO;
-using SoftwareEngineering2.Models;
 
 namespace SoftwareEngineering2.Interfaces;
 
-public interface IProductService
-{
-    Task<ProductDTO> CreateModelAsync(NewProductDTO newProduct);
-    Task<ProductDTO> GetModelByIdAsync(int id);
+public interface IProductService {
+    Task<ProductDto> CreateModelAsync(NewProductDto newProduct);
+    Task<ProductDto?> GetModelByIdAsync(int id);
     Task DeleteModelAsync(int id);
-    Task<List<ProductDTO>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage);
-    Task<ProductDTO> UpdateModelAsync(UpdateProductDTO product);
+
+    Task<List<ProductDto>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, decimal minPrice,
+        decimal maxPrice, int pageNumber, int elementsOnPage);
+
+    Task<ProductDto> UpdateModelAsync(UpdateProductDto product);
 }
