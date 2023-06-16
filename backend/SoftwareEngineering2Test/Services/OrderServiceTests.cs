@@ -16,6 +16,7 @@ public class OrderServiceTests {
     private static IAddressModelRepository _addressModelRepository = null!;
     private static IClientModelRepository _clientModelRepository = null!;
     private static IDeliveryManModelRepository _deliveryManModelRepository = null!;
+    private static IProductRepository _productRepository = null!;
 
     public OrderServiceTests() {
         if (_mapper is null) {
@@ -39,7 +40,7 @@ public class OrderServiceTests {
 
         if (_orderService is null) {
             _orderService = new(_unitOfWork, MockRepo.Object, _orderDetailsModelRepository, _addressModelRepository,
-                _clientModelRepository, _deliveryManModelRepository, _mapper);
+                _clientModelRepository, _deliveryManModelRepository, _productRepository, _mapper);
         }
     }
 

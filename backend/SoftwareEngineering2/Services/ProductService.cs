@@ -49,8 +49,12 @@ public class ProductService : IProductService {
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<List<ProductDto>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage) {
-        var result = await _productRepository.GetAllFilteredAsync(searchQuery, filteredCategory, pageNumber, elementsOnPage);
+    public async Task<List<ProductDto>> GetFilteredModelsAsync(string searchQuery, string filteredCategory, decimal minPrice, decimal maxPrice, int pageNumber, int elementsOnPage) {
+        if (minPrice > maxPrice) {
+            throw new ArgumentException("Min price cannot be greater than max price");
+        }
+        
+        var result = await _productRepository.GetAllFilteredAsync(searchQuery, filteredCategory, minPrice, maxPrice, pageNumber, elementsOnPage);
         return new List<ProductDto>(result.Select(_mapper.Map<ProductDto>));
     }
 

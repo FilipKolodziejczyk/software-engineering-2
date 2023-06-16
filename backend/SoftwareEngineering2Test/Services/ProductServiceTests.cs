@@ -35,7 +35,7 @@ public class ProductServiceTests
             ProductId = 4, Name = "Rose", Description = "String", Archived = false,
             Category = "flowers", Images = new List<ImageModel>(), Price = 5, Quantity = 10
         }));
-        MockRepo.Setup(e => e.GetAllFilteredAsync("daffodil", "flower", 1,32))
+        MockRepo.Setup(e => e.GetAllFilteredAsync("daffodil", "flower", 0, decimal.MaxValue, 1,32))
             .Returns(Task.FromResult((IEnumerable<ProductModel>) new [] { new ProductModel
             {
                 ProductId = 4, Name = "Rose", Description = "String", Archived = false,

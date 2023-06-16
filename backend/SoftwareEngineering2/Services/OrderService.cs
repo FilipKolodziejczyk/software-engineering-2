@@ -13,6 +13,7 @@ public class OrderService : IOrderService {
     private readonly IAddressModelRepository _addressModelRepository;
     private readonly IClientModelRepository _clientModelRepository;
     private readonly IDeliveryManModelRepository _deliveryManModelRepository;
+    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
 
     public OrderService(
@@ -22,6 +23,7 @@ public class OrderService : IOrderService {
         IAddressModelRepository addressModelRepository,
         IClientModelRepository clientModelRepository,
         IDeliveryManModelRepository deliveryManModelRepository,
+        IProductRepository productRepository,
         IMapper mapper) {
         _unitOfWork = unitOfWork;
         _orderModelRepository = orderModelRepository;
@@ -29,6 +31,7 @@ public class OrderService : IOrderService {
         _addressModelRepository = addressModelRepository;
         _clientModelRepository = clientModelRepository;
         _deliveryManModelRepository = deliveryManModelRepository;
+        _productRepository = productRepository;
         _mapper = mapper;
     }
 
@@ -65,6 +68,16 @@ public class OrderService : IOrderService {
 
     public async Task<OrderDto?> CreateModelAsync(NewOrderDto order, int clientId) {
         var model = _mapper.Map<OrderModel>(order);
+        
+        foreach (var item in order.Items!) {
+            var product = await _productRepository.GetByIdAsync(item.ProductId);
+            if (product is null) {
+                throw new ArgumentException("Product does not exist");
+            }
+            if (product.Quantity < item.Quantity) {
+                throw new ArgumentException("Not enough products in stock");
+            }
+        }
 
         var client = await _clientModelRepository.GetById(clientId);
         if (client is null) {

@@ -27,6 +27,10 @@ public class BasketService : IBasketService {
     }
 
     public async Task<BasketItemDto?> AddToBasket(int clientId, int productId, int quantity) {
+        if (quantity <= 0) {
+            throw new ArgumentException("Quantity must be greater than 0");
+        }
+        
         var model = await _basketItemModelRepository.GetByIds(clientId, productId);
 
         var client = await _clientModelRepository.GetById(clientId);
@@ -37,9 +41,20 @@ public class BasketService : IBasketService {
         }
 
         if (model is null) {
-            model = _mapper.Map<BasketItemModel>(new BasketItemDto { ProductId = productId, Quantity = 0 });
-            model.Client = client;
+            if (product.Quantity < quantity) {
+                throw new ArgumentException("Not enough products in stock");
+            }
+            
+            model = new BasketItemModel {
+                Product = product,
+                Client = client,
+                Quantity = quantity
+            };
             await _basketItemModelRepository.AddAsync(model);
+        }
+        
+        if (product.Quantity < model.Quantity + quantity) {
+            throw new ArgumentException("Not enough products in stock");
         }
 
         model.Quantity += quantity;
@@ -52,7 +67,13 @@ public class BasketService : IBasketService {
         var model = await _basketItemModelRepository.GetByIds(clientId, productId);
 
         if (model is null)
+            throw new ArgumentException("Product does not exist in basket");
+        
+        if (quantity <= 0) {
+            _basketItemModelRepository.Delete(model);
+            await _unitOfWork.SaveChangesAsync();
             return null;
+        }
 
         model.Quantity = quantity;
 
@@ -62,6 +83,8 @@ public class BasketService : IBasketService {
 
     public async Task DeleteByProductId(int clientId, int productId) {
         var model = await _basketItemModelRepository.GetByIds(clientId, productId);
+        if (model is null)
+            throw new ArgumentException("Product does not exist in basket");
         _basketItemModelRepository.Delete(model);
         await _unitOfWork.SaveChangesAsync();
     }

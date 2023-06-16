@@ -56,7 +56,10 @@ public class AutoMapperProfile : Profile {
             .ForMember(dest => dest.DeliveryMan, opt => opt.Ignore())
             .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
 
-        CreateMap<BasketItemModel, BasketItemDto>();
+        CreateMap<BasketItemModel, BasketItemDto>()
+            .IncludeAllDerived()
+            .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product));
+        CreateMap<ProductModel, int>().ConstructUsing(product => product.ProductId);
 
         CreateMap<BasketItemDto, BasketItemModel>()
             .ForMember(dest => dest.Client, opt => opt.Ignore());

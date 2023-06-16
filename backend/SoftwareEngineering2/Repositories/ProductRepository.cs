@@ -1,3 +1,4 @@
+using System.Data.SqlTypes;
 using SoftwareEngineering2.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SoftwareEngineering2.Models;
@@ -29,12 +30,18 @@ public class ProductRepository: IProductRepository
         _context.ProductModels.Remove(product);
     }
 
-    public async Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string searchQuery, string filteredCategory, int pageNumber, int elementsOnPage)
+    public async Task<IEnumerable<ProductModel>> GetAllFilteredAsync(string searchQuery, string filteredCategory, decimal minPrice, decimal maxPrice, int pageNumber, int elementsOnPage)
     {
+        if (maxPrice > (decimal) Math.Pow(10, 17 - 2))
+        {
+            maxPrice = (decimal) Math.Pow(10, 17 - 2);
+        }
+        
         return await _context.ProductModels
             .Include(product => product.Images)
             .Where(product => product.Name.Contains(searchQuery))
             .Where(product => product.Category.Contains(filteredCategory))
+            .Where(product => product.Price >= minPrice && product.Price <= maxPrice)
             .Skip(elementsOnPage * (pageNumber - 1))
             .Take(elementsOnPage)
             .ToListAsync();

@@ -28,8 +28,12 @@ public class BasketController : ControllerBase {
         if (!int.TryParse(User.FindFirst("UserID")?.Value, out var clientId))
             return Forbid();
 
-        var result = await _basketService.AddToBasket(clientId, item.ProductId, item.Quantity);
-        return CreatedAtAction(nameof(AddToBasket), result);
+        try {
+            var result = await _basketService.AddToBasket(clientId, item.ProductId, item.Quantity);
+            return CreatedAtAction(nameof(AddToBasket), result);
+        } catch (ArgumentException e) {
+            return BadRequest(e.Message);
+        }
     }
 
     // GET: api/basket
@@ -60,12 +64,12 @@ public class BasketController : ControllerBase {
         if (!int.TryParse(User.FindFirst("UserID")?.Value, out var clientId))
             return Forbid();
 
-        var item = await _basketService.GetItemByProductId(clientId, productId);
-        if (item is null)
-            return NotFound("Product not found in basket");
-
-        await _basketService.DeleteByProductId(clientId, productId);
-        return NoContent();
+        try {
+            await _basketService.DeleteByProductId(clientId, productId);
+            return NoContent();
+        } catch (ArgumentException e) {
+            return NotFound(e.Message);
+        }
     }
 
     // DELETE: api/basket
@@ -96,16 +100,12 @@ public class BasketController : ControllerBase {
         if (!int.TryParse(User.FindFirst("UserID")?.Value, out var clientId))
             return Forbid();
 
-        var item = await _basketService.GetItemByProductId(clientId, productId);
-        if (item is null)
-            return NotFound();
-
-        if (updatedItem.Quantity > 0) {
+        try {
             var result = await _basketService.Modify(clientId, productId, updatedItem.Quantity);
             return Ok(result);
         }
-
-        await _basketService.DeleteByProductId(clientId, productId);
-        return NoContent();
+        catch (ArgumentException e) {
+            return NotFound(e.Message);
+        }
     }
 }
